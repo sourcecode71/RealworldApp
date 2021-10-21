@@ -9,4 +9,13 @@
     <Folder Include="Behaviours\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Persistance\Persistance.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+  </ItemGroup>
+
 </Project>
