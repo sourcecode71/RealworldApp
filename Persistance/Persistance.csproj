@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Context\" />
     <Folder Include="Repository\Abstraction\" />
     <Folder Include="Repository\Behaviours\" />
   </ItemGroup>

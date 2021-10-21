@@ -5,11 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Abstraction\" />
-    <Folder Include="Behaviours\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Persistance\Persistance.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>

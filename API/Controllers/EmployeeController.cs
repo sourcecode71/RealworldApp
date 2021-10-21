@@ -1,9 +1,9 @@
-using System.Threading.Tasks;
 using API.DTOs;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -12,21 +12,23 @@ namespace API.Controllers
     {
         private readonly UserManager<Employee> _userManager;
         private readonly SignInManager<Employee> _signInManager;
+
         public EmployeeController(UserManager<Employee> userManager, SignInManager<Employee> signInManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
         }
+
         [HttpPost("login")]
         public async Task<ActionResult<EmployeeDto>> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
-            if(user == null) return Unauthorized();
+            if (user == null) return Unauthorized();
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 return new EmployeeDto
                 {

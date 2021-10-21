@@ -6,7 +6,7 @@ using Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Persistance
+namespace Persistance.Context
 {
     public class DataContext : IdentityDbContext<Employee>
     {

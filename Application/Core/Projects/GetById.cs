@@ -7,22 +7,24 @@ using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
+using Persistance.Context;
 
-namespace Application.Projects
+namespace Application.Core.Projects
 {
     public class GetById
     {
-         public class Query : IRequest<Project>
+        public class Query : IRequest<Project>
         {
             public string Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, Project>
         {
-        private readonly DataContext _context;
+            private readonly DataContext _context;
+
             public Handler(DataContext context)
             {
-            _context = context;
+                _context = context;
             }
 
             public async Task<Project> Handle(Query request, CancellationToken cancellationToken)
