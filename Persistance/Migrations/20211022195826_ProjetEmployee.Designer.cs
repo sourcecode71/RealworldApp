@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Context;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211022195826_ProjetEmployee")]
+    partial class ProjetEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,7 +145,10 @@ namespace Persistance.Migrations
 
             modelBuilder.Entity("Domain.ProjectActivity", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EmployeeId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Comment")
@@ -155,17 +160,9 @@ namespace Persistance.Migrations
                     b.Property<double>("Duration")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("EmployeeId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProjectId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
+                    b.HasKey("ProjectId", "EmployeeId");
 
                     b.HasIndex("EmployeeId");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectActivities");
                 });
@@ -317,11 +314,15 @@ namespace Persistance.Migrations
                 {
                     b.HasOne("Domain.Employee", "Employee")
                         .WithMany("ProjectActivities")
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Project", "Project")
                         .WithMany("Activities")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Employee");
 

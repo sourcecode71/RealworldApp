@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Context;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211022193424_ProjectActivity")]
+    partial class ProjectActivity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,9 +66,6 @@ namespace Persistance.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ProjectsId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
@@ -112,9 +111,6 @@ namespace Persistance.Migrations
                     b.Property<string>("EStatus")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("EmployeesId")
-                        .HasColumnType("TEXT");
-
                     b.Property<double>("Factor")
                         .HasColumnType("REAL");
 
@@ -143,7 +139,10 @@ namespace Persistance.Migrations
 
             modelBuilder.Entity("Domain.ProjectActivity", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EmployeeId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Comment")
@@ -155,34 +154,11 @@ namespace Persistance.Migrations
                     b.Property<double>("Duration")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("EmployeeId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProjectId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
+                    b.HasKey("ProjectId", "EmployeeId");
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("ProjectId");
-
                     b.ToTable("ProjectActivities");
-                });
-
-            modelBuilder.Entity("EmployeeProject", b =>
-                {
-                    b.Property<string>("EmployeesId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProjectsId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("EmployeesId", "ProjectsId");
-
-                    b.HasIndex("ProjectsId");
-
-                    b.ToTable("EmployeeProject");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -317,30 +293,19 @@ namespace Persistance.Migrations
                 {
                     b.HasOne("Domain.Employee", "Employee")
                         .WithMany("ProjectActivities")
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Project", "Project")
                         .WithMany("Activities")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Employee");
 
                     b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("EmployeeProject", b =>
-                {
-                    b.HasOne("Domain.Employee", null)
-                        .WithMany()
-                        .HasForeignKey("EmployeesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

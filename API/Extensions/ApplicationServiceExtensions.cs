@@ -23,6 +23,9 @@ namespace API.Extensions
             });
             services.AddMediatR(typeof(List.Handler).Assembly);
 
+            services.AddControllers().AddNewtonsoftJson(options => 
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
             return services;
         }
     }

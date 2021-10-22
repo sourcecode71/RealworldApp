@@ -28,7 +28,7 @@ namespace Application.Core.Projects
 
             public async Task<List<Project>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Projects.ToListAsync();
+                return await _context.Projects.Include(a => a.Activities).Include(e => e.Employees).ToListAsync();
             }
         }
     }

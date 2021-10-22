@@ -21,9 +21,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProject(Project project)
+        public async Task<IActionResult> CreateProject([FromForm] Project project, [FromForm] List<string> employees)
         {
-            return Ok(await Mediator.Send(new Create.Command { Project = project }));
+            return Ok(await Mediator.Send(new Create.Command { Project = project, Employees=employees }));
         }
 
         [HttpDelete("{id}")]
