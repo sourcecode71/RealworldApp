@@ -11,13 +11,13 @@ namespace API.Extensions
         public static IServiceCollection AddIdentityServices(this IServiceCollection services,
             IConfiguration _config)
         {
-            services.AddIdentityCore<Employee>(opt =>
+            services.AddIdentity<Employee, IdentityRole>(opt =>
             {
                 opt.Password.RequireNonAlphanumeric = false;
             })
             .AddEntityFrameworkStores<DataContext>()
             .AddSignInManager<SignInManager<Employee>>();
-
+            
             services.AddAuthentication();
 
             return services;
