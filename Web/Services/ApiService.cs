@@ -30,15 +30,25 @@ namespace Web.Services
             ProjectEndpoint = _configuration.GetValue<string>("Client:Project");
         }
 
-        public async Task<bool> CallRegisterUser(AddEmployeeModel employee)
+        public async Task<ResultModel> CallRegisterUser(EmployeeModel employee)
         {
             string employeeJson = JsonConvert.SerializeObject(employee);
             StringContent content = new StringContent(employeeJson, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PostAsync($"{EmployeeEndpoint}/Login", content);
+            HttpResponseMessage response = await client.PostAsync($"{EmployeeEndpoint}/register", content);
             string apiResponse = await response.Content.ReadAsStringAsync();
 
+            EmployeeModel returnEmployee = new EmployeeModel();
+            
+            if(response.IsSuccessStatusCode)
+                returnEmployee = JsonConvert.DeserializeObject<EmployeeModel>(apiResponse);
 
+            return new ResultModel
+            {
+                IsSuccess = response.IsSuccessStatusCode,
+                ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
+                Result = returnEmployee
+            };
         }
     }
 }

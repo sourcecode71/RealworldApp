@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Web.Models
 {
-    public class AddEmployeeModel
+    public class EmployeeModel
     {
         public string Name { get; set; }
         public string Password { get; set; }
