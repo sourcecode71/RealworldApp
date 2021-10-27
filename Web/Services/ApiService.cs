@@ -50,5 +50,26 @@ namespace Web.Services
                 Result = returnEmployee
             };
         }
+
+        public async Task<ResultModel> CallCreateProject(ProjectModel employee)
+        {
+            string employeeJson = JsonConvert.SerializeObject(employee);
+            StringContent content = new StringContent(employeeJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync($"{EmployeeEndpoint}/register", content);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            EmployeeModel returnEmployee = new EmployeeModel();
+
+            if (response.IsSuccessStatusCode)
+                returnEmployee = JsonConvert.DeserializeObject<EmployeeModel>(apiResponse);
+
+            return new ResultModel
+            {
+                IsSuccess = response.IsSuccessStatusCode,
+                ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
+                Result = returnEmployee
+            };
+        }
     }
 }
