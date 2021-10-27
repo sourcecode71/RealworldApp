@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.DTOs;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +14,11 @@ namespace Application.Core.Projects
 {
     public class List
     {
-        public class Query : IRequest<List<Project>>
+        public class Query : IRequest<List<ProjectDto>>
         {
         }
 
-        public class Handler : IRequestHandler<Query, List<Project>>
+        public class Handler : IRequestHandler<Query, List<ProjectDto>>
         {
             private readonly DataContext _context;
 
@@ -26,9 +27,21 @@ namespace Application.Core.Projects
                 _context = context;
             }
 
-            public async Task<List<Project>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<List<ProjectDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Projects.Include(a => a.Activities).Include(e => e.Employees).ToListAsync();
+                var projectsDto = new List<ProjectDto>();
+                var projects = await _context.Projects.ToListAsync();
+                foreach (var item in projects)
+                {
+                    var itemDto = new ProjectDto
+                    {
+                        Name = item.Name,
+                        Description = item.Description,
+                        SelfProjectId = item.SelfProjectId
+                    };
+                    projectsDto.Add(itemDto);
+                }
+                return projectsDto;
             }
         }
     }

@@ -1,3 +1,4 @@
+using Application.DTOs;
 using Application.Core.Projects;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -9,21 +10,21 @@ namespace API.Controllers
     public class ProjectController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<List<Project>>> GetProjects()
+        public async Task<ActionResult<List<ProjectDto>>> GetProjects()
         {
-            return await Mediator.Send(new List.Query());
+            return Ok(await Mediator.Send(new List.Query()));
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Project>> GetProjectById(string id)
+        [HttpGet("byId")]
+        public async Task<ActionResult<ProjectDto>> GetProjectById(int selfProjectId)
         {
-            return await Mediator.Send(new GetById.Query { Id = id });
+            return await Mediator.Send(new GetById.Query { SelfProjectId = selfProjectId });
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateProject([FromForm] Project project, [FromForm] List<string> employees)
         {
-            return Ok(await Mediator.Send(new Create.Command { Project = project, Employees=employees }));
+            return Ok(await Mediator.Send(new Create.Command { Project = project, Employees = employees }));
         }
 
         [HttpDelete("{id}")]

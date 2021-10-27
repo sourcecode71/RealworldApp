@@ -1,4 +1,4 @@
-using API.DTOs;
+using Application.DTOs;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Core.Employees;
 using System.Security.Claims;
+using System.Linq;
 
 namespace API.Controllers
 {
@@ -27,31 +28,23 @@ namespace API.Controllers
             _userManager = userManager;
         }
         [HttpGet]
-        public async Task<ActionResult<List<Employee>>> GetEmployees()
+        public async Task<ActionResult<List<EmployeeDto>>> GetEmployees()
         {
-            return await _context.Employees.Include(p => p.Projects).Include(a => a.ProjectActivities).ToListAsync();
+            return Ok(await Mediator.Send(new ListEmployees.Query()));
         }
         
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployeeById(string id)
+        [HttpGet("byEmail")]
+        public async Task<ActionResult<EmployeeDto>> GetEmployeeByEmail(string email)
         {
-            return await _context.Employees.Include(p => p.Projects).Include(a => a.ProjectActivities).FirstOrDefaultAsync(x => x.Id == id);
+            return Ok(await Mediator.Send(new GetEmployeeByEmail.Query{Email = email}));
         }
 
         [HttpDelete]
         public async Task<ActionResult> DeleteEmployee(string email)
         {
-            Employee employee = await _context.Employees.FirstOrDefaultAsync(x => x.Email == email);
-
-            _context.Remove(employee);
-
-            var result = await _context.SaveChangesAsync() > 0;
-
-            if (!result) return NotFound("Failed to delete employee!");
-
-            return Ok("Employee deleted successfuly!");
+            return Ok(await Mediator.Send(new DeleteEmployee.Command { Email = email }));
         }
-        
+
         [HttpPost("login")]
         public async Task<ActionResult<EmployeeDto>> Login(LoginDto loginDto)
         {
@@ -68,6 +61,7 @@ namespace API.Controllers
 
             return Ok();
         }
+    
 
         [HttpPost("register")]
         public async Task<ActionResult<EmployeeDto>> Register(RegisterDto registerDto)
