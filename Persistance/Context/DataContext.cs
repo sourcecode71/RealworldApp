@@ -6,7 +6,7 @@ namespace Persistance.Context
 {
     public class DataContext : IdentityDbContext<Employee>
     {
-        public DataContext(DbContextOptions options) : base(options)
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {       
         }
 

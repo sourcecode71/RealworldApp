@@ -27,6 +27,7 @@ namespace API.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
         }
+
         [HttpGet]
         public async Task<ActionResult<List<EmployeeDto>>> GetEmployees()
         {
@@ -66,7 +67,7 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<EmployeeDto>> Register(RegisterDto registerDto)
         {
-            
+
             if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
             {
                 return BadRequest("Email taken");
@@ -84,19 +85,24 @@ namespace API.Controllers
 
             if (result.Succeeded)
             {
-               await CreateRole(user, user.IsAdmin);
-               return CreateEmployeeObject(user);
+                await CreateRole(user, user.IsAdmin);
+                return CreateEmployeeObject(user);
             }
 
             return BadRequest("Problem registring user");
         }
 
         [HttpPost("activity")]
-        public async Task<ActionResult> AddActivity([FromForm] string employeeEmail, [FromForm] string projectId, 
+        public async Task<ActionResult> AddActivity([FromForm] string employeeEmail, [FromForm] string projectId,
         [FromForm] double duration, [FromForm] string comment)
         {
-            return Ok(await Mediator.Send(new AddActivity.Command { EmployeeEmail = employeeEmail , 
-            ProjectId = projectId, Duration = duration, Comment = comment})); 
+            return Ok(await Mediator.Send(new AddActivity.Command
+            {
+                EmployeeEmail = employeeEmail,
+                ProjectId = projectId,
+                Duration = duration,
+                Comment = comment
+            }));
         }
 
         [HttpGet("current")]
@@ -104,7 +110,7 @@ namespace API.Controllers
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             Employee user = await _context.Employees.FirstOrDefaultAsync(x => x.Id == userId);
-            return CreateEmployeeObject(user); 
+            return CreateEmployeeObject(user);
         }
 
         private EmployeeDto CreateEmployeeObject(Employee user)
@@ -118,15 +124,15 @@ namespace API.Controllers
 
         private async Task CreateRole(Employee employee, bool isAdmin)
         {
-            if(isAdmin)
-            {  
+            if (isAdmin)
+            {
                 var role = new IdentityRole();
                 role.Name = "Admin";
                 await _roleManager.CreateAsync(role);
-                
+
                 var result1 = await _userManager.AddToRoleAsync(employee, "Admin");
-                
-                if(!result1.Succeeded) throw new System.Exception("Greska!");
+
+                if (!result1.Succeeded) throw new System.Exception("Greska!");
             }
             else
             {
@@ -135,8 +141,8 @@ namespace API.Controllers
                 await _roleManager.CreateAsync(role);
 
                 var result1 = await _userManager.AddToRoleAsync(employee, "Employee");
-                
-                if(!result1.Succeeded) throw new System.Exception("Greska!");
+
+                if (!result1.Succeeded) throw new System.Exception("Greska!");
             }
         }
     }
