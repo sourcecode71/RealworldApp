@@ -22,8 +22,7 @@ namespace API.Extensions
             {
                 opt.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
             });
-
-            services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddMediatR(typeof(Create.Handler).Assembly);
 
             services.AddControllers().AddNewtonsoftJson(options => 
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);

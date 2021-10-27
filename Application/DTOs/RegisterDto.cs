@@ -1,4 +1,4 @@
-namespace API.DTOs
+namespace Application.DTOs
 {
     public class RegisterDto
     {
