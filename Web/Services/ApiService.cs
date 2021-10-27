@@ -51,6 +51,17 @@ namespace Web.Services
             };
         }
 
+        public async Task<List<string>> CallGetEmployeesNames()
+        {
+            HttpResponseMessage response = await client.GetAsync($"{EmployeeEndpoint}/get-all-employees-names");
+
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            List<string> employees = JsonConvert.DeserializeObject<List<string>>(apiResponse);
+
+            return employees;
+        }
+
         public async Task<ResultModel> CallCreateProject(ProjectModel employee)
         {
             string employeeJson = JsonConvert.SerializeObject(employee);

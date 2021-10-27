@@ -2,6 +2,38 @@
 
 }
 
+AdminPanel.getAllEmployeesNames = function () {
+
+    $.ajax({
+        url: '/Admin/GetEmployeesNames',
+        type: 'GET',
+        success: function (result) {
+            var i = 1;
+            $.each(result, function (index, value) {
+                $('#addProjectEngineering').append($('<option/>', {
+                    value: i,
+                    text: value
+                }));
+
+                $('#addProjectDrawing').append($('<option/>', {
+                    value: i,
+                    text: value
+                }));
+
+                $('#addProjectApproval').append($('<option/>', {
+                    value: i,
+                    text: value
+                }));
+
+                i++
+            });
+        },
+        error: function (err) {
+         
+        }
+    });
+}
+
 AdminPanel.addNewEmployee = function () {
 
     AdminPanel.loading();
@@ -71,3 +103,7 @@ AdminPanel.removeLoader = function() {
         $("#loadingDiv").remove();
     });
 }
+
+$(document).ready(function () {
+    AdminPanel.getAllEmployeesNames();
+});

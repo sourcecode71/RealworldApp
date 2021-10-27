@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using Web.Models;
 using Web.Services;
 
@@ -21,6 +22,11 @@ namespace Web.Controllers
         public ResultModel AddNewEmployee(EmployeeModel employee)
         {
             return _apiService.CallRegisterUser(employee).Result;
+        }
+
+        public List<string> GetEmployeesNames()
+        {
+            return  _apiService.CallGetEmployeesNames().Result;
         }
     }
 }

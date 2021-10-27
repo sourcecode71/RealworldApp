@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Core.Employees;
 using System.Security.Claims;
+using System.Linq;
 
 namespace API.Controllers
 {
@@ -150,6 +151,13 @@ namespace API.Controllers
 
                 if (!result1.Succeeded) throw new System.Exception("Greska!");
             }
+        }
+
+        [HttpGet("get-all-employees-names")]
+        public async Task<ActionResult<List<string>>> GetEnployeesNames()
+        {
+            var result = await Mediator.Send(new GetAllEmployees.Query());
+            return result.ToList().Select(x => x.Name).ToList();
         }
     }
 }

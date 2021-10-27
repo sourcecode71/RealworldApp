@@ -16,9 +16,6 @@ namespace Web.Models
         public double Balance { get; set; }
         public double Factor { get; set; }
         public string EStatus { get; set; }
-        public ProjectStatus Status { get; set; }
-        public List<ProjectActivity> Activities { get; set; } = new List<ProjectActivity>();
-        public List<Employee> Employees { get; set; }
-        public string EmployeesId { get; set; }
+        public int Status { get; set; }
     }
 }

@@ -36,5 +36,50 @@
     </div>
     <div class="col-md-6">
         <div class="col-md-12 text-center"><h3><u>Add new Project</u></h3></div>
+        <div class="row" style="margin-top: 20px">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <label for="addProjectName">Project name:</label>
+                <input type="text" id="addProjectName" class="form-control" />
+
+                <label for="addProjectClient" style="margin-top: 20px">Project client:</label>
+                <input type="text" id="addProjectClient" class="form-control" />
+
+                <label for="addProjectEngineering" style="margin-top: 20px">Engineering:</label>
+                <select id="addProjectEngineering" class="form-control">
+                    <option value="0">Please select an employee...</option>
+                </select>
+
+                <label for="addProjectDrawing" style="margin-top: 20px">Drawing:</label>
+                <select id="addProjectDrawing" class="form-control">
+                    <option value="0">Please select an employee...</option>
+                </select>
+
+                <label for="addProjectApproval" style="margin-top: 20px">Approval:</label>
+                <select id="addProjectApproval" class="form-control">
+                    <option value="0">Please select an employee...</option>
+                </select>
+
+                <label for="addProjectDelivery" style="margin-top: 20px">Project Delivery Date:</label>
+                <input type="date" id="addProjectDelivery" class="form-control" />
+
+                <label for="addProjectSchedule" style="margin-top: 20px">Project Schedule Weeks:</label>
+                <input type="number" id="addProjectSchedule" class="form-control" />
+
+                <label for="addProjectBudget" style="margin-top: 20px">Project Budget in $:</label>
+                <input type="number" id="addProjectBudget" class="form-control" />
+
+                <label for="addProjectEStatus" style="margin-top: 20px">Project EStatus:</label>
+                <input type="text" id="addProjectEStatus" class="form-control" />
+
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6 text-center">
+                        <button class="btn btn-block btn-sm btn-success" style="margin-top: 20px; margin-bottom: 50px" onclick="AdminPanel.addNewEmployee()">Add</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
     </div>
 </div>
