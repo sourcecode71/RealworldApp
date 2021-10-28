@@ -45,11 +45,13 @@ namespace Application.Core.Projects
 
                     Activities = project.Activities.Select(x => new ProjectActivityDto
                     {
-                        ProjectId = x.ProjectId,
-                        EmployeeId = x.EmployeeId,
+                        SelfProjectId = x.SelfProjectId,
+                        EmployeeEmail = x.EmployeeEmail,
                         Duration = x.Duration,
                         DateTime = x.DateTime,
-                        Comment = x.Comment
+                        Comment = x.Comment,
+                        Status = x.Status,
+                        StatusComment = x.StatusComment
                     }).ToList()
                 };
 

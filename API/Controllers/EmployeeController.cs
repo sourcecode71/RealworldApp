@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using Application.Core.Employees;
 using System.Security.Claims;
 using System.Linq;
+using Domain.Enums;
+using API.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -19,15 +22,19 @@ namespace API.Controllers
         private readonly SignInManager<Employee> _signInManager;
         private readonly DataContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly TokenService _tokenService;
 
-        public EmployeeController(DataContext context, UserManager<Employee> userManager, SignInManager<Employee> signInManager, RoleManager<IdentityRole> roleManager)
+        public EmployeeController(DataContext context, UserManager<Employee> userManager, SignInManager<Employee> signInManager,
+         RoleManager<IdentityRole> roleManager, TokenService tokenService)
         {
+            _tokenService = tokenService;
             _roleManager = roleManager;
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
         }
-
+        
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<EmployeeDto>>> GetEmployees()
         {
@@ -60,7 +67,7 @@ namespace API.Controllers
                 return CreateEmployeeObject(user);
             }
 
-            return Ok();
+            return Unauthorized();
         }
     
 
@@ -93,15 +100,18 @@ namespace API.Controllers
         }
 
         [HttpPost("activity")]
-        public async Task<ActionResult> AddActivity([FromForm] string employeeEmail, [FromForm] string projectId,
-        [FromForm] double duration, [FromForm] string comment)
+        public async Task<ActionResult> AddActivity([FromForm] string employeeEmail, [FromForm] int selfProjectId,
+        [FromForm] double duration, [FromForm] string comment, [FromForm] ProjectStatus status, 
+        [FromForm] string statusComment)
         {
             return Ok(await Mediator.Send(new AddActivity.Command
             {
                 EmployeeEmail = employeeEmail,
-                ProjectId = projectId,
+                SelfProjectId = selfProjectId,
                 Duration = duration,
-                Comment = comment
+                Comment = comment,
+                Status = status,
+                StatusComment = statusComment
             }));
         }
 
@@ -118,7 +128,8 @@ namespace API.Controllers
             return new EmployeeDto
             {
                 Name = user.Name,
-                Email = user.Email
+                Email = user.Email,
+                Token = _tokenService.CreateToken(user)
             };
         }
 

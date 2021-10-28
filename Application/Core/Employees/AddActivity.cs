@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain;
+using Domain.Enums;
 using MediatR;
 using Persistance.Context;
 
@@ -14,9 +15,11 @@ namespace Application.Core.Employees
         public class Command : IRequest<Unit>
         {
             public string EmployeeEmail { get; set; }
-            public string ProjectId { get; set; }
+            public int SelfProjectId { get; set; }
             public double Duration { get; set; }
             public string Comment { get; set; }
+            public ProjectStatus Status { get; set; }
+            public string StatusComment { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -29,7 +32,7 @@ namespace Application.Core.Employees
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var project = _context.Projects.FirstOrDefault(x => x.Id == request.ProjectId);
+                var project = _context.Projects.FirstOrDefault(x => x.SelfProjectId == request.SelfProjectId);
                 
                 var emp = _context.Employees.FirstOrDefault( x => x.Email == request.EmployeeEmail);
 
@@ -37,12 +40,15 @@ namespace Application.Core.Employees
                 {
                     Id = Guid.NewGuid().ToString(),
                     Project= project,
-                    ProjectId = request.ProjectId,
+                    SelfProjectId = request.SelfProjectId,
+                    EmployeeEmail = request.EmployeeEmail,
                     Employee = emp,
                     EmployeeId = emp.Id,
                     Duration = request.Duration,
                     Comment = request.Comment,
-                    DateTime = DateTime.Now
+                    DateTime = DateTime.Now,
+                    Status = request.Status,
+                    StatusComment = request.StatusComment
                 };
 
                 _context.ProjectActivities.Add(activity);
