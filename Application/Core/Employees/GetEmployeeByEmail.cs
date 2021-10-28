@@ -34,7 +34,9 @@ namespace Application.Core.Employees
                     {
                         Name = x.Name,
                         Description = x.Description,
-                        SelfProjectId = x.SelfProjectId
+                        SelfProjectId = x.SelfProjectId,
+                        AdminDelayedComment = x.AdminDelayedComment,
+                        AdminModifiedComment = x.AdminModifiedComment
                     }).ToList(),
                     ProjectActivities = employee.ProjectActivities.Select(x => new ProjectActivityDto
                     {

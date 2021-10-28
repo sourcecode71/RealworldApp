@@ -37,7 +37,9 @@ namespace Application.Core.Projects
                     {
                         Name = item.Name,
                         Description = item.Description,
-                        SelfProjectId = item.SelfProjectId
+                        SelfProjectId = item.SelfProjectId,
+                        AdminDelayedComment = item.AdminDelayedComment,
+                        AdminModifiedComment = item.AdminModifiedComment
                     };
                     projectsDto.Add(itemDto);
                 }

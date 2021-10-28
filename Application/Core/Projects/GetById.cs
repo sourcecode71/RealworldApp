@@ -36,6 +36,8 @@ namespace Application.Core.Projects
                     Name = project.Name,
                     Description = project.Description,
                     SelfProjectId = project.SelfProjectId,
+                    AdminDelayedComment = project.AdminDelayedComment,
+                    AdminModifiedComment = project.AdminModifiedComment,
 
                     Employees = project.Employees.Select(x => new EmployeeDto
                     {

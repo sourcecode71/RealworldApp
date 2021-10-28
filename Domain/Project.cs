@@ -20,6 +20,8 @@ namespace Domain
         public double Factor { get; set; }
         public string EStatus { get; set; }
         public ProjectStatus Status { get; set; }
+        public string AdminDelayedComment { get; set; }
+        public string AdminModifiedComment { get; set; }
         public List<ProjectActivity> Activities { get; set; } = new List<ProjectActivity>();
         public List<Employee> Employees { get; set; }
         public string EmployeesId { get; set; }

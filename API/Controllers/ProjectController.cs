@@ -32,5 +32,16 @@ namespace API.Controllers
         {
             return Ok(await Mediator.Send(new Delete.Command { Id = id }));
         }
+        [HttpPut("delayed")]
+        public async Task<IActionResult> AddDelayedComment(string delayed, int selfProjectId)
+        {
+            return Ok(await Mediator.Send(new AddDelayedComment.Command { Delayed = delayed, SelfProjectId = selfProjectId }));
+        }
+
+        [HttpPut("modified")]
+        public async Task<IActionResult> AddModifiedComment(string modified, int selfProjectId)
+        {
+            return Ok(await Mediator.Send(new AddModifiedComment.Command { Modified = modified, SelfProjectId = selfProjectId }));
+        }
     }
 }
