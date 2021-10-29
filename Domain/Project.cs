@@ -24,6 +24,5 @@ namespace Domain
         public string AdminModifiedComment { get; set; }
         public List<ProjectActivity> Activities { get; set; } = new List<ProjectActivity>();
         public List<Employee> Employees { get; set; }
-        public string EmployeesId { get; set; }
     }
 }
