@@ -43,5 +43,11 @@ namespace API.Controllers
         {
             return Ok(await Mediator.Send(new AddModifiedComment.Command { Modified = modified, SelfProjectId = selfProjectId }));
         }
+
+        [HttpPut("addEmployee")]
+        public async Task<IActionResult> AddEmployee(string employeeEmail, int selfProjectId)
+        {
+            return Ok(await Mediator.Send(new AddEmployee.Command { EmployeeEmail = employeeEmail, SelfProjectId = selfProjectId }));
+        }
     }
 }

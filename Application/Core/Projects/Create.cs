@@ -39,21 +39,21 @@ namespace Application.Core.Projects
                 var project = _context.Projects.Include(p => p.Employees).FirstOrDefault(x => x.Id == request.Project.Id);
 
                 if (project == null) return SystemException("Greska pri nalazenju projekta iz baze!");
-                
-                foreach(var employee in request.Employees)
+
+                if (request.Employees.Count != 0)
                 {
-                    Employee emp =_context.Employees.FirstOrDefault(x => x.Email == employee);
+                    foreach (var employee in request.Employees)
+                    {
+                        Employee emp = _context.Employees.FirstOrDefault(x => x.Email == employee);
 
-                    if (emp == null) return SystemException("Greska pri nalazenju zaposlenog iz baze!");
-                    
-                    project.Employees.Add(emp);
-                    
-                    project.EmployeesId= emp.Id;
+                        if (emp == null) return SystemException("Greska pri nalazenju zaposlenog iz baze!");
+
+                        project.Employees.Add(emp);
+                    }
+                    result = await _context.SaveChangesAsync() > 0;
                 }
-                
-                var success = await _context.SaveChangesAsync() > 0;
 
-                if (!success) return SystemException("Greska pri dodavanju zaposlenih!");
+                if (!result) return SystemException("Greska pri dodavanju zaposlenih!");
 
                 return Unit.Value;
 
@@ -61,7 +61,7 @@ namespace Application.Core.Projects
 
             private Unit SystemException(string v)
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException(v);
             }
         }
     }
