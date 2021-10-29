@@ -105,5 +105,5 @@ AdminPanel.removeLoader = function() {
 }
 
 $(document).ready(function () {
-    AdminPanel.getAllEmployeesNames();
+   // AdminPanel.getAllEmployeesNames();
 });

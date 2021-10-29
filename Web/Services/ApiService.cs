@@ -30,6 +30,27 @@ namespace Web.Services
             ProjectEndpoint = _configuration.GetValue<string>("Client:Project");
         }
 
+        public async Task<ResultModel> CallLogin(EmployeeModel loginUser)
+        {
+            string userJson = JsonConvert.SerializeObject(loginUser);
+            StringContent content = new StringContent(userJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync($"{EmployeeEndpoint}/login", content);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            EmployeeModel returnEmployee = new EmployeeModel();
+
+            if (response.IsSuccessStatusCode)
+                returnEmployee = JsonConvert.DeserializeObject<EmployeeModel>(apiResponse);
+
+            return new ResultModel
+            {
+                IsSuccess = response.IsSuccessStatusCode,
+                ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
+                Result = returnEmployee
+            };
+        }
+
         public async Task<ResultModel> CallRegisterUser(EmployeeModel employee)
         {
             string employeeJson = JsonConvert.SerializeObject(employee);
