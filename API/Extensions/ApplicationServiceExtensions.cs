@@ -24,6 +24,14 @@ namespace API.Extensions
             });
             services.AddMediatR(typeof(Create.Handler).Assembly);
 
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("AllowOrigin", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build();
+                });
+            });
+
             services.AddControllers().AddNewtonsoftJson(options => 
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 

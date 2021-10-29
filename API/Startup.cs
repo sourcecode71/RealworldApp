@@ -33,8 +33,9 @@ namespace API
 
             //app.UseHttpsRedirection();
 
-            app.UseRouting();
+            app.UseCors("AllowOrigin");
 
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 

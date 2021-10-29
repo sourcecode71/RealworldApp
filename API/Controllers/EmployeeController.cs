@@ -143,7 +143,7 @@ namespace API.Controllers
 
                 var result1 = await _userManager.AddToRoleAsync(employee, "Admin");
 
-                if (!result1.Succeeded) throw new System.Exception("Greska!");
+                if (!result1.Succeeded) throw new System.Exception("Error!");
             }
             else
             {
@@ -153,7 +153,7 @@ namespace API.Controllers
 
                 var result1 = await _userManager.AddToRoleAsync(employee, "Employee");
 
-                if (!result1.Succeeded) throw new System.Exception("Greska!");
+                if (!result1.Succeeded) throw new System.Exception("Error!");
             }
         }
 
