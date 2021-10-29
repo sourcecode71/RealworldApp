@@ -21,7 +21,9 @@ namespace Web.Services
         public ApiService(IConfiguration configuration)
         {
             _configuration = configuration;
-            client = new HttpClient();
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            client = new HttpClient(clientHandler);
             client.BaseAddress = new Uri(_configuration.GetValue<string>("Client:BaseAddress"));
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -39,8 +41,8 @@ namespace Web.Services
             string apiResponse = await response.Content.ReadAsStringAsync();
 
             EmployeeModel returnEmployee = new EmployeeModel();
-            
-            if(response.IsSuccessStatusCode)
+
+            if (response.IsSuccessStatusCode)
                 returnEmployee = JsonConvert.DeserializeObject<EmployeeModel>(apiResponse);
 
             return new ResultModel
