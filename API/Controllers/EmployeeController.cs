@@ -12,6 +12,7 @@ using System.Linq;
 using Domain.Enums;
 using API.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace API.Controllers
 {
@@ -34,7 +35,7 @@ namespace API.Controllers
             _userManager = userManager;
         }
         
-        [Authorize]
+       [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<ActionResult<List<EmployeeDto>>> GetEmployees()
         {
