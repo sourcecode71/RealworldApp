@@ -105,5 +105,15 @@ namespace Web.Services
                 Result = returnEmployee
             };
         }
+        public async Task<List<ProjectModel>> CallGetProjects()
+        {
+            HttpResponseMessage response = await client.GetAsync($"{ProjectEndpoint}");
+
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            List<ProjectModel> projects = JsonConvert.DeserializeObject<List<ProjectModel>>(apiResponse);
+
+            return projects;
+        }
     }
 }
