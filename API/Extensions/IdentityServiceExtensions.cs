@@ -24,19 +24,38 @@ namespace API.Extensions
             .AddSignInManager<SignInManager<Employee>>();
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
-            
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
                 .AddJwtBearer(opt =>
                 {
+                    opt.RequireHttpsMetadata = false;
+                    opt.SaveToken = true;
                     opt.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey =  key,
+                        IssuerSigningKey = key,
                         ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateAudience = false,
+                        ValidateLifetime = true
                     };
                 });
-            
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsAdmin", policy =>
+                {
+                    policy.RequireClaim("role", "Admin").Build();
+                });
+                options.AddPolicy("IsEmployee", policy =>
+                {
+                    policy.RequireClaim("role", "Employee").Build();
+                });
+            });
 
             return services;
         }

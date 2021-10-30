@@ -35,24 +35,27 @@ namespace API.Controllers
             _userManager = userManager;
         }
 
-       [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<EmployeeDto>>> GetEmployees()
         {
             return Ok(await Mediator.Send(new ListEmployees.Query()));
         }
 
+        [Authorize]
         [HttpGet("byEmail")]
         public async Task<ActionResult<EmployeeDto>> GetEmployeeByEmail(string email)
         {
             return Ok(await Mediator.Send(new GetEmployeeByEmail.Query { Email = email }));
         }
 
+        [Authorize]
         [HttpDelete]
         public async Task<ActionResult> DeleteEmployee(string email)
         {
             return Ok(await Mediator.Send(new DeleteEmployee.Command { Email = email }));
         }
+
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<EmployeeDto>> Login(LoginDto loginDto)
@@ -72,11 +75,31 @@ namespace API.Controllers
             return Unauthorized();
         }
 
+        [Authorize]
+        [HttpPost("Logout")]
+        public async Task<bool> Logout(EmployeeDto loggedInUser)
+        {
+            if (loggedInUser == null)
+            {
+                return false;
+            }
+
+            Employee user = await _userManager.FindByEmailAsync(loggedInUser.Email);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            await _signInManager.SignOutAsync();
+
+            return true;
+        }
+
 
         [HttpPost("register")]
         public async Task<ActionResult<EmployeeDto>> Register(RegisterDto registerDto)
         {
-
             if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
             {
                 return BadRequest("Email taken");
@@ -86,18 +109,26 @@ namespace API.Controllers
             {
                 Name = registerDto.Name,
                 Email = registerDto.Email,
-                UserName = registerDto.Email,
-                IsAdmin = registerDto.IsAdmin
+                UserName = registerDto.Email
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
             if (result.Succeeded)
             {
-                await CreateRole(user, user.IsAdmin);
+                bool existRole = await _roleManager.RoleExistsAsync(registerDto.Role);
+
+                if (!existRole)
+                {
+                    IdentityRole role = new IdentityRole();
+                    role.Name = registerDto.Role;
+
+                    await _roleManager.CreateAsync(role);
+                }
+
+                await _userManager.AddToRoleAsync(user, registerDto.Role);
 
                 IList<string> roles = await _userManager.GetRolesAsync(user);
-
 
                 return CreateEmployeeObject(user, roles.Count > 0 ? roles[0] : string.Empty);
             }
@@ -137,32 +168,8 @@ namespace API.Controllers
                 Name = user.Name,
                 Email = user.Email,
                 Role = role,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user, role)
             };
-        }
-
-        private async Task CreateRole(Employee employee, bool isAdmin)
-        {
-            if (isAdmin)
-            {
-                var role = new IdentityRole();
-                role.Name = "Admin";
-                await _roleManager.CreateAsync(role);
-
-                var result1 = await _userManager.AddToRoleAsync(employee, "Admin");
-
-                if (!result1.Succeeded) throw new System.Exception("Error!");
-            }
-            else
-            {
-                var role = new IdentityRole();
-                role.Name = "Employee";
-                await _roleManager.CreateAsync(role);
-
-                var result1 = await _userManager.AddToRoleAsync(employee, "Employee");
-
-                if (!result1.Succeeded) throw new System.Exception("Error!");
-            }
         }
 
         [HttpGet("get-all-employees-names")]

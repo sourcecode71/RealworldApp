@@ -26,6 +26,7 @@ namespace API
                 var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             });
+
             services.AddApplicationServices(_config);
             services.AddIdentityServices(_config);
         }

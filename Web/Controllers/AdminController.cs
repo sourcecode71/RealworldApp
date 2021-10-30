@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Web.Models;
 using Web.Services;
@@ -16,7 +17,28 @@ namespace Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                if (currentRole == "Admin")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+            }
+
+            return RedirectToAction("Login", "Home");
         }
 
         public ResultModel AddNewEmployee(EmployeeModel employee)

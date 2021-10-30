@@ -53,6 +53,17 @@ namespace Web.Services
             };
         }
 
+        public async Task<bool> CallLogout(EmployeeModel employeeModel)
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(employeeModel), Encoding.UTF8, "application/json");
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", employeeModel.Token);
+            HttpResponseMessage response = await client.PostAsync($"{EmployeeEndpoint}/logout", content);
+
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            return apiResponse == "true";
+        }
+
         public async Task<ResultModel> CallRegisterUser(EmployeeModel employee)
         {
             string employeeJson = JsonConvert.SerializeObject(employee);

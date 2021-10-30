@@ -4,12 +4,14 @@ using Domain;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
     public class ProjectController : BaseApiController
     {
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<ProjectDto>>> GetProjects()
         {
             return Ok(await Mediator.Send(new List.Query()));

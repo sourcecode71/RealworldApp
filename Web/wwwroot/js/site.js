@@ -16,9 +16,9 @@ Site.login = function () {
         url: '/Home/Login',
         type: 'POST',
         data: loginUser,
-        success: function (result) {
-            if (result.isSuccess) {
-                if (result.Result.Role == "Admin") {
+        success: function (response) {
+            if (response.isSuccess) {
+                if (response.result.role == "Admin") {
                     window.location.href = "/Admin/Index";
                 }
                 else {

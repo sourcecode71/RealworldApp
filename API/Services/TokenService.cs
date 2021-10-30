@@ -19,17 +19,18 @@ namespace API.Services
             _config = config;
         }
 
-        public string CreateToken(Employee employee)
+        public string CreateToken(Employee employee, string role)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, employee.Email),
+                new Claim("role", role)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(7),

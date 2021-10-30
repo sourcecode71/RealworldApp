@@ -27,7 +27,28 @@ namespace Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                if (currentRole == "Admin")
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Employee");
+                }
+            }
+
+            return RedirectToAction("Login", "Home");
         }
 
         [HttpGet]
@@ -46,10 +67,28 @@ namespace Web.Controllers
                 SetSessionString("current_user_token", loggedInUser.Token);
                 SetSessionString("current_user_email", loggedInUser.Email);
                 SetSessionString("current_user_role", loggedInUser.Role);
+                SetSessionString("current_user_name", loggedInUser.Name);
             }
 
             return result;
         }
+
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            string currentToken = HttpContext.Session.GetString("current_user_token");
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            bool isLogout = _apiService.CallLogout(new EmployeeModel { Email = currentEmail, Token = currentToken }).Result;
+
+            HttpContext.Session.Remove("current_user_token");
+            HttpContext.Session.Remove("current_user_email");
+            HttpContext.Session.Remove("current_user_role");
+            HttpContext.Session.Remove("current_user_name");
+
+            return RedirectToAction("Login", "/Home");
+        }
+
 
         private void SetSessionString(string name, string property)
         {
