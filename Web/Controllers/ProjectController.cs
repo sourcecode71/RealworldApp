@@ -5,23 +5,18 @@ using Web.Services;
 
 namespace Web.Controllers
 {
-    public class EmployeeController : Controller
+    public class ProjectController : Controller
     {
         private readonly ApiService _apiService;
 
-        public EmployeeController(ApiService apiService)
+        public ProjectController(ApiService apiService)
         {
             _apiService = apiService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
             return View();
-        }
-
-        public List<ProjectModel> GetProjects()
-        {
-            return  _apiService.CallGetProjects().Result;
         }
     }
 }
