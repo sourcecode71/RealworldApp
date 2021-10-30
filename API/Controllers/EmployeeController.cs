@@ -35,7 +35,6 @@ namespace API.Controllers
             _userManager = userManager;
         }
         
-       [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<ActionResult<List<EmployeeDto>>> GetEmployees()
         {
@@ -53,7 +52,7 @@ namespace API.Controllers
         {
             return Ok(await Mediator.Send(new DeleteEmployee.Command { Email = email }));
         }
-
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<EmployeeDto>> Login(LoginDto loginDto)
         {
@@ -115,12 +114,13 @@ namespace API.Controllers
                 StatusComment = statusComment
             }));
         }
-
+        
+        [AllowAnonymous]
         [HttpGet("current")]
         public async Task<ActionResult<EmployeeDto>> GetCurrentUser()
         {
-            var userId = _userManager.GetUserId(HttpContext.User);
-            Employee user = await _context.Employees.FirstOrDefaultAsync(x => x.Id == userId);
+            var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
+            
             return CreateEmployeeObject(user);
         }
 
