@@ -23,11 +23,19 @@ namespace API.Services
         {
             var claims = new List<Claim>
             {
+                 new Claim (JwtRegisteredClaimNames.Jti,
+                Guid.NewGuid().ToString()),
+
+            new Claim (JwtRegisteredClaimNames.Email,
+                employee.Email),
+
+            new Claim (JwtRegisteredClaimNames.Sub,
+                employee.Id),
                 new Claim(ClaimTypes.Email, employee.Email),
-                new Claim("role", role)
+                new Claim(ClaimTypes.Role, role)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
