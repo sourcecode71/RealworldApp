@@ -34,18 +34,18 @@ namespace API.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
         }
-        
+
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<ActionResult<List<EmployeeDto>>> GetEmployees()
         {
             return Ok(await Mediator.Send(new ListEmployees.Query()));
         }
-        
+
         [HttpGet("byEmail")]
         public async Task<ActionResult<EmployeeDto>> GetEmployeeByEmail(string email)
         {
-            return Ok(await Mediator.Send(new GetEmployeeByEmail.Query{Email = email}));
+            return Ok(await Mediator.Send(new GetEmployeeByEmail.Query { Email = email }));
         }
 
         [HttpDelete]
@@ -65,12 +65,13 @@ namespace API.Controllers
 
             if (result.Succeeded)
             {
-                return CreateEmployeeObject(user);
+                IList<string> roles = await _userManager.GetRolesAsync(user);
+                return CreateEmployeeObject(user, roles.Count > 0 ? roles[0] : string.Empty);
             }
 
             return Unauthorized();
         }
-    
+
 
         [HttpPost("register")]
         public async Task<ActionResult<EmployeeDto>> Register(RegisterDto registerDto)
@@ -94,7 +95,11 @@ namespace API.Controllers
             if (result.Succeeded)
             {
                 await CreateRole(user, user.IsAdmin);
-                return CreateEmployeeObject(user);
+
+                IList<string> roles = await _userManager.GetRolesAsync(user);
+
+
+                return CreateEmployeeObject(user, roles.Count > 0 ? roles[0] : string.Empty);
             }
 
             return BadRequest("Problem registring user");
@@ -102,7 +107,7 @@ namespace API.Controllers
 
         [HttpPost("activity")]
         public async Task<ActionResult> AddActivity([FromForm] string employeeEmail, [FromForm] int selfProjectId,
-        [FromForm] double duration, [FromForm] string comment, [FromForm] ProjectStatus status, 
+        [FromForm] double duration, [FromForm] string comment, [FromForm] ProjectStatus status,
         [FromForm] string statusComment)
         {
             return Ok(await Mediator.Send(new AddActivity.Command
@@ -121,15 +126,16 @@ namespace API.Controllers
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             Employee user = await _context.Employees.FirstOrDefaultAsync(x => x.Id == userId);
-            return CreateEmployeeObject(user);
+            return CreateEmployeeObject(user, null);
         }
 
-        private EmployeeDto CreateEmployeeObject(Employee user)
+        private EmployeeDto CreateEmployeeObject(Employee user, string role)
         {
             return new EmployeeDto
             {
                 Name = user.Name,
                 Email = user.Email,
+                Role = role,
                 Token = _tokenService.CreateToken(user)
             };
         }

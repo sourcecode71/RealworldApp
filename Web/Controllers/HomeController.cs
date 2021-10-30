@@ -30,12 +30,13 @@ namespace Web.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
-        public ActionResult<ResultModel> Login(EmployeeModel loginUser)
+        public ResultModel Login(EmployeeModel loginUser)
         {
             ResultModel result = _apiService.CallLogin(loginUser).Result;
 
@@ -45,13 +46,9 @@ namespace Web.Controllers
                 SetSessionString("current_user_token", loggedInUser.Token);
                 SetSessionString("current_user_email", loggedInUser.Email);
                 SetSessionString("current_user_role", loggedInUser.Role);
+            }
 
-                return result;
-            }
-            else
-            {
-                return RedirectToAction("Login");
-            }
+            return result;
         }
 
         private void SetSessionString(string name, string property)

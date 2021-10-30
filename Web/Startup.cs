@@ -25,6 +25,14 @@ namespace Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(typeof(ApiService));
+            services.AddSingleton(typeof(ConverterService<string>));
+
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = "Project.Session";
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromDays(7);
+            });
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
@@ -45,6 +53,7 @@ namespace Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();
