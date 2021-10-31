@@ -30,7 +30,9 @@ namespace Web.Controllers
 
                 if (currentRole == "Admin")
                 {
-                    return View();
+                    List<ProjectModel> projects = _apiService.CallGetProjects().Result;
+
+                    return View(projects);
                 }
                 else
                 {

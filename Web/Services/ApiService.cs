@@ -18,6 +18,8 @@ namespace Web.Services
         private string EmployeeEndpoint;
         private string ProjectEndpoint;
 
+    
+
         public ApiService(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -31,6 +33,8 @@ namespace Web.Services
             EmployeeEndpoint = _configuration.GetValue<string>("Client:Employee");
             ProjectEndpoint = _configuration.GetValue<string>("Client:Project");
         }
+
+    
 
         public async Task<ResultModel> CallLogin(EmployeeModel loginUser)
         {
@@ -125,6 +129,17 @@ namespace Web.Services
             List<ProjectModel> projects = JsonConvert.DeserializeObject<List<ProjectModel>>(apiResponse);
 
             return projects;
+        }
+
+        public async Task<ProjectModel> CallGetProject(int id)
+        {
+            HttpResponseMessage response = await client.GetAsync($"{ProjectEndpoint}/byId?selfProjectId={id}");
+
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            ProjectModel project = JsonConvert.DeserializeObject<ProjectModel>(apiResponse);
+
+            return project;
         }
     }
 }

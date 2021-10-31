@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.DTOs;
 using Domain;
+using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
@@ -28,6 +29,23 @@ namespace Application.Core.Projects
                 _context = context;
             }
 
+            private string GetStatusString(ProjectStatus status)
+            {
+                switch (status)
+                {
+                    case ProjectStatus.OnTime:
+                        return "On Time";
+                    case ProjectStatus.Delayed:
+                        return "Delayed";
+                    case ProjectStatus.Modified:
+                        return "Modified";
+                    case ProjectStatus.Archived:
+                        return "Archived";
+                    default:
+                        return "On Time";
+                }
+            }
+
             public async Task<ProjectDto> Handle(Query request, CancellationToken cancellationToken)
             {
                 var project = await _context.Projects.Include(e => e.Employees).Include(a => a.Activities).FirstOrDefaultAsync(x => x.SelfProjectId == request.SelfProjectId);
@@ -36,6 +54,16 @@ namespace Application.Core.Projects
                     Name = project.Name,
                     Description = project.Description,
                     SelfProjectId = project.SelfProjectId,
+                    Balance = project.Balance,
+                    Budget = project.Budget,
+                    EStatus = project.EStatus,
+                    Factor = project.Factor,
+                    Paid = project.Paid,
+                    Progress = project.Progress,
+                    Schedule = project.Schedule,
+                    DeliveryDate = project.DeliveryDate,
+                    Client = project.Client,
+                    Status = GetStatusString(project.Status),
                     AdminDelayedComment = project.AdminDelayedComment,
                     AdminModifiedComment = project.AdminModifiedComment,
 

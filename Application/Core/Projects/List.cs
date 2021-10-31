@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.DTOs;
 using Domain;
+using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
@@ -26,6 +27,22 @@ namespace Application.Core.Projects
             {
                 _context = context;
             }
+            private string GetStatusString(ProjectStatus status)
+            {
+                switch (status)
+                {
+                    case ProjectStatus.OnTime:
+                        return "On Time";
+                    case ProjectStatus.Delayed:
+                        return "Delayed";
+                    case ProjectStatus.Modified:
+                        return "Modified";
+                    case ProjectStatus.Archived:
+                        return "Archived";
+                    default:
+                        return "On Time";
+                }
+            }
 
             public async Task<List<ProjectDto>> Handle(Query request, CancellationToken cancellationToken)
             {
@@ -38,6 +55,16 @@ namespace Application.Core.Projects
                         Name = item.Name,
                         Description = item.Description,
                         SelfProjectId = item.SelfProjectId,
+                        Balance = item.Balance,
+                        Budget = item.Budget,
+                        EStatus = item.EStatus,
+                        Factor = item.Factor,
+                        Paid = item.Paid,
+                        Progress = item.Progress,
+                        Schedule = item.Schedule,
+                        DeliveryDate = item.DeliveryDate,
+                        Client = item.Client,
+                        Status = GetStatusString(item.Status),
                         AdminDelayedComment = item.AdminDelayedComment,
                         AdminModifiedComment = item.AdminModifiedComment
                     };

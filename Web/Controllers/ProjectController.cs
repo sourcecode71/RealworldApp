@@ -16,7 +16,8 @@ namespace Web.Controllers
 
         public IActionResult Index(int id)
         {
-            return View();
+            ProjectModel project = _apiService.CallGetProject(id).Result;
+            return View(project);
         }
     }
 }

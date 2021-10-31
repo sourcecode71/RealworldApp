@@ -16,6 +16,6 @@ namespace Web.Models
         public double Balance { get; set; }
         public double Factor { get; set; }
         public string EStatus { get; set; }
-        public int Status { get; set; }
+        public string Status { get; set; }
     }
 }

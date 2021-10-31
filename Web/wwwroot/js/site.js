@@ -26,11 +26,11 @@ Site.login = function () {
                 }
             }
             else {
-                window.location.href = "/Home/Login";
+                $("#loginValidationMessage").css("display", "block");
             }
         },
         error: function (err) {
-            window.location.href = "/Home/Login";
+            $("#loginValidationMessage").css("display", "block");
         }
     });
 }
