@@ -48,7 +48,28 @@ namespace Application.Core.Projects
 
             public async Task<ProjectDto> Handle(Query request, CancellationToken cancellationToken)
             {
-                var project = await _context.Projects.Include(e => e.Employees).Include(a => a.Activities).FirstOrDefaultAsync(x => x.SelfProjectId == request.SelfProjectId);
+                var project = await _context.Projects.Include(x => x.ProjectEmployees).Include(a => a.Activities).FirstOrDefaultAsync(x => x.SelfProjectId == request.SelfProjectId);
+
+                List<string> projectEmployees = project.ProjectEmployees.Select(x => x.EmployeeId).ToList().Distinct().ToList();
+
+                List<Employee> employees = new List<Employee>();
+
+                foreach(var employee in projectEmployees)
+                {
+                    employees.Add(_context.Employees.FirstOrDefault(x => x.Id == employee));
+                }
+
+                string employeesNames = string.Empty;
+
+                foreach(var employee in employees)
+                {
+                    employeesNames += employee.Name + ", ";
+                }
+
+                string engId = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Engineering).EmployeeId;
+                string drawId = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Drawing).EmployeeId;
+                string appId = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Approval).EmployeeId;
+
                 var projectDto = new ProjectDto
                 {
                     Name = project.Name,
@@ -63,16 +84,13 @@ namespace Application.Core.Projects
                     Schedule = project.Schedule,
                     DeliveryDate = project.DeliveryDate,
                     Client = project.Client,
+                    Engineering = _context.Employees.FirstOrDefault(x => x.Id == engId).Name,
+                    Drawing = _context.Employees.FirstOrDefault(x => x.Id == drawId).Name,
+                    Approval = _context.Employees.FirstOrDefault(x => x.Id == appId).Name,
                     Status = GetStatusString(project.Status),
                     AdminDelayedComment = project.AdminDelayedComment,
                     AdminModifiedComment = project.AdminModifiedComment,
-
-                    Employees = project.Employees.Select(x => new EmployeeDto
-                    {
-                        Name = x.Name,
-                        Email = x.Email
-                    }).ToList(),
-
+                    EmployeesNames = employeesNames,
                     Activities = project.Activities.Select(x => new ProjectActivityDto
                     {
                         SelfProjectId = x.SelfProjectId,

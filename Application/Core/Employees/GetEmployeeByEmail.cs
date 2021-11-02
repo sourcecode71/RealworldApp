@@ -25,29 +25,29 @@ namespace Application.Core.Employees
 
             public async Task<EmployeeDto> Handle(Query request, CancellationToken cancellationToken)
             {
-                var employee = await _context.Employees.Include(p => p.Projects).Include(a => a.ProjectActivities).FirstOrDefaultAsync(x => x.Email == request.Email);
+                var employee = await _context.Employees.Include(a => a.ProjectActivities).FirstOrDefaultAsync(x => x.Email == request.Email);
                 var employeeDto = new EmployeeDto
                 {
                     Name = employee.Name,
-                    Email = employee.Email,
-                    Projects = employee.Projects.Select(x => new ProjectDto
-                    {
-                        Name = x.Name,
-                        Description = x.Description,
-                        SelfProjectId = x.SelfProjectId,
-                        AdminDelayedComment = x.AdminDelayedComment,
-                        AdminModifiedComment = x.AdminModifiedComment
-                    }).ToList(),
-                    ProjectActivities = employee.ProjectActivities.Select(x => new ProjectActivityDto
-                    {
-                        SelfProjectId = x.SelfProjectId,
-                        EmployeeEmail = x.EmployeeEmail,
-                        Duration = x.Duration,
-                        DateTime = x.DateTime,
-                        Comment = x.Comment,
-                        Status = x.Status,
-                        StatusComment = x.StatusComment
-                    }).ToList()
+                    Email = employee.Email
+                    //Projects = employee.Projects.Select(x => new ProjectDto
+                    //{
+                    //    Name = x.Name,
+                    //    Description = x.Description,
+                    //    SelfProjectId = x.SelfProjectId,
+                    //    AdminDelayedComment = x.AdminDelayedComment,
+                    //    AdminModifiedComment = x.AdminModifiedComment
+                    //}).ToList(),
+                    //ProjectActivities = employee.ProjectActivities.Select(x => new ProjectActivityDto
+                    //{
+                    //    SelfProjectId = x.SelfProjectId,
+                    //    EmployeeEmail = x.EmployeeEmail,
+                    //    Duration = x.Duration,
+                    //    DateTime = x.DateTime,
+                    //    Comment = x.Comment,
+                    //    Status = x.Status,
+                    //    StatusComment = x.StatusComment
+                    //}).ToList()
                 };
 
                 return employeeDto;

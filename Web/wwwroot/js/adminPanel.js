@@ -2,38 +2,6 @@
 
 }
 
-AdminPanel.getAllEmployeesNames = function () {
-
-    $.ajax({
-        url: '/Admin/GetEmployeesNames',
-        type: 'GET',
-        success: function (result) {
-            var i = 1;
-            $.each(result, function (index, value) {
-                $('#addProjectEngineering').append($('<option/>', {
-                    value: i,
-                    text: value
-                }));
-
-                $('#addProjectDrawing').append($('<option/>', {
-                    value: i,
-                    text: value
-                }));
-
-                $('#addProjectApproval').append($('<option/>', {
-                    value: i,
-                    text: value
-                }));
-
-                i++
-            });
-        },
-        error: function (err) {
-         
-        }
-    });
-}
-
 AdminPanel.addNewEmployee = function () {
 
     AdminPanel.loading();
@@ -93,6 +61,181 @@ AdminPanel.addNewEmployee = function () {
     });
 }
 
+AdminPanel.assignEmployee = function () {
+
+    AdminPanel.loading();
+
+    var id = $("#projectId").val();
+    var listofEmployees = $("#assignEmployeesList").val();
+    var employeesEmails = "";
+
+    for (var i = 0; i < listofEmployees.length; i++) {
+        employeesEmails += listofEmployees[i] + ", ";
+    }
+
+    var project = {
+        SelfProjectId: id,
+        EmployeesNames: employeesEmails
+    };
+
+    $.ajax({
+        url: '/Admin/AssignEmployee',
+        type: 'POST',
+        data: project,
+        success: function (result) {
+            AdminPanel.removeLoader();
+
+            if (result.isSuccess) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Employee added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            else {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + result.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        },
+        error: function (err) {
+            AdminPanel.removeLoader();
+
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong. Error: ' + result.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    });
+}
+
+AdminPanel.archiveProject = function () {
+
+    AdminPanel.loading();
+
+    var id = $("#projectId").val();
+
+    //Add validation
+
+    var project = {
+        SelfProjectId: id
+    };
+
+    $.ajax({
+        url: '/Admin/ArchiveProject',
+        type: 'POST',
+        data: project,
+        success: function (result) {
+            AdminPanel.removeLoader();
+
+            if (result.isSuccess) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Employee added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            else {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + result.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        },
+        error: function (err) {
+            AdminPanel.removeLoader();
+
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong. Error: ' + result.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    });
+}
+
+AdminPanel.addNewproject = function () {
+
+    AdminPanel.loading();
+
+    var name = $("#addProjectName").val();
+    var client = $("#addProjectClient").val();
+    var eng = $("#addProjectEngineering").val();
+    var drawing = $("#addProjectDrawing").val();
+    var approval = $("#addProjectApproval").val();
+    var delivery = $("#addProjectDelivery").val();
+    var schedule = $("#addProjectSchedule").val();
+    var budget = $("#addProjectBudget").val();
+    var estatus = $("#addProjectEStatus").val();
+
+    var project = {
+        Name: name,
+        Client: client,
+        Engineering: eng,
+        Drawing: drawing,
+        Approval: approval,
+        DeliveryDate: delivery,
+        Schedule: schedule,
+        Budget: budget,
+        EStatus: estatus
+    };
+
+    $.ajax({
+        url: '/Admin/AddNewProject',
+        type: 'POST',
+        data: project,
+        success: function (result) {
+            AdminPanel.removeLoader();
+
+            if (result.isSuccess) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Project added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            else {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + result.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        },
+        error: function (err) {
+            AdminPanel.removeLoader();
+
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong. Error: ' + result.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    });
+}
+
 AdminPanel.loading = function () {
 
     $('body').append('<div style="" id="loadingDiv"><div class="loader">Loading...</div></div>');
@@ -105,5 +248,4 @@ AdminPanel.removeLoader = function() {
 }
 
 $(document).ready(function () {
-   // AdminPanel.getAllEmployeesNames();
 });

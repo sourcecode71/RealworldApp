@@ -2,9 +2,127 @@
     ViewData["Title"] = "Home Page";
 }
 @using Web.Models
-@model ProjectModel
+@model ProjectPageDetails
 
 <div class="text-center">
-    <h1 class="display-4">@Model.Name</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if (Model.Project.Status == "Delayed")
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="display-4 text-danger">@Model.Project.Name</h1>
+                <span class="badge badge-danger" style="font-size: 25px; margin-top: 20px">Delayed</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="delayedComment" style="margin-top: 20px">Delayed Comment:</label>
+                <textarea type="text" id="delayedComment" class="form-control"></textarea>
+            </div>
+        </div>
+    }
+    else if (Model.Project.Status == "Modified")
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="display-4 text-success">@Model.Project.Name</h1>
+                <span class="badge badge-success" style="font-size: 25px; margin-top: 20px">Modified</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="modifiedComment" style="margin-top: 20px">Modified Comment:</label>
+                <textarea type="text" id="modifiedComment" class="form-control"></textarea>
+            </div>
+            <div class="col-md-6">
+                <label for="modifiedBudget" style="margin-top: 20px">Modify Budget in $:</label>
+                <input type="number" id="modifiedBudget" class="form-control" value="@Model.Project.Budget" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="display-4 text-sucess">@Model.Project.Name</h1>
+                <span class="badge badge-light" style="font-size: 25px; margin-top: 20px">On time</span>
+            </div>
+        </div>
+    }
 </div>
+
+<div class="row" style="margin-top: 50px">
+    <div class="col-md-6">
+        <label for="projectId" style="margin-top: 20px">Folio:</label>
+        <input type="text" id="projectId" disabled value="@Model.Project.SelfProjectId" class="form-control" />
+
+        <label for="projectName" style="margin-top: 20px">Proyecto:</label>
+        <input type="text" id="projectName" disabled value="@Model.Project.Name" class="form-control" />
+
+        <label for="projectClient" style="margin-top: 20px">Cliente:</label>
+        <input type="text" id="projectClient" disabled value="@Model.Project.Client" class="form-control" />
+
+        <label for="projectEngineering" style="margin-top: 20px">Ingeniería:</label>
+        <input type="text" id="projectEngineering" disabled value="@Model.Project.Engineering" class="form-control" />
+
+        <label for="projectDrawing" style="margin-top: 20px">Dibujo:</label>
+        <input type="text" id="projectDrawing" disabled value="@Model.Project.Drawing" class="form-control" />
+
+        <label for="projectApproval" style="margin-top: 20px">Visto bueno:</label>
+        <input type="text" id="projectApproval" disabled value="@Model.Project.Approval" class="form-control" />
+
+        <label for="projectDelivery" style="margin-top: 20px">Fecha de entrega:</label>
+        <input type="text" id="projectDelivery" disabled value="@Model.Project.DeliveryDate" class="form-control" />
+    </div>
+    <div class="col-md-6">
+        <label for="projectSchedule" style="margin-top: 20px">Programa:</label>
+        <input type="text" id="projectSchedule" value="@Model.Project.Schedule" disabled class="form-control" />
+
+        <label for="projectProgress" style="margin-top: 20px">Semana de trabajo:</label>
+        <input type="text" id="projectProgress" disabled value="@Model.Project.Progress" class="form-control" />
+
+        <label for="projectBudget" style="margin-top: 20px">Presupuesto:</label>
+        <input type="text" id="projectBudget" disabled value="$@Model.Project.Budget" class="form-control" />
+
+        <label for="projectPaid" style="margin-top: 20px">Presupuesto:</label>
+        <input type="text" id="projectPaid" disabled value="$@Model.Project.Paid" class="form-control" />
+
+        <label for="projectBalance" style="margin-top: 20px">Pop pagar:</label>
+        <input type="text" id="projectBalance" disabled value="$@Model.Project.Balance" class="form-control" />
+
+        <label for="projectFactor" style="margin-top: 20px">Factor:</label>
+        <input type="text" id="projectFactor" disabled value="$@Model.Project.Factor" class="form-control" />
+
+        <label for="projectEstatus" style="margin-top: 20px">EStatus:</label>
+        <input type="text" id="projectEstatus" disabled value="@Model.Project.EStatus" class="form-control" />
+    </div>
+    <div class="col-md-6">
+        <label for="projectEmployees" style="margin-top: 20px">Employees:</label>
+        <textarea type="text" id="projectEmployees" style="width: 100%" disabled value="@Model.Project.EmployeesNames" class="form-control">@Model.Project.EmployeesNames</textarea>
+    </div>
+    <div class="col-md-6" style="margin-top: 20px">
+        <h4>Assign Employees to Project</h4>
+        <select id="assignEmployeesList" class="form-control" multiple>
+            @foreach (var employee in Model.AllEmployees)
+            {
+                <option value="@employee">@employee</option>
+            }
+        </select>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button class="btn btn-success" id="assignEmployeeBtn" onclick="AdminPanel.assignEmployee()" style="margin-top: 10px;">Assign</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+        <div class="col-md-12">
+            <label for="projectArchive">Want to archive this project?</label>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-dark form-control" id="projectArchive" onclick="AdminPanel.archiveProject()" style="margin-top: 10px;">Archive</button>
+        </div>
+    </div>
+</div>
+

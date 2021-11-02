@@ -16,8 +16,13 @@ namespace Web.Controllers
 
         public IActionResult Index(int id)
         {
+            ProjectPageDetails projectPage = new ProjectPageDetails();
+
             ProjectModel project = _apiService.CallGetProject(id).Result;
-            return View(project);
+            projectPage.Project = project;
+            projectPage.AllEmployees = _apiService.CallGetEmployeesNames().Result;
+
+            return View(projectPage);
         }
     }
 }

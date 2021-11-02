@@ -1,4 +1,5 @@
 ﻿using System;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistance.Migrations
@@ -185,7 +186,8 @@ namespace Persistance.Migrations
                 columns: table => new
                 {
                     EmployeesId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProjectsId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ProjectsId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmployeeType = table.Column<EmployeeType>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

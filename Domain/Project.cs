@@ -23,6 +23,6 @@ namespace Domain
         public string AdminDelayedComment { get; set; }
         public string AdminModifiedComment { get; set; }
         public List<ProjectActivity> Activities { get; set; } = new List<ProjectActivity>();
-        public List<Employee> Employees { get; set; }
+        public virtual ICollection<ProjectEmployee> ProjectEmployees { get; set; } = new List<ProjectEmployee>();
     }
 }

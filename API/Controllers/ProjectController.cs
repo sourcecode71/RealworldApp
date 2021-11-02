@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Domain.Enums;
 
 namespace API.Controllers
 {
@@ -25,9 +26,36 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProject([FromForm] Project project, [FromForm] List<string> employees)
+        public async Task<IActionResult> CreateProject(ProjectDto project)
         {
-            return Ok(await Mediator.Send(new Create.Command { Project = project, Employees = employees }));
+            Dictionary<EmployeeType, string> employees = new Dictionary<EmployeeType, string>();
+
+            employees.Add(EmployeeType.Engineering, project.Engineering);
+            employees.Add(EmployeeType.Drawing, project.Drawing);
+            employees.Add(EmployeeType.Approval, project.Approval);
+
+            Project projectDomain = new Project
+            {
+                Balance = project.Budget,
+                Factor = project.Budget / (double)project.Schedule,
+                Client = project.Client,
+                DeliveryDate = project.DeliveryDate,
+                Paid = 0,
+                Name = project.Name,
+                EStatus = project.EStatus,
+                Progress = 0,
+                Schedule = project.Schedule,
+                Status = ProjectStatus.OnTime,
+                Budget = project.Budget
+            };
+
+            return Ok(await Mediator.Send(new Create.Command { Project = projectDomain, Employees = employees }));
+        }
+
+        [HttpPost("archive")]
+        public async Task<IActionResult> ArchiveProject(ProjectDto project)
+        {
+            return Ok(await Mediator.Send(new Archive.Command { SelfProjectId = project.SelfProjectId }));
         }
 
         [HttpDelete("{id}")]
@@ -47,10 +75,18 @@ namespace API.Controllers
             return Ok(await Mediator.Send(new AddModifiedComment.Command { Modified = modified, SelfProjectId = selfProjectId }));
         }
 
-        [HttpPut("addEmployee")]
-        public async Task<IActionResult> AddEmployee(string employeeEmail, int selfProjectId)
+        [HttpPost("assign")]
+        public async Task<IActionResult> AssignEmployee(ProjectDto details)
         {
-            return Ok(await Mediator.Send(new AddEmployee.Command { EmployeeEmail = employeeEmail, SelfProjectId = selfProjectId }));
+            string[] names = details.EmployeesNames.Split(',');
+            List<string> employeesNames = new List<string>();
+
+            foreach(var name in names)
+            {
+                employeesNames.Add(name.Replace(" ", string.Empty));
+            }
+
+            return Ok(await Mediator.Send(new AddEmployee.Command { EmployeesEmails = employeesNames, SelfProjectId = details.SelfProjectId }));
         }
     }
 }

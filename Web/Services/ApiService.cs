@@ -34,7 +34,21 @@ namespace Web.Services
             ProjectEndpoint = _configuration.GetValue<string>("Client:Project");
         }
 
-    
+        public async Task<ResultModel> CallArchiveProject(ProjectModel project)
+        {
+            string userJson = JsonConvert.SerializeObject(project);
+            StringContent content = new StringContent(userJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync($"{ProjectEndpoint}/archive", content);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            return new ResultModel
+            {
+                IsSuccess = response.IsSuccessStatusCode,
+                ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
+                Result = response
+            };
+        }
 
         public async Task<ResultModel> CallLogin(EmployeeModel loginUser)
         {
@@ -57,6 +71,7 @@ namespace Web.Services
             };
         }
 
+      
         public async Task<bool> CallLogout(EmployeeModel employeeModel)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(employeeModel), Encoding.UTF8, "application/json");
@@ -100,26 +115,35 @@ namespace Web.Services
             return employees;
         }
 
-        public async Task<ResultModel> CallCreateProject(ProjectModel employee)
-        {
-            string employeeJson = JsonConvert.SerializeObject(employee);
-            StringContent content = new StringContent(employeeJson, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PostAsync($"{EmployeeEndpoint}/register", content);
+        public async Task<List<EmployeeModel>> CallGetEmployees()
+        {
+            HttpResponseMessage response = await client.GetAsync($"{EmployeeEndpoint}");
+
             string apiResponse = await response.Content.ReadAsStringAsync();
 
-            EmployeeModel returnEmployee = new EmployeeModel();
+            List<EmployeeModel> employees = JsonConvert.DeserializeObject<List<EmployeeModel>>(apiResponse);
 
-            if (response.IsSuccessStatusCode)
-                returnEmployee = JsonConvert.DeserializeObject<EmployeeModel>(apiResponse);
+            return employees;
+        }
+
+
+        public async Task<ResultModel> CallCreateProject(ProjectModel project)
+        {
+            string projectJson = JsonConvert.SerializeObject(project);
+            StringContent content = new StringContent(projectJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync($"{ProjectEndpoint}", content);
+            string apiResponse = await response.Content.ReadAsStringAsync();
 
             return new ResultModel
             {
                 IsSuccess = response.IsSuccessStatusCode,
                 ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
-                Result = returnEmployee
+                Result = apiResponse
             };
         }
+
         public async Task<List<ProjectModel>> CallGetProjects()
         {
             HttpResponseMessage response = await client.GetAsync($"{ProjectEndpoint}");
@@ -141,5 +165,22 @@ namespace Web.Services
 
             return project;
         }
+
+        public async Task<ResultModel> CallAssignEmployee(ProjectModel project)
+        {
+            string projectJson = JsonConvert.SerializeObject(project);
+            StringContent content = new StringContent(projectJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync($"{ProjectEndpoint}/assign", content);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            return new ResultModel
+            {
+                IsSuccess = response.IsSuccessStatusCode,
+                ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
+                Result = apiResponse
+            };
+        }
+
     }
 }

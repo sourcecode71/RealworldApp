@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain;
+using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
@@ -13,7 +15,7 @@ namespace Application.Core.Projects
         public class Command : IRequest<Unit>
         {
             public int SelfProjectId { get; set; }
-            public string EmployeeEmail { get; set; }
+            public List<string> EmployeesEmails { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -26,17 +28,30 @@ namespace Application.Core.Projects
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var project = await _context.Projects.Include(e => e.Employees).Include(a => a.Activities).FirstOrDefaultAsync(x => x.SelfProjectId == request.SelfProjectId);
+                var project = await _context.Projects.FirstOrDefaultAsync(x => x.SelfProjectId == request.SelfProjectId);
 
-                Employee employee = _context.Employees.FirstOrDefault(x => x.Email == request.EmployeeEmail);
+                if (project != null)
+                {
+                    foreach (var employeeName in request.EmployeesEmails)
+                    {
+                        Employee employeeInDb = _context.Employees.FirstOrDefault(x => x.Email == employeeName);
 
-                if (employee == null) return SystemException("Error finding employee in database!!");
+                        if (employeeInDb != null)
+                        {
+                            ProjectEmployee projectEmployee = new ProjectEmployee
+                            {
+                                EmployeeId = employeeInDb.Id,
+                                ProjectId = project.Id,
+                                EmployeeType = EmployeeType.Other
+                            };
 
-                project.Employees.Add(employee);
+                            _context.ProjectEmployees.Add(projectEmployee);
+                        }
+                    }
 
-                var result = await _context.SaveChangesAsync() > 0;
+                    _context.SaveChanges();
+                }
 
-                if (!result) return SystemException("Error adding employee!");
 
                 return Unit.Value;
             }

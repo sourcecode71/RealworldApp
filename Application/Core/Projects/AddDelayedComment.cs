@@ -27,7 +27,7 @@ namespace Application.Core.Projects
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var project = await _context.Projects.Include(e => e.Employees).Include(a => a.Activities).FirstOrDefaultAsync(x => x.SelfProjectId == request.SelfProjectId);
+                var project = await _context.Projects.Include(a => a.Activities).FirstOrDefaultAsync(x => x.SelfProjectId == request.SelfProjectId);
 
                 project.AdminDelayedComment = request.Delayed;
 

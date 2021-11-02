@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain;
+using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
@@ -16,7 +17,7 @@ namespace Application.Core.Projects
         public class Command : IRequest<Unit>
         {
             public Project Project { get; set; }
-            public List<string> Employees { get; set; }
+            public Dictionary<EmployeeType, string> Employees { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -30,33 +31,46 @@ namespace Application.Core.Projects
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                int maxSelfId = 1;
+                if (_context.Projects.Count() > 0)
+                    _context.Projects.Max(x => x.SelfProjectId);
+
+                request.Project.SelfProjectId = maxSelfId + 1;
+                request.Project.Id = Guid.NewGuid().ToString();
+
                 _context.Projects.Add(request.Project);
 
                 var result = await _context.SaveChangesAsync() > 0;
 
-                if (!result) return SystemException("Greska!");
+                if (!result) return SystemException("Error!");
 
-                var project = _context.Projects.Include(p => p.Employees).FirstOrDefault(x => x.Id == request.Project.Id);
+                var project = _context.Projects.FirstOrDefault(x => x.Id == request.Project.Id);
 
-                if (project == null) return SystemException("Greska pri nalazenju projekta iz baze!");
+                if (project == null) return SystemException("Error");
 
-                if (request.Employees.Count != 0)
+                List<ProjectEmployee> projectEmployees = new List<ProjectEmployee>();
+
+                foreach (var employee in request.Employees)
                 {
-                    foreach (var employee in request.Employees)
+                    var employeeInDb = _context.Employees.FirstOrDefault(x => x.Email == employee.Value);
+
+                    if (employeeInDb != null)
                     {
-                        Employee emp = _context.Employees.FirstOrDefault(x => x.Email == employee);
+                        projectEmployees.Add(new ProjectEmployee
+                        {
+                            EmployeeId = employeeInDb.Id,
+                            ProjectId = project.Id,
+                            EmployeeType = employee.Key
+                        });
 
-                        if (emp == null) return SystemException("Greska pri nalazenju zaposlenog iz baze!");
-
-                        project.Employees.Add(emp);
                     }
-                    result = await _context.SaveChangesAsync() > 0;
                 }
 
-                if (!result) return SystemException("Greska pri dodavanju zaposlenih!");
+                _context.ProjectEmployees.AddRange(projectEmployees);
+
+                await _context.SaveChangesAsync();
 
                 return Unit.Value;
-
             }
 
             private Unit SystemException(string v)

@@ -17,5 +17,9 @@ namespace Web.Models
         public double Factor { get; set; }
         public string EStatus { get; set; }
         public string Status { get; set; }
+        public string Engineering { get; set; }
+        public string Drawing { get; set; }
+        public string Approval { get; set; }
+        public string EmployeesNames { get; set; }
     }
 }

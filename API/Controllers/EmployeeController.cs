@@ -176,7 +176,7 @@ namespace API.Controllers
         public async Task<ActionResult<List<string>>> GetEnployeesNames()
         {
             var result = await Mediator.Send(new GetAllEmployees.Query());
-            return result.ToList().Select(x => x.Name).ToList();
+            return result.ToList().Select(x => x.Email).ToList();
         }
     }
 }

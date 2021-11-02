@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Context;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211101175215_DeletedEmployeeType")]
+    partial class DeletedEmployeeType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,29 +188,19 @@ namespace Persistance.Migrations
                     b.ToTable("ProjectActivities");
                 });
 
-            modelBuilder.Entity("Domain.ProjectEmployee", b =>
+            modelBuilder.Entity("EmployeeProject", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("EmployeeId")
+                    b.Property<string>("EmployeesId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("EmployeeType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProjectId")
+                    b.Property<string>("ProjectsId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("EmployeesId", "ProjectsId");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("ProjectsId");
 
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ProjectEmployees");
+                    b.ToTable("EmployeeProject");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -357,19 +349,19 @@ namespace Persistance.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("Domain.ProjectEmployee", b =>
+            modelBuilder.Entity("EmployeeProject", b =>
                 {
-                    b.HasOne("Domain.Employee", "Employee")
-                        .WithMany("ProjectEmployees")
-                        .HasForeignKey("EmployeeId");
+                    b.HasOne("Domain.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("EmployeesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Domain.Project", "Project")
-                        .WithMany("ProjectEmployees")
-                        .HasForeignKey("ProjectId");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Project");
+                    b.HasOne("Domain.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -426,15 +418,11 @@ namespace Persistance.Migrations
             modelBuilder.Entity("Domain.Employee", b =>
                 {
                     b.Navigation("ProjectActivities");
-
-                    b.Navigation("ProjectEmployees");
                 });
 
             modelBuilder.Entity("Domain.Project", b =>
                 {
                     b.Navigation("Activities");
-
-                    b.Navigation("ProjectEmployees");
                 });
 #pragma warning restore 612, 618
         }

@@ -20,6 +20,10 @@ namespace Application.DTOs
         public string Status { get; set; }
         public string AdminDelayedComment { get; set; }
         public string AdminModifiedComment { get; set; }
+        public string Engineering { get; set; }
+        public string Drawing { get; set; }
+        public string Approval { get; set; }
+        public string EmployeesNames { get; set; }
         public List<ProjectActivityDto> Activities { get; set; } = new List<ProjectActivityDto>();
         public List<EmployeeDto> Employees { get; set; }
     }
