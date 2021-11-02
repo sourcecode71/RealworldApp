@@ -72,6 +72,7 @@ namespace Web.Services
         }
 
       
+
         public async Task<bool> CallLogout(EmployeeModel employeeModel)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(employeeModel), Encoding.UTF8, "application/json");
@@ -180,6 +181,77 @@ namespace Web.Services
                 ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
                 Result = apiResponse
             };
+        }
+
+        public async Task<ResultModel> CallSaveDelayedComment(ProjectModel project)
+        {
+            string projectJson = JsonConvert.SerializeObject(project);
+            StringContent content = new StringContent(projectJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync($"{ProjectEndpoint}/savedelayed", content);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            return new ResultModel
+            {
+                IsSuccess = response.IsSuccessStatusCode,
+                ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
+                Result = apiResponse
+            };
+        }
+
+        public async Task<ResultModel> SaveModifiedComment(ProjectModel project)
+        {
+            string projectJson = JsonConvert.SerializeObject(project);
+            StringContent content = new StringContent(projectJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync($"{ProjectEndpoint}/savemodified", content);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            return new ResultModel
+            {
+                IsSuccess = response.IsSuccessStatusCode,
+                ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
+                Result = apiResponse
+            };
+        }
+
+        public async Task<ResultModel> CallAddActivity(ActivityModel activity)
+        {
+            string projectJson = JsonConvert.SerializeObject(activity);
+            StringContent content = new StringContent(projectJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync($"{ProjectEndpoint}/activity", content);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            return new ResultModel
+            {
+                IsSuccess = response.IsSuccessStatusCode,
+                ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
+                Result = apiResponse
+            };
+        }
+
+        public async Task<List<ActivityModel>> CallGetActivities(string currentEmail)
+        {
+            HttpResponseMessage response = await client.GetAsync($"{EmployeeEndpoint}/activity-by-employee?email={currentEmail}");
+
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            List<ActivityModel> activities = JsonConvert.DeserializeObject<List<ActivityModel>>(apiResponse);
+
+            return activities;
+        }
+
+
+        public async Task<List<ActivityModel>> CallGetActivitiesForProject(int id)
+        {
+            HttpResponseMessage response = await client.GetAsync($"{EmployeeEndpoint}/activity-by-project?id={id}");
+
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            List<ActivityModel> activities = JsonConvert.DeserializeObject<List<ActivityModel>>(apiResponse);
+
+            return activities;
         }
 
     }

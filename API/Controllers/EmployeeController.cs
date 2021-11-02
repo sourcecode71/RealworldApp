@@ -136,21 +136,6 @@ namespace API.Controllers
             return BadRequest("Problem registring user");
         }
 
-        [HttpPost("activity")]
-        public async Task<ActionResult> AddActivity([FromForm] string employeeEmail, [FromForm] int selfProjectId,
-        [FromForm] double duration, [FromForm] string comment, [FromForm] ProjectStatus status,
-        [FromForm] string statusComment)
-        {
-            return Ok(await Mediator.Send(new AddActivity.Command
-            {
-                EmployeeEmail = employeeEmail,
-                SelfProjectId = selfProjectId,
-                Duration = duration,
-                Comment = comment,
-                Status = status,
-                StatusComment = statusComment
-            }));
-        }
         
         [AllowAnonymous]
         [HttpGet("current")]
@@ -177,6 +162,19 @@ namespace API.Controllers
         {
             var result = await Mediator.Send(new GetAllEmployees.Query());
             return result.ToList().Select(x => x.Email).ToList();
+        }
+
+        [Authorize]
+        [HttpGet("activity-by-employee")]
+        public async Task<ActionResult<List<ProjectActivityDto>>> GetActivitiesForEmployee(string email)
+        {
+            return Ok(await Mediator.Send(new GetActivitiesForEmployee.Query { Email = email }));
+        }
+
+        [HttpGet("activity-by-project")]
+        public async Task<ActionResult<List<ProjectActivityDto>>> GetActivitiesForProject(int id)
+        {
+            return Ok(await Mediator.Send(new GetActivitiesForProject.Query { SelfProjectId = id }));
         }
     }
 }

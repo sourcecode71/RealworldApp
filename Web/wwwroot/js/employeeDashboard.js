@@ -2,28 +2,81 @@ var EmployeeDashboard = {
 
 }
 
-EmployeeDashboard.getProjects = function () {
+EmployeeDashboard.addActivity = function () {
+
+    EmployeeDashboard.loading();
+
+    var employeeEmail = $("#currentEmail").val();
+    var id = $("#projectId").val();
+    var date = $("#addActivityDate").val();
+    var hours = $("#addActivityHours").val();
+    var comment = $("#addActivityComment").val();
+    var status = $("#addActivityStatus").val();
+    var statusComment = $("#addActivityStatusComment").val();
+
+    var activity = {
+        SelfProjectId: id,
+        DateTime: date,
+        Duration: hours,
+        Comment: comment,
+        Status: status,
+        EmployeeEmail: employeeEmail,
+        StatusComment: statusComment
+    };
 
     $.ajax({
-        url: '/Employee/GetProjects',
-        type: 'GET',
+        url: '/Project/AddActivity',
+        type: 'POST',
+        data: activity,
         success: function (result) {
-            var i = 1;
-            $.each(result, function (index, value) {
-                $('#Projectslist').append($('<li/>', {
-                    value: i,
-                    text: value.name + "\n" + value.description
-                }));
+            EmployeeDashboard.removeLoader();
 
-                i++
-            });
+            if (result.isSuccess) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Employee added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            else {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + result.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
         },
         error: function (err) {
+            EmployeeDashboard.removeLoader();
 
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong. Error: ' + result.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
         }
     });
 }
 
+EmployeeDashboard.loading = function () {
+
+    $('body').append('<div style="" id="loadingDiv"><div class="loader">Loading...</div></div>');
+}
+
+EmployeeDashboard.removeLoader = function () {
+    $("#loadingDiv").fadeOut(500, function () {
+        $("#loadingDiv").remove();
+    });
+}
+
 $(document).ready(function () {
-    EmployeeDashboard.getProjects();
+    var today = new Date();
+
+    $("#addActivityDate").val(today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2));
 });

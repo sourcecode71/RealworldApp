@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Domain.Enums;
+using Application.Core.Employees;
 
 namespace API.Controllers
 {
@@ -88,5 +89,33 @@ namespace API.Controllers
 
             return Ok(await Mediator.Send(new AddEmployee.Command { EmployeesEmails = employeesNames, SelfProjectId = details.SelfProjectId }));
         }
+
+        [HttpPost("savedelayed")]
+        public async Task<IActionResult> SaveDelayedComment(ProjectDto details)
+        {
+            return Ok(await Mediator.Send(new AddDelayedComment.Command { Delayed = details.AdminDelayedComment, SelfProjectId = details.SelfProjectId }));
+        }
+
+        [HttpPost("savemodified")]
+        public async Task<IActionResult> SaveModifiedComment(ProjectDto details)
+        {
+            return Ok(await Mediator.Send(new AddModifiedComment.Command { Modified = details.AdminModifiedComment, Budget = details.Budget, SelfProjectId = details.SelfProjectId }));
+        }
+
+
+        [HttpPost("activity")]
+        public async Task<ActionResult> AddActivity(ProjectActivityDto projectActivity)
+        {
+            return Ok(await Mediator.Send(new AddActivity.Command
+            {
+                EmployeeEmail = projectActivity.EmployeeEmail,
+                SelfProjectId = projectActivity.SelfProjectId,
+                Duration = projectActivity.Duration,
+                Comment = projectActivity.Comment,
+                Status = (ProjectStatus)projectActivity.Status,
+                StatusComment = projectActivity.StatusComment
+            }));
+        }
+
     }
 }

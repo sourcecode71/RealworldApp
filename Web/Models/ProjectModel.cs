@@ -10,7 +10,7 @@ namespace Web.Models
         public string Client { get; set; }
         public DateTime DeliveryDate { get; set; }
         public int Schedule { get; set; }
-        public int Progress { get; set; }
+        public double Progress { get; set; }
         public double Budget { get; set; }
         public double Paid { get; set; }
         public double Balance { get; set; }
@@ -21,5 +21,9 @@ namespace Web.Models
         public string Drawing { get; set; }
         public string Approval { get; set; }
         public string EmployeesNames { get; set; }
+        public string AdminDelayedComment { get; set; }
+        public string AdminModifiedComment { get; set; }
+        public string EmployeeDelayedComment { get; set; }
+        public string EmployeeModifiedComment { get; set; }
     }
 }

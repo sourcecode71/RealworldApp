@@ -29,12 +29,15 @@ namespace Application.Core.Projects
             {
                 var project = await _context.Projects.Include(a => a.Activities).FirstOrDefaultAsync(x => x.SelfProjectId == request.SelfProjectId);
 
-                project.AdminDelayedComment = request.Delayed;
+                if (project != null)
+                {
+                    project.AdminDelayedComment = request.Delayed;
 
-                var result = await _context.SaveChangesAsync() > 0;
+                    var result = await _context.SaveChangesAsync() > 0;
 
-                if (!result) return SystemException("Error adding delayed comment!");
-                
+                    if (!result) return SystemException("Error adding delayed comment!");
+                }
+
                 return Unit.Value;
             }
 

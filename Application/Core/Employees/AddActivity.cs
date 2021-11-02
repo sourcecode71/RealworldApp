@@ -36,28 +36,31 @@ namespace Application.Core.Employees
                 
                 var emp = _context.Employees.FirstOrDefault( x => x.Email == request.EmployeeEmail);
 
-                var activity = new ProjectActivity
+                if (project != null && emp != null)
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Project= project,
-                    SelfProjectId = request.SelfProjectId,
-                    EmployeeEmail = request.EmployeeEmail,
-                    Employee = emp,
-                    EmployeeId = emp.Id,
-                    Duration = request.Duration,
-                    Comment = request.Comment,
-                    DateTime = DateTime.Now,
-                    Status = request.Status,
-                    StatusComment = request.StatusComment
-                };
+                    var activity = new ProjectActivity
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Project = project,
+                        SelfProjectId = request.SelfProjectId,
+                        EmployeeEmail = request.EmployeeEmail,
+                        Employee = emp,
+                        EmployeeId = emp.Id,
+                        Duration = request.Duration,
+                        Comment = request.Comment,
+                        DateTime = DateTime.Now,
+                        Status = request.Status,
+                        StatusComment = request.StatusComment
+                    };
 
-                _context.ProjectActivities.Add(activity);
-                
-                var result = await _context.SaveChangesAsync() > 0;
+                    project.Status = request.Status;
 
-                if (!result) return SystemException("Greska pri dodavanju aktivnosti u bazu!");
-                
-                project.Activities.Add(activity);
+                    _context.ProjectActivities.Add(activity);
+                    project.Activities.Add(activity);
+
+                    var result = await _context.SaveChangesAsync() > 0;
+                    if (!result) return SystemException("Error");
+                }
 
                 return Unit.Value;
             }

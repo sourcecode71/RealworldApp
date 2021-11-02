@@ -61,6 +61,113 @@ AdminPanel.addNewEmployee = function () {
     });
 }
 
+AdminPanel.saveModifiedComment = function () {
+
+    AdminPanel.loading();
+
+    var id = $("#projectId").val();
+    var modifiedComment = $("#modifiedComment").val();
+    var modifiedBudget = $("#modifiedBudget").val();
+
+
+    var project = {
+        SelfProjectId: id,
+        AdminModifiedComment: modifiedComment,
+        Budget: modifiedBudget
+    };
+
+    $.ajax({
+        url: '/Admin/SaveModifiedComment',
+        type: 'POST',
+        data: project,
+        success: function (result) {
+            AdminPanel.removeLoader();
+
+            if (result.isSuccess) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Employee added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            else {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + result.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        },
+        error: function (err) {
+            AdminPanel.removeLoader();
+
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong. Error: ' + result.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    });
+}
+
+AdminPanel.saveDelayedComment = function () {
+
+    AdminPanel.loading();
+
+    var id = $("#projectId").val();
+    var delayedComment = $("#delayedComment").val();
+
+    var project = {
+        SelfProjectId: id,
+        AdminDelayedComment: delayedComment
+    };
+
+    $.ajax({
+        url: '/Admin/SaveDelayedComment',
+        type: 'POST',
+        data: project,
+        success: function (result) {
+            AdminPanel.removeLoader();
+
+            if (result.isSuccess) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Employee added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            else {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + result.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        },
+        error: function (err) {
+            AdminPanel.removeLoader();
+
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong. Error: ' + result.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    });
+}
+
 AdminPanel.assignEmployee = function () {
 
     AdminPanel.loading();
@@ -145,6 +252,8 @@ AdminPanel.archiveProject = function () {
                     showConfirmButton: false,
                     timer: 1500
                 })
+
+                window.location = "/Admin/Index";
             }
             else {
                 Swal.fire({

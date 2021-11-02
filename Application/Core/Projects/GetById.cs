@@ -54,14 +54,14 @@ namespace Application.Core.Projects
 
                 List<Employee> employees = new List<Employee>();
 
-                foreach(var employee in projectEmployees)
+                foreach (var employee in projectEmployees)
                 {
                     employees.Add(_context.Employees.FirstOrDefault(x => x.Id == employee));
                 }
 
                 string employeesNames = string.Empty;
 
-                foreach(var employee in employees)
+                foreach (var employee in employees)
                 {
                     employeesNames += employee.Name + ", ";
                 }
@@ -69,6 +69,9 @@ namespace Application.Core.Projects
                 string engId = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Engineering).EmployeeId;
                 string drawId = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Drawing).EmployeeId;
                 string appId = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Approval).EmployeeId;
+
+                var lastModifiedActivity = project.Activities.OrderBy(x => x.DateTime).LastOrDefault(x => x.Status == ProjectStatus.Modified);
+                var lastDelayedActivity = project.Activities.OrderBy(x => x.DateTime).LastOrDefault(x => x.Status == ProjectStatus.Delayed);
 
                 var projectDto = new ProjectDto
                 {
@@ -80,7 +83,7 @@ namespace Application.Core.Projects
                     EStatus = project.EStatus,
                     Factor = project.Factor,
                     Paid = project.Paid,
-                    Progress = project.Progress,
+                    Progress = Math.Round((DateTime.Now - project.DeliveryDate).TotalDays / 7, 2),
                     Schedule = project.Schedule,
                     DeliveryDate = project.DeliveryDate,
                     Client = project.Client,
@@ -90,6 +93,8 @@ namespace Application.Core.Projects
                     Status = GetStatusString(project.Status),
                     AdminDelayedComment = project.AdminDelayedComment,
                     AdminModifiedComment = project.AdminModifiedComment,
+                    EmployeeDelayedComment = lastDelayedActivity != null ? lastDelayedActivity.StatusComment : string.Empty,
+                    EmployeeModifiedComment = lastModifiedActivity != null ? lastModifiedActivity.StatusComment : string.Empty,
                     EmployeesNames = employeesNames,
                     Activities = project.Activities.Select(x => new ProjectActivityDto
                     {
@@ -98,7 +103,7 @@ namespace Application.Core.Projects
                         Duration = x.Duration,
                         DateTime = x.DateTime,
                         Comment = x.Comment,
-                        Status = x.Status,
+                        Status = (int)x.Status,
                         StatusComment = x.StatusComment
                     }).ToList()
                 };

@@ -73,5 +73,15 @@ namespace Web.Controllers
         {
             return _apiService.CallAssignEmployee(project).Result;
         }
+
+        public ResultModel SaveDelayedComment(ProjectModel project)
+        {
+            return _apiService.CallSaveDelayedComment(project).Result;
+        }
+
+        public ResultModel SaveModifiedComment(ProjectModel project)
+        {
+            return _apiService.SaveModifiedComment(project).Result;
+        }
     }
 }

@@ -3,7 +3,32 @@
 }
 @using Web.Models
 @model ProjectPageDetails
+@{
+    string currentName = "";
+    string currentRole = "";
+    string currentEmail = "";
 
+    byte[] currentRoleByte;
+    byte[] currentNameByte;
+    byte[] currentEmailByte;
+
+    if (Context.Session.Keys.Count() > 0)
+    {
+        Context.Session.TryGetValue("current_user_role", out currentRoleByte);
+        Context.Session.TryGetValue("current_user_name", out currentNameByte);
+        Context.Session.TryGetValue("current_user_email", out currentEmailByte);
+
+
+        if (currentRoleByte != null && currentNameByte != null && currentEmailByte != null)
+        {
+            currentRole = System.Text.Encoding.Default.GetString(currentRoleByte);
+            currentName = System.Text.Encoding.Default.GetString(currentNameByte);
+            currentEmail = System.Text.Encoding.Default.GetString(currentEmailByte);
+        }
+    }
+}
+
+<input type="hidden" id="currentEmail" value="@currentEmail" />
 <div class="text-center">
     @if (Model.Project.Status == "Delayed")
     {
@@ -15,10 +40,34 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <label for="delayedComment" style="margin-top: 20px">Delayed Comment:</label>
-                <textarea type="text" id="delayedComment" class="form-control"></textarea>
+                <label for="delayedCommentByEmployee" style="margin-top: 20px">Comment By Employee:</label>
+                <textarea type="text" id="delayedCommentByEmployee" disabled class="form-control">@Model.Project.EmployeeDelayedComment</textarea>
             </div>
         </div>
+
+        @if (currentRole == "Admin")
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="delayedComment" style="margin-top: 20px">Delayed Comment:</label>
+                    <textarea type="text" id="delayedComment" class="form-control">@Model.Project.AdminDelayedComment</textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-success" id="delayedSubmit" onclick="AdminPanel.saveDelayedComment()" style="margin-top: 10px;">Submit</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="delayedComment" style="margin-top: 20px">Delayed Comment:</label>
+                    <textarea type="text" id="delayedComment" disabled class="form-control">@Model.Project.AdminDelayedComment</textarea>
+                </div>
+            </div>
+        }
     }
     else if (Model.Project.Status == "Modified")
     {
@@ -29,15 +78,38 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <label for="modifiedComment" style="margin-top: 20px">Modified Comment:</label>
-                <textarea type="text" id="modifiedComment" class="form-control"></textarea>
-            </div>
-            <div class="col-md-6">
-                <label for="modifiedBudget" style="margin-top: 20px">Modify Budget in $:</label>
-                <input type="number" id="modifiedBudget" class="form-control" value="@Model.Project.Budget" />
+            <div class="col-md-12">
+                <label for="modifiedCommentByEmployee" style="margin-top: 20px">Comment By Employee:</label>
+                <textarea type="text" id="modifiedCommentByEmployee" disabled class="form-control">@Model.Project.EmployeeModifiedComment</textarea>
             </div>
         </div>
+        @if (currentRole == "Admin")
+        {
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="modifiedComment" style="margin-top: 20px">Modified Comment:</label>
+                    <textarea type="text" id="modifiedComment" class="form-control">@Model.Project.AdminModifiedComment</textarea>
+                </div>
+                <div class="col-md-6">
+                    <label for="modifiedBudget" style="margin-top: 20px">Modify Budget in $:</label>
+                    <input type="number" id="modifiedBudget" class="form-control" value="@Model.Project.Budget" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-success" id="modifiedSubmit" onclick="AdminPanel.saveModifiedComment()" style="margin-top: 10px;">Submit</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="modifiedComment" style="margin-top: 20px">Modified Comment:</label>
+                    <textarea type="text" id="modifiedComment" disabled class="form-control">@Model.Project.AdminModifiedComment</textarea>
+                </div>
+            </div>
+        }
     }
     else
     {
@@ -99,30 +171,115 @@
         <label for="projectEmployees" style="margin-top: 20px">Employees:</label>
         <textarea type="text" id="projectEmployees" style="width: 100%" disabled value="@Model.Project.EmployeesNames" class="form-control">@Model.Project.EmployeesNames</textarea>
     </div>
-    <div class="col-md-6" style="margin-top: 20px">
-        <h4>Assign Employees to Project</h4>
-        <select id="assignEmployeesList" class="form-control" multiple>
-            @foreach (var employee in Model.AllEmployees)
-            {
-                <option value="@employee">@employee</option>
-            }
-        </select>
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <button class="btn btn-success" id="assignEmployeeBtn" onclick="AdminPanel.assignEmployee()" style="margin-top: 10px;">Assign</button>
+    @if (currentRole == "Admin")
+    {
+        <div class="col-md-6" style="margin-top: 20px">
+            <h4>Assign Employees to Project</h4>
+            <select id="assignEmployeesList" class="form-control" multiple>
+                @foreach (var employee in Model.AllEmployees)
+                {
+                    <option value="@employee">@employee</option>
+                }
+            </select>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-success" id="assignEmployeeBtn" onclick="AdminPanel.assignEmployee()" style="margin-top: 10px;">Assign</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@if (currentRole != "Admin")
+{
+    <div class="row" style="margin-top: 30px">
+        <div class="col-md-12">
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Add Activity</h3>
+                    <div class="row" style="margin-top: 20px">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="addActivityDate">Day:</label>
+                                    <input type="date" id="addActivityDate" class="form-control" disabled />
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="addActivityHours">Hours:</label>
+                                    <input type="number" id="addActivityHours" class="form-control" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="addActivityComment">Comment:</label>
+                                    <textarea id="addActivityComment" class="form-control"></textarea>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="addActivityStatus">Status:</label>
+                                    <select class="form-control" id="addActivityStatus">
+                                        <option value="1">On Time</option>
+                                        <option value="2">Delayed</option>
+                                        <option value="3">Modified</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="addActivityStatusComment">Status Comment:</label>
+                                    <textarea id="addActivityStatusComment" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-success" id="addActivitySave" onclick="EmployeeDashboard.addActivity()" style="margin-top: 10px;">Add Activity</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <hr />
+}
+
+@if (currentRole == "Admin")
+{
+    <div class="row" style="margin-top: 80px">
         <div class="col-md-12">
-            <label for="projectArchive">Want to archive this project?</label>
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-dark form-control" id="projectArchive" onclick="AdminPanel.archiveProject()" style="margin-top: 10px;">Archive</button>
+            <h3>All Activities</h3>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-sm  table-bordered" style="margin-top: 20px; margin-bottom: 50px">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Employee</th>
+                                <th scope="col">Duration</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Comment</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Status Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projectTableBody">
+                            @foreach (var project in Model.Activities)
+                            {
+                                <tr>
+                                    <td>@project.EmployeeName</td>
+                                    <td>@project.Duration</td>
+                                    <td>@project.DateTime.ToShortDateString()</td>
+                                    <td>@project.Comment</td>
+                                    <td>@(project.Status == 2 ? "Delayed": project.Status == 3 ? "Modified" : "On time")</td>
+                                    <td>@project.StatusComment</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+            <label for="archiveProject">Want to archive project?</label>
+            <br />
+            <button class="btn btn-dark" id="archiveProject" onclick="AdminPanel.archiveProject()" style="margin-top: 10px;">Archive</button>
+        </div>
+    </div>
+}

@@ -15,6 +15,7 @@ namespace Application.Core.Projects
         {
             public int SelfProjectId { get; set; }
             public string Modified { get; set; }
+            public double Budget { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -29,12 +30,18 @@ namespace Application.Core.Projects
             {
                 var project = await _context.Projects.Include(a => a.Activities).FirstOrDefaultAsync(x => x.SelfProjectId == request.SelfProjectId);
 
-                project.AdminModifiedComment = request.Modified;
+                if (project != null)
+                {
+                    project.Budget = request.Budget;
+                    project.Balance = request.Budget;
+                    project.Factor = request.Budget / project.Schedule;
+                    project.AdminModifiedComment = request.Modified;
 
-                var result = await _context.SaveChangesAsync() > 0;
+                    var result = await _context.SaveChangesAsync() > 0;
 
-                if (!result) return SystemException("Error adding modified comment!");
-                
+                    if (!result) return SystemException("Error adding modified comment!");
+                }
+
                 return Unit.Value;
             }
 
