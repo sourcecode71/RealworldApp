@@ -41,6 +41,8 @@ namespace Application.Core.Projects
                         return "Modified";
                     case ProjectStatus.Archived:
                         return "Archived";
+                    case ProjectStatus.Completed:
+                        return "Completed";
                     default:
                         return "On Time";
                 }
@@ -66,9 +68,38 @@ namespace Application.Core.Projects
                     employeesNames += employee.Name + ", ";
                 }
 
-                string engId = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Engineering).EmployeeId;
-                string drawId = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Drawing).EmployeeId;
-                string appId = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Approval).EmployeeId;
+                var eng = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Engineering);
+                string engName = string.Empty;
+
+                if (eng != null)
+                {
+                    var employee = _context.Employees.FirstOrDefault(x => x.Id == eng.EmployeeId);
+
+                    if (employee != null)
+                        engName = employee.Name;
+                }
+
+                var draw = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Drawing);
+                string drawName = string.Empty;
+
+                if (draw != null)
+                {
+                    var employee = _context.Employees.FirstOrDefault(x => x.Id == draw.EmployeeId);
+
+                    if (employee != null)
+                        drawName = employee.Name;
+                }
+
+                var app = project.ProjectEmployees.FirstOrDefault(x =>x.EmployeeType == EmployeeType.Approval);
+                string appName = string.Empty;
+
+                if (app != null)
+                {
+                    var employee = _context.Employees.FirstOrDefault(x => x.Id == app.EmployeeId);
+
+                    if (employee != null)
+                        appName = employee.Name;
+                }
 
                 var lastModifiedActivity = project.Activities.OrderBy(x => x.DateTime).LastOrDefault(x => x.Status == ProjectStatus.Modified);
                 var lastDelayedActivity = project.Activities.OrderBy(x => x.DateTime).LastOrDefault(x => x.Status == ProjectStatus.Delayed);
@@ -83,13 +114,13 @@ namespace Application.Core.Projects
                     EStatus = project.EStatus,
                     Factor = project.Factor,
                     Paid = project.Paid,
-                    Progress = Math.Round((DateTime.Now - project.DeliveryDate).TotalDays / 7, 2),
+                    Progress = Math.Abs(Math.Round((DateTime.Now - project.CreatedDate).TotalDays / 7, 2)),
                     Schedule = project.Schedule,
                     DeliveryDate = project.DeliveryDate,
                     Client = project.Client,
-                    Engineering = _context.Employees.FirstOrDefault(x => x.Id == engId).Name,
-                    Drawing = _context.Employees.FirstOrDefault(x => x.Id == drawId).Name,
-                    Approval = _context.Employees.FirstOrDefault(x => x.Id == appId).Name,
+                    Engineering = engName,
+                    Drawing = drawName,
+                    Approval =appName,
                     Status = GetStatusString(project.Status),
                     AdminDelayedComment = project.AdminDelayedComment,
                     AdminModifiedComment = project.AdminModifiedComment,

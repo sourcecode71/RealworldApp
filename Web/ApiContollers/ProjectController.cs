@@ -15,7 +15,7 @@ using OfficeOpenXml.Drawing;
 using System.Drawing;
 using System;
 
-namespace API.Controllers
+namespace Web.ApiControllers
 {
     public class ProjectController : BaseApiController
     {

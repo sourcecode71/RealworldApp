@@ -83,5 +83,15 @@ namespace Web.Controllers
         {
             return _apiService.SaveModifiedComment(project).Result;
         }
+
+        public ResultModel CompleteProject(CompleteProjectModel project)
+        {
+            return _apiService.CallCompleteProject(project).Result;
+        }
+
+        public ResultModel SavePaid(ProjectModel project)
+        {
+            return _apiService.CallSavePaid(project).Result;
+        }
     }
 }

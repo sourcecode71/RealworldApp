@@ -5,6 +5,7 @@
         OnTime = 1,
         Delayed = 2,
         Modified =3, 
-        Archived = 4
+        Archived = 4,
+        Completed = 5
     }
 }

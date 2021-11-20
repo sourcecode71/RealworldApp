@@ -111,11 +111,20 @@
             </div>
         }
     }
+    else if (Model.Project.Status == "Completed")
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="display-4 text-primary">@Model.Project.Name</h1>
+                <span class="badge badge-primary" style="font-size: 25px; margin-top: 20px">Project is completed!</span>
+            </div>
+        </div>
+    }
     else
     {
         <div class="row">
             <div class="col-md-12">
-                <h1 class="display-4 text-sucess">@Model.Project.Name</h1>
+                <h1 class="display-4">@Model.Project.Name</h1>
                 <span class="badge badge-light" style="font-size: 25px; margin-top: 20px">On time</span>
             </div>
         </div>
@@ -155,9 +164,23 @@
         <label for="projectBudget" style="margin-top: 20px">Presupuesto:</label>
         <input type="text" id="projectBudget" disabled value="$@Model.Project.Budget" class="form-control" />
 
-        <label for="projectPaid" style="margin-top: 20px">Presupuesto:</label>
-        <input type="text" id="projectPaid" disabled value="$@Model.Project.Paid" class="form-control" />
-
+        @if (currentRole == "Admin")
+        {
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="projectPaid" style="margin-top: 20px">Pagado:</label>
+                    <input type="text" id="projectPaid" value="$@Model.Project.Paid" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-success" id="savePaidBtn" onclick="AdminPanel.savePaid()" style="margin-top: 50px;">Save</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <label for="projectPaid" style="margin-top: 20px">Pagado:</label>
+            <input type="text" id="projectPaid" disabled value="$@Model.Project.Paid" class="form-control" />
+        }
         <label for="projectBalance" style="margin-top: 20px">Pop pagar:</label>
         <input type="text" id="projectBalance" disabled value="$@Model.Project.Balance" class="form-control" />
 
@@ -275,7 +298,16 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
+            <hr />
+            <label for="completeProject">Complete project?</label>
+            <br />
+            <label for="completeProject">Invoiced?</label>
+            <input type="checkbox" class="custom-checkbox" id="invoiced" />
+            <br />
+            <button class="btn btn-primary" id="completeProject" onclick="AdminPanel.completeProject()" style="margin-top: 10px;">Complete</button>
+        </div>
+        <div class="col-md-6 text-right">
             <hr />
             <label for="archiveProject">Want to archive project?</label>
             <br />

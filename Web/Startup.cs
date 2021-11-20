@@ -1,14 +1,21 @@
+using Application.Core.Projects;
+using Domain;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Persistance.Context;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using Web.Services;
+using Web.Setting.GlobalExceptionHandling;
 
 namespace Web
 {
@@ -26,6 +33,68 @@ namespace Web
         {
             services.AddSingleton(typeof(ApiService));
             services.AddSingleton(typeof(ConverterService<string>));
+
+            services.AddDbContext<DataContext>(opt =>
+            {
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            services.AddMediatR(typeof(Create.Handler).Assembly);
+            services.AddScoped<TokenService>();
+
+            services.AddIdentity<Employee, IdentityRole>(opt =>
+            {
+                opt.Password.RequireNonAlphanumeric = false;
+            })
+            .AddEntityFrameworkStores<DataContext>()
+            .AddSignInManager<SignInManager<Employee>>();
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services.AddAuthentication(auth =>
+            {
+                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                    .AddJwtBearer(opt =>
+                    {
+                        opt.SaveToken = true;
+                        opt.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = key,
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            ValidateLifetime = false
+                        };
+                    });
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("IsAdmin", policy =>
+            //    {
+            //        policy.RequireClaim("role", "Admin").Build();
+            //    });
+            //    options.AddPolicy("IsEmployee", policy =>
+            //    {
+            //        policy.RequireClaim("role", "Employee").Build();
+            //    });
+            //});
+
+            services.AddAuthorization();
+
+            //services.AddIdentityServices(_config);
+            // services.AddApplicationServices(_config);
+
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("AllowOrigin", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build();
+                });
+            });
 
             services.AddSession(options =>
             {
@@ -55,6 +124,8 @@ namespace Web
 
             app.UseSession();
             app.UseRouting();
+
+            app.ConfigureExceptionHandler();
 
             app.UseAuthorization();
 

@@ -153,14 +153,14 @@
                 <label for="reportType">Please select a type of projects: </label>
                 <select class="form-control" id="reportType">
                     <option value="0">All Projects</option>
-                    <option value="1">Completed Projects</option>
-                    <option value="2">Pending Projects</option>
-                    <option value="3">Delayed Projects</option>
-                    <option value="4">Modified Projects</option>
+                    <option value="1">Pending Projects</option>
+                    <option value="2">Delayed Projects</option>
+                    <option value="3">Modified Projects</option>
+                    <option value="5">Completed Projects</option>
                 </select>
             </div>
             <div class="col-md-12">
-                <button class="btn btn-sm btn-success" style="margin-top: 20px; margin-bottom: 50px">Generate Report</button>
+                <a id="generateReportHref" href="http://ec2-3-144-165-25.us-east-2.compute.amazonaws.com/api/Project/get-excel-report?projectStatus=0"> <button class="btn btn-sm btn-success" style="margin-top: 20px; margin-bottom: 50px">Generate Report</button></a>
             </div>
         </div>
         <div class="row" style="margin-top: 80px">

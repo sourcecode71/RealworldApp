@@ -1,5 +1,5 @@
 ﻿var AdminPanel = {
-
+    href: "http://ec2-3-144-165-25.us-east-2.compute.amazonaws.com/api/Project/get-excel-report?projectStatus="
 }
 
 AdminPanel.addNewEmployee = function () {
@@ -25,6 +25,60 @@ AdminPanel.addNewEmployee = function () {
         url: '/Admin/AddNewEmployee',
         type: 'POST',
         data: employee,
+        success: function (result) {
+            AdminPanel.removeLoader();
+
+            if (result.isSuccess) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Employee added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            else {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + result.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        },
+        error: function (err) {
+            AdminPanel.removeLoader();
+
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong. Error: ' + result.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    });
+}
+
+AdminPanel.savePaid = function () {
+
+    AdminPanel.loading();
+
+    var paid = $("#projectPaid").val();
+    var selfProjectId = $("#projectId").val();
+
+    //Add validation
+
+    var project = {
+        Paid: paid,
+        SelfProjectId: selfProjectId
+    };
+
+    $.ajax({
+        url: '/Admin/SavePaid',
+        type: 'POST',
+        data: project,
         success: function (result) {
             AdminPanel.removeLoader();
 
@@ -225,6 +279,60 @@ AdminPanel.assignEmployee = function () {
     });
 }
 
+AdminPanel.completeProject = function () {
+
+    AdminPanel.loading();
+
+    var id = $("#projectId").val();
+    var invoiced = $("#invoiced").checked;
+
+    //Add validation
+
+    var project = {
+        Invoiced: invoiced,
+        SelfProjectId: id
+    };
+
+    $.ajax({
+        url: '/Admin/CompleteProject',
+        type: 'POST',
+        data: project,
+        success: function (result) {
+            AdminPanel.removeLoader();
+
+            if (result.isSuccess) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Employee added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            else {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + result.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        },
+        error: function (err) {
+            AdminPanel.removeLoader();
+
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong. Error: ' + result.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    });
+}
+
 AdminPanel.archiveProject = function () {
 
     AdminPanel.loading();
@@ -355,6 +463,13 @@ AdminPanel.removeLoader = function() {
         $("#loadingDiv").remove();
     });
 }
+
+$("#reportType").on('change', function () {
+
+    var href = AdminPanel.href + this.value;
+
+    $("#generateReportHref").attr('href', href);
+});
 
 $(document).ready(function () {
 });

@@ -231,6 +231,38 @@ namespace Web.Services
             };
         }
 
+        public async Task<ResultModel> CallCompleteProject(CompleteProjectModel project)
+        {
+            string projectJson = JsonConvert.SerializeObject(project);
+            StringContent content = new StringContent(projectJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync($"{ProjectEndpoint}/complete", content);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            return new ResultModel
+            {
+                IsSuccess = response.IsSuccessStatusCode,
+                ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
+                Result = apiResponse
+            };
+        }
+
+        public async Task<ResultModel> CallSavePaid(ProjectModel project)
+        {
+            string projectJson = JsonConvert.SerializeObject(project);
+            StringContent content = new StringContent(projectJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync($"{ProjectEndpoint}/save-paid", content);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            return new ResultModel
+            {
+                IsSuccess = response.IsSuccessStatusCode,
+                ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
+                Result = apiResponse
+            };
+        }
+
         public async Task<List<ActivityModel>> CallGetActivities(string currentEmail)
         {
             HttpResponseMessage response = await client.GetAsync($"{EmployeeEndpoint}/activity-by-employee?email={currentEmail}");

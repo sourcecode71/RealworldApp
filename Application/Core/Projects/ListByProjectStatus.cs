@@ -13,10 +13,11 @@ using Persistance.Context;
 
 namespace Application.Core.Projects
 {
-    public class List
+    public class ListByProjectStatus
     {
         public class Query : IRequest<List<ProjectDto>>
         {
+            public int ProjectStatus { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, List<ProjectDto>>
@@ -49,7 +50,10 @@ namespace Application.Core.Projects
             public async Task<List<ProjectDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var projectsDto = new List<ProjectDto>();
-                var projects = await _context.Projects.Include(x => x.ProjectEmployees).Where(x => x.Status != ProjectStatus.Archived).ToListAsync();
+                    
+                var projects = request.ProjectStatus == 0 ? await _context.Projects.Include(x => x.ProjectEmployees).ToListAsync()
+                        : await _context.Projects.Include(x => x.ProjectEmployees).Where(x => x.Status == (ProjectStatus)request.ProjectStatus).ToListAsync();
+                
                 foreach (var item in projects)
                 {
                     var eng = item.ProjectEmployees.FirstOrDefault(x => x.ProjectId == item.Id && x.EmployeeType == EmployeeType.Engineering);
@@ -85,6 +89,7 @@ namespace Application.Core.Projects
                             appName = employee.Name;
                     }
 
+
                     var itemDto = new ProjectDto
                     {
                         Name = item.Name,
@@ -93,9 +98,9 @@ namespace Application.Core.Projects
                         Balance = item.Balance,
                         Budget = item.Budget,
                         EStatus = item.EStatus,
-                        Factor = item.Factor,
+                        Factor =   item.Factor,
                         Paid = item.Paid,
-                        Progress = Math.Abs(Math.Round((DateTime.Now - item.CreatedDate).TotalDays / 7, 2)),
+                        Progress = Math.Abs(Math.Round((DateTime.Now - item.CreatedDate).TotalDays /7, 2)),
                         Schedule = item.Schedule,
                         DeliveryDate = item.DeliveryDate,
                         Client = item.Client,

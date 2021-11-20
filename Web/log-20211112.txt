@@ -1,0 +1,1 @@
+2021-11-12 22:34:48.820 +01:00 [INF] Apllication Started.
