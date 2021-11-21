@@ -1,4 +1,9 @@
 ﻿@{
+    Layout = null;
+}
+@using Web.Models
+@model AdminPageDetails
+@{
     string currentName = "";
     string currentRole = "";
     byte[] currentRoleByte;
@@ -9,7 +14,7 @@
         Context.Session.TryGetValue("current_user_role", out currentRoleByte);
         Context.Session.TryGetValue("current_user_name", out currentNameByte);
 
-        if(currentRoleByte != null && currentNameByte != null)
+        if (currentRoleByte != null && currentNameByte != null)
         {
             currentRole = System.Text.Encoding.Default.GetString(currentRoleByte);
             currentName = System.Text.Encoding.Default.GetString(currentNameByte);
@@ -62,6 +67,7 @@
                         </ul>
                     }
                 <ul class="navbar-nav flex-grow-1 col-md-6">
+          
                     @if (currentRole == "Admin")
                     {
                         <li class="nav-item">
@@ -85,12 +91,66 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main style="margin-left: 2%; margin-right: 2%">
+        <div class="col-md-12 text-center"><h3><u>Add new Project</u></h3></div>
+        <div class="row" style="margin-top: 50px">
+            <div class="col-md-4"></div>
+            <div class="col-md-2">
+                <label for="addProjectName">Project name:</label>
+                <input type="text" id="addProjectName" class="form-control" />
 
+                <label for="addProjectClient" style="margin-top: 20px">Project client:</label>
+                <input type="text" id="addProjectClient" class="form-control" />
+
+                <label for="addProjectEngineering" style="margin-top: 20px">Engineering:</label>
+                <select id="addProjectEngineering" class="form-control">
+                    <option value="0">Please select an employee...</option>
+                    @foreach (var employee in Model.Employees)
+                    {
+                    <option value="@employee.Email">@employee.Email</option>
+                    }
+                </select>
+
+                <label for="addProjectDrawing" style="margin-top: 20px">Drawing:</label>
+                <select id="addProjectDrawing" class="form-control">
+                    <option value="0">Please select an employee...</option>
+                    @foreach (var employee in Model.Employees)
+                    {
+                    <option value="@employee.Email">@employee.Email</option>
+                    }
+                </select>
+
+                <label for="addProjectApproval" style="margin-top: 20px">Approval:</label>
+                <select id="addProjectApproval" class="form-control">
+                    <option value="0">Please select an employee...</option>
+                    @foreach (var employee in Model.Employees)
+                    {
+                    <option value="@employee.Email">@employee.Email</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="addProjectDelivery" >Project Delivery Date:</label>
+                <input type="date" id="addProjectDelivery" class="form-control" />
+
+                <label for="addProjectSchedule" style="margin-top: 20px">Project Schedule Weeks:</label>
+                <input type="number" id="addProjectSchedule" class="form-control" />
+
+                <label for="addProjectBudget" style="margin-top: 20px">Project Budget in $:</label>
+                <input type="number" id="addProjectBudget" class="form-control" />
+
+                <label for="addProjectEStatus" style="margin-top: 20px">Project EStatus:</label>
+                <input type="text" id="addProjectEStatus" class="form-control" />
+
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6 text-center">
+                        <button class="btn btn-block btn-sm btn-success" style="margin-top: 50px; margin-bottom: 50px" onclick="AdminPanel.addNewproject()">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2021 - Project Management App
@@ -101,6 +161,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/adminPanel.js" asp-append-version="true"></script>
     <script src="~/js/employeeDashboard.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
