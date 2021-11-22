@@ -75,9 +75,18 @@
                     <ul class="navbar-nav flex-grow-1 col-md-6">
                         @if (currentRole == "Admin")
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Admin/Index">Admin Panel</a>
-                            </li>
+                           <li class="nav-item">
+                            <a class="nav-link text-dark" href="/Admin/Index">Admin Panel</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/Admin/AddEmployee">Add Employee</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/Admin/AddProject">Add Project</a>
+                        </li>
+                          <li class="nav-item">
+                            <a class="nav-link text-dark" href="/Admin/GenerateReports">Reports</a>
+                        </li>
                         }
                         @if (currentRole == "Employee")
                         {

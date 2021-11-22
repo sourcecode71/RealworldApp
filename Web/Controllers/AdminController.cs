@@ -107,6 +107,32 @@ namespace Web.Controllers
             return RedirectToAction("Login", "Home");
         }
 
+        public IActionResult GenerateReports()
+        {
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                if (currentRole == "Admin")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+            }
+
+            return RedirectToAction("Login", "Home");
+        }
+
         public ResultModel AddNewEmployee(EmployeeModel employee)
         {
             return _apiService.CallRegisterUser(employee).Result;

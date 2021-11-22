@@ -67,9 +67,6 @@
                         </ul>
                     }
                     <ul class="navbar-nav flex-grow-1 col-md-6">
-                        @*<li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>*@
                         @if (currentRole == "Admin")
                         {
                             <li class="nav-item">
@@ -80,6 +77,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/AddProject">Add Project</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" href="/Admin/GenerateReports">Reports</a>
                         </li>
                         }
                         @if (currentRole == "Employee")
@@ -167,135 +167,6 @@
             </div>
             <div class="col-md-12">
                 <a id="generateReportHref" href="http://ec2-3-144-165-25.us-east-2.compute.amazonaws.com/api/Project/get-excel-report?projectStatus=0"> <button class="btn btn-sm btn-success" style="margin-top: 20px; margin-bottom: 50px">Generate Report</button></a>
-            </div>
-        </div>
-        <div class="row" style="margin-top: 80px">
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-8">
-                        <h3>Active Employees</h3>
-                        <table class="table table-sm  table-bordered" style="margin-top: 20px; margin-bottom: 50px">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">List of Projects</th>
-                                </tr>
-                            </thead>
-                            <tbody id="employeeTableBody">
-                                @foreach (var employee in Model.Employees)
-                                {
-                                    <tr>
-                                        <td>@employee.Name</td>
-                                        <td>@employee.Email</td>
-                                        <td>
-                                            @foreach (var project in employee.ProjectsNames)
-                                            {
-                                                @project
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-2"></div>
-                </div>
-            </div>
-        </div>
-        <div class="container" style="margin-top: 30px">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-12 text-center"><h3><u>Add new Employee</u></h3></div>
-                    </div>
-                    <div class="row" style="margin-top: 20px">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-6">
-                            <label for="addNewName">Employee name:</label>
-                            <input type="text" id="addNewName" class="form-control" />
-                            <label for="addNewUserEmail" style="margin-top: 20px">Employee email:</label>
-                            <input type="text" id="addNewUserEmail" class="form-control" />
-                            <label for="addNewUserPassword" style="margin-top: 20px">Employee password:</label>
-                            <input type="password" id="addNewUserPassword" class="form-control" />
-                            <label for="addNewUserConfirmPassword" style="margin-top: 20px">Confirm password:</label>
-                            <input type="password" id="addNewUserConfirmPassword" class="form-control" />
-                            <label for="addNewUserRole" style="margin-top: 20px">Role:</label>
-                            <select class="form-control" id="addNewUserRole">
-                                <option value="0">Please select a role...</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Employee">Employee</option>
-                            </select>
-                            <div class="row">
-                                <div class="col-md-3"></div>
-                                <div class="col-md-6 text-center">
-                                    <button class="btn btn-block btn-sm btn-success" style="margin-top: 20px; margin-bottom: 50px" onclick="AdminPanel.addNewEmployee()">Add</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="col-md-12 text-center"><h3><u>Add new Project</u></h3></div>
-                    <div class="row" style="margin-top: 20px">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-6">
-                            <label for="addProjectName">Project name:</label>
-                            <input type="text" id="addProjectName" class="form-control" />
-
-                            <label for="addProjectClient" style="margin-top: 20px">Project client:</label>
-                            <input type="text" id="addProjectClient" class="form-control" />
-
-                            <label for="addProjectEngineering" style="margin-top: 20px">Engineering:</label>
-                            <select id="addProjectEngineering" class="form-control">
-                                <option value="0">Please select an employee...</option>
-                                @foreach (var employee in Model.Employees)
-                                {
-                                    <option value="@employee.Email">@employee.Email</option>
-                                }
-                            </select>
-
-                            <label for="addProjectDrawing" style="margin-top: 20px">Drawing:</label>
-                            <select id="addProjectDrawing" class="form-control">
-                                <option value="0">Please select an employee...</option>
-                                @foreach (var employee in Model.Employees)
-                                {
-                                    <option value="@employee.Email">@employee.Email</option>
-                                }
-                            </select>
-
-                            <label for="addProjectApproval" style="margin-top: 20px">Approval:</label>
-                            <select id="addProjectApproval" class="form-control">
-                                <option value="0">Please select an employee...</option>
-                                @foreach (var employee in Model.Employees)
-                                {
-                                    <option value="@employee.Email">@employee.Email</option>
-                                }
-                            </select>
-
-                            <label for="addProjectDelivery" style="margin-top: 20px">Project Delivery Date:</label>
-                            <input type="date" id="addProjectDelivery" class="form-control" />
-
-                            <label for="addProjectSchedule" style="margin-top: 20px">Project Schedule Weeks:</label>
-                            <input type="number" id="addProjectSchedule" class="form-control" />
-
-                            <label for="addProjectBudget" style="margin-top: 20px">Project Budget in $:</label>
-                            <input type="number" id="addProjectBudget" class="form-control" />
-
-                            <label for="addProjectEStatus" style="margin-top: 20px">Project EStatus:</label>
-                            <input type="text" id="addProjectEStatus" class="form-control" />
-
-                            <div class="row">
-                                <div class="col-md-3"></div>
-                                <div class="col-md-6 text-center">
-                                    <button class="btn btn-block btn-sm btn-success" style="margin-top: 20px; margin-bottom: 50px" onclick="AdminPanel.addNewproject()">Add</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3"></div>
-                    </div>
-                </div>
             </div>
         </div>
     </main>
