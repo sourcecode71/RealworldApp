@@ -90,14 +90,14 @@
 		<input type="text" id="projectProgress" disabled value="@Model.Project.Progress" class="form-control" />
 
 		<label for="projectBudget" style="margin-top: 20px">Presupuesto:</label>
-		<input type="text" id="projectBudget" disabled value="$@Model.Project.Budget" class="form-control" />
+		<input type="text" id="projectBudget" disabled value="$@Model.Project.BudgetFormat" class="form-control" />
 
 		@if (currentRole == "Admin")
 		{
 				<div class="row">
 					<div class="col-md-8">
 						<label for="projectPaid" style="margin-top: 20px">Pagado:</label>
-						<input type="text" id="projectPaid" value="$@Model.Project.Paid" class="form-control" />
+						<input type="text" id="projectPaid" value="$@Model.Project.PaidFormat" class="form-control" />
 					</div>
 					<div class="col-md-4">
 						<button class="btn btn-success" id="savePaidBtn" onclick="AdminPanel.savePaid()" style="margin-top: 50px;">Save</button>
@@ -107,13 +107,13 @@
 		else
 		{
 				<label for="projectPaid" style="margin-top: 20px">Pagado:</label>
-				<input type="text" id="projectPaid" disabled value="$@Model.Project.Paid" class="form-control" />
+				<input type="text" id="projectPaid" disabled value="$@Model.Project.PaidFormat" class="form-control" />
 		}
 		<label for="projectBalance" style="margin-top: 20px">Pop pagar:</label>
-		<input type="text" id="projectBalance" disabled value="$@Model.Project.Balance" class="form-control" />
+		<input type="text" id="projectBalance" disabled value="$@Model.Project.BalanceFormat" class="form-control" />
 
 		<label for="projectFactor" style="margin-top: 20px">Factor:</label>
-		<input type="text" id="projectFactor" disabled value="$@Model.Project.Factor" class="form-control" />
+		<input type="text" id="projectFactor" disabled value="$@Model.Project.FactorFormat" class="form-control" />
 
 		<label for="projectEstatus" style="margin-top: 20px">EStatus:</label>
 		<input type="text" id="projectEstatus" disabled value="@Model.Project.Status" class="form-control" />

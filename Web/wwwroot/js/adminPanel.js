@@ -68,10 +68,11 @@ AdminPanel.savePaid = function () {
     var paid = $("#projectPaid").val();
     var selfProjectId = $("#projectId").val();
 
+    var paidFormat = paid.replace(",", "").replace("$", "").replace(" ", "");
     //Add validation
 
     var project = {
-        Paid: paid,
+        Paid: paidFormat,
         SelfProjectId: selfProjectId
     };
 

@@ -14,6 +14,8 @@ using OfficeOpenXml.Style;
 using OfficeOpenXml.Drawing;
 using System.Drawing;
 using System;
+using System.Globalization;
+using System.Linq;
 
 namespace Web.ApiControllers
 {
@@ -357,10 +359,10 @@ namespace Web.ApiControllers
                 worksheet.Cells[cellDelivery].Value = project.DeliveryDate.ToString("MM/dd/yyyy");
                 worksheet.Cells[cellSchedule].Value = project.Schedule;
                 worksheet.Cells[cellProgress].Value = project.Progress;
-                worksheet.Cells[cellBudget].Value = project.Budget;
-                worksheet.Cells[cellPaid].Value = project.Paid;
-                worksheet.Cells[cellBalance].Value = project.Balance;
-                worksheet.Cells[cellFactor].Value = project.Factor;
+                worksheet.Cells[cellBudget].Value = CreateFormatForCurrency(project.Budget);
+                worksheet.Cells[cellPaid].Value = CreateFormatForCurrency(project.Paid);
+                worksheet.Cells[cellBalance].Value = CreateFormatForCurrency(project.Balance);
+                worksheet.Cells[cellFactor].Value = CreateFormatForCurrency(project.Factor);
                 worksheet.Cells[cellStatus].Value = project.Status;
 
                 if (projectStatus == 0 || projectStatus == 3) //Delayed
@@ -383,6 +385,42 @@ namespace Web.ApiControllers
             var fileStream = System.IO.File.OpenRead(newPath);
 
             return fileStream;
+        }
+
+        private string CreateFormatForCurrency(double amount)
+        {
+            string currencyCode = "$";
+
+            CultureInfo culture = (from c in CultureInfo.GetCultures(CultureTypes.SpecificCultures)
+                                   let r = new RegionInfo(c.LCID)
+                                   where r != null
+                                   && r.ISOCurrencySymbol.ToUpper() == currencyCode.ToUpper()
+                                   select c).FirstOrDefault();
+            if (culture == null)
+            {
+                // fall back to current culture if none is found
+                // you could throw an exception here if that's not supposed to happen
+                culture = CultureInfo.CurrentCulture;
+
+            }
+            culture = (CultureInfo)culture.Clone();
+            culture.NumberFormat.CurrencySymbol = currencyCode;
+            culture.NumberFormat.CurrencyPositivePattern = culture.NumberFormat.CurrencyPositivePattern == 0 ? 2 : 3;
+            var cnp = culture.NumberFormat.CurrencyNegativePattern;
+            switch (cnp)
+            {
+                case 0: cnp = 14; break;
+                case 1: cnp = 9; break;
+                case 2: cnp = 12; break;
+                case 3: cnp = 11; break;
+                case 4: cnp = 15; break;
+                case 5: cnp = 8; break;
+                case 6: cnp = 13; break;
+                case 7: cnp = 10; break;
+            }
+            culture.NumberFormat.CurrencyNegativePattern = cnp;
+
+            return amount.ToString("C" + ((amount % 1) == 0 ? "0" : "2"), culture);
         }
     }
 }
