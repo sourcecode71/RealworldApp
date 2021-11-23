@@ -2,7 +2,7 @@ var EmployeeDashboard = {
 
 }
 
-EmployeeDashboard.addActivity = function () {
+EmployeeDashboard.addActivity = function (admin) {
 
     EmployeeDashboard.loading();
 
@@ -13,6 +13,7 @@ EmployeeDashboard.addActivity = function () {
     var comment = $("#addActivityComment").val();
     var status = $("#addActivityStatus").val();
     var statusComment = $("#addActivityStatusComment").val();
+    var isAdmin = admin == 1;
 
     var activity = {
         SelfProjectId: id,
@@ -21,7 +22,8 @@ EmployeeDashboard.addActivity = function () {
         Comment: comment,
         Status: status,
         EmployeeEmail: employeeEmail,
-        StatusComment: statusComment
+        StatusComment: statusComment,
+        IsAdmin: isAdmin
     };
 
     $.ajax({

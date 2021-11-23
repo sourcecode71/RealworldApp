@@ -19,6 +19,11 @@ namespace Web.Controllers
         {
             string currentEmail = HttpContext.Session.GetString("current_user_email");
 
+            if (string.IsNullOrEmpty(currentEmail))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
             EmployeePageDetails employeePageDetails = new EmployeePageDetails();
 
             employeePageDetails.Projects = _apiService.CallGetProjects().Result;

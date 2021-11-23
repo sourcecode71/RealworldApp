@@ -20,5 +20,6 @@ namespace Domain
         public string Comment { get; set; }
         public ProjectStatus Status { get; set; }
         public string StatusComment { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

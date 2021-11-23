@@ -126,7 +126,8 @@ namespace Web.ApiControllers
                 Duration = projectActivity.Duration,
                 Comment = projectActivity.Comment,
                 Status = (ProjectStatus)projectActivity.Status,
-                StatusComment = projectActivity.StatusComment
+                StatusComment = projectActivity.StatusComment,
+                IsAdmin = projectActivity.IsAdmin,
             }));
         }
 

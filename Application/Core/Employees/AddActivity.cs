@@ -20,6 +20,7 @@ namespace Application.Core.Employees
             public string Comment { get; set; }
             public ProjectStatus Status { get; set; }
             public string StatusComment { get; set; }
+            public bool IsAdmin { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -50,7 +51,8 @@ namespace Application.Core.Employees
                         Comment = request.Comment,
                         DateTime = DateTime.Now,
                         Status = request.Status,
-                        StatusComment = request.StatusComment
+                        StatusComment = request.StatusComment,
+                        IsAdmin = request.IsAdmin,
                     };
 
                     project.Status = request.Status;

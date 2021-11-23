@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 using Web.Services;
@@ -16,6 +17,13 @@ namespace Web.Controllers
 
         public IActionResult Index(int id)
         {
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (string.IsNullOrEmpty(currentEmail))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
             ProjectPageDetails projectPage = new ProjectPageDetails();
 
             ProjectModel project = _apiService.CallGetProject(id).Result;
