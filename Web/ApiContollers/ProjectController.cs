@@ -166,13 +166,13 @@ namespace Web.ApiControllers
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             ExcelPackage package = new ExcelPackage();
             ExcelWorkbook workbook = package.Workbook;
-            ExcelWorksheet worksheet = workbook.Worksheets.Add("MID");
+            ExcelWorksheet worksheet = workbook.Worksheets.Add("Project follow up");
 
             worksheet.Cells["A1:D1"].Merge = true;
             worksheet.Cells["A1:D1"].Value = "PROJECT FOLLOW UP - CONTROL SHEET";
             worksheet.Cells["A1:D1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             worksheet.Cells["A1:D1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-            worksheet.Cells["A1:D1"].Style.Font.Size = 22;
+            worksheet.Cells["A1:D1"].Style.Font.Size = 12;
             worksheet.Cells["A1:D1"].Style.Font.Bold = true;
 
             worksheet.Cells["O4:Q4"].Merge = true;
@@ -326,7 +326,7 @@ namespace Web.ApiControllers
             worksheet.Cells["A6:Q20"].AutoFitColumns();
 
             int i = 0;
-            int cellNumber = 8 + i;
+            int cellNumber = 7 + i;
 
             foreach (var project in projects)
             {
@@ -361,7 +361,7 @@ namespace Web.ApiControllers
                 worksheet.Cells[cellPaid].Value = project.Paid;
                 worksheet.Cells[cellBalance].Value = project.Balance;
                 worksheet.Cells[cellFactor].Value = project.Factor;
-                worksheet.Cells[cellStatus].Value = project.EStatus;
+                worksheet.Cells[cellStatus].Value = project.Status;
 
                 if (projectStatus == 0 || projectStatus == 3) //Delayed
                 {
