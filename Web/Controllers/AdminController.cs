@@ -185,6 +185,11 @@ namespace Web.Controllers
             return _apiService.CallArchiveProject(project).Result;
         }
 
+        public ResultModel InvoiceProject(ProjectModel project)
+        {
+            return _apiService.CallInvoiceProject(project).Result;
+        }
+
         public ResultModel AssignEmployee(ProjectModel project)
         {
             return _apiService.CallAssignEmployee(project).Result;

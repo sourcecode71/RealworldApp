@@ -50,6 +50,22 @@ namespace Web.Services
             };
         }
 
+        public async Task<ResultModel> CallInvoiceProject(ProjectModel project)
+        {
+            string userJson = JsonConvert.SerializeObject(project);
+            StringContent content = new StringContent(userJson, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync($"{ProjectEndpoint}/invoice", content);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            return new ResultModel
+            {
+                IsSuccess = response.IsSuccessStatusCode,
+                ErrorMessage = response.IsSuccessStatusCode ? string.Empty : $"Error: {apiResponse}",
+                Result = response
+            };
+        }
+
         public async Task<ResultModel> CallLogin(EmployeeModel loginUser)
         {
             string userJson = JsonConvert.SerializeObject(loginUser);
@@ -145,7 +161,9 @@ namespace Web.Services
             };
         }
 
-        public async Task<List<ProjectModel>> CallGetProjects()
+	
+
+		public async Task<List<ProjectModel>> CallGetProjects()
         {
             HttpResponseMessage response = await client.GetAsync($"{ProjectEndpoint}");
 

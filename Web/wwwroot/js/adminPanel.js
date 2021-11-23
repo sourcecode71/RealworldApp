@@ -284,12 +284,10 @@ AdminPanel.completeProject = function () {
     AdminPanel.loading();
 
     var id = $("#projectId").val();
-    var invoiced = $("#invoiced").checked;
 
     //Add validation
 
     var project = {
-        Invoiced: invoiced,
         SelfProjectId: id
     };
 
@@ -308,6 +306,8 @@ AdminPanel.completeProject = function () {
                     showConfirmButton: false,
                     timer: 1500
                 })
+
+                window.location = window.location.href;
             }
             else {
                 Swal.fire({
@@ -333,13 +333,64 @@ AdminPanel.completeProject = function () {
     });
 }
 
-AdminPanel.archiveProject = function () {
+AdminPanel.invoiceProject = function () {
 
     AdminPanel.loading();
 
     var id = $("#projectId").val();
 
-    //Add validation
+    var project = {
+        SelfProjectId: id
+    };
+
+    $.ajax({
+        url: '/Admin/InvoiceProject',
+        type: 'POST',
+        data: project,
+        success: function (result) {
+            AdminPanel.removeLoader();
+
+            if (result.isSuccess) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Employee added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+
+                window.location = window.location.href;
+            }
+            else {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + result.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        },
+        error: function (err) {
+            AdminPanel.removeLoader();
+
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong. Error: ' + result.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    });
+}
+
+
+AdminPanel.archiveProject = function () {
+
+    AdminPanel.loading();
+
+    var id = $("#projectId").val();
 
     var project = {
         SelfProjectId: id

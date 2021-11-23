@@ -225,21 +225,40 @@
 
 @if (currentRole == "Admin")
 {
+	@if (Model.Project.Status == "On Time" || Model.Project.Status == "Delayed" || Model.Project.Status == "Modified")
+	{
 		<div class="row">
+
 			<div class="col-md-6">
 				<hr />
-				<label for="completeProject">Complete project?</label>
-				<br />
-				<label for="completeProject">Invoiced?</label>
-				<input type="checkbox" class="custom-checkbox" id="invoiced" />
+				<label for="completeProject">Is project completed? Close it?</label>
 				<br />
 				<button class="btn btn-primary" id="completeProject" onclick="AdminPanel.completeProject()" style="margin-top: 10px;">Complete</button>
 			</div>
-			<div class="col-md-6 text-right">
+		</div>
+	}
+	else if(Model.Project.Status == "Completed")
+	{
+		<div class="row">
+
+			<div class="col-md-6">
 				<hr />
-				<label for="archiveProject">Want to archive project?</label>
+				<label for="invoiceProject">Invoice project?</label>
 				<br />
-				<button class="btn btn-dark" id="archiveProject" onclick="AdminPanel.archiveProject()" style="margin-top: 10px;">Archive</button>
+				<button class="btn btn-danger" id="invoiceProject" onclick="AdminPanel.invoiceProject()" style="margin-top: 10px;">Invoice</button>
 			</div>
 		</div>
+	}
+	else if(Model.Project.Status == "Invoiced")
+	{
+		<div class="row">
+
+			<div class="col-md-6">
+				<hr />
+				<label for="archiveProject">Archive project?</label>
+				<br />
+				<button class="btn btn-success" id="archiveProject" onclick="AdminPanel.archiveProject()" style="margin-top: 10px;">Archive</button>
+			</div>
+		</div>
+	}
 }

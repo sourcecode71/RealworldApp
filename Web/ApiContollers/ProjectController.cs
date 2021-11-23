@@ -66,6 +66,12 @@ namespace Web.ApiControllers
             return Ok(await Mediator.Send(new Archive.Command { SelfProjectId = project.SelfProjectId }));
         }
 
+        [HttpPost("invoice")]
+        public async Task<IActionResult> InvoiceProject(ProjectDto project)
+        {
+            return Ok(await Mediator.Send(new Invoice.Command { SelfProjectId = project.SelfProjectId }));
+        }
+
         [HttpPost("complete")]
         public async Task<IActionResult> CompleteProject(Complete.Command project)
         {
