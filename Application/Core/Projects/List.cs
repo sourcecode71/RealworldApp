@@ -41,6 +41,8 @@ namespace Application.Core.Projects
                         return "Archived";
                     case ProjectStatus.Completed:
                         return "Completed";
+                    case ProjectStatus.Invoiced:
+                        return "Invoiced";
                     default:
                         return "On Time";
                 }
@@ -49,7 +51,7 @@ namespace Application.Core.Projects
             public async Task<List<ProjectDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var projectsDto = new List<ProjectDto>();
-                var projects = await _context.Projects.Include(x => x.ProjectEmployees).Where(x => x.Status != ProjectStatus.Archived).ToListAsync();
+                var projects = await _context.Projects.Include(x => x.ProjectEmployees).ToListAsync();
                 foreach (var item in projects)
                 {
                     var eng = item.ProjectEmployees.FirstOrDefault(x => x.ProjectId == item.Id && x.EmployeeType == EmployeeType.Engineering);

@@ -76,7 +76,7 @@
                         @if (currentRole == "Admin")
                         {
                            <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Admin/Index">Admin Panel</a>
+                            <a class="nav-link text-dark" href="/Admin/Index">Admin</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/AddEmployee">Add Employee</a>
@@ -142,7 +142,7 @@
                                         <td>$@project.Paid</td>
                                         <td>$@project.Balance</td>
                                         <td>$@project.Factor</td>
-                                        <td>@project.EStatus</td>
+                                        <td>@project.Status</td>
                                         <td><a href="/Project?id=@project.SelfProjectId"><button class="btn btn-sm btn-success">Detalles</button></a></td>
                                     </tr>
                                 }

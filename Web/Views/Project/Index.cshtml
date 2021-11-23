@@ -48,21 +48,12 @@
 				</div>
 			</div>
 	}
-	else if (Model.Project.Status == "Completed")
-	{
-			<div class="row">
-				<div class="col-md-12">
-					<h1 class="display-4 text-primary">@Model.Project.Name</h1>
-					<span class="badge badge-primary" style="font-size: 25px; margin-top: 20px">Project is completed!</span>
-				</div>
-			</div>
-	}
 	else
 	{
 			<div class="row">
 				<div class="col-md-12">
 					<h1 class="display-4">@Model.Project.Name</h1>
-					<span class="badge badge-light" style="font-size: 25px; margin-top: 20px">On time</span>
+					<span class="badge badge-light" style="font-size: 25px; margin-top: 20px">@Model.Project.Status</span>
 				</div>
 			</div>
 	}
@@ -125,7 +116,7 @@
 		<input type="text" id="projectFactor" disabled value="$@Model.Project.Factor" class="form-control" />
 
 		<label for="projectEstatus" style="margin-top: 20px">EStatus:</label>
-		<input type="text" id="projectEstatus" disabled value="@Model.Project.EStatus" class="form-control" />
+		<input type="text" id="projectEstatus" disabled value="@Model.Project.Status" class="form-control" />
 	</div>
 	<div class="col-md-6">
 		<label for="projectEmployees" style="margin-top: 20px">Employees:</label>

@@ -70,7 +70,7 @@
                         @if (currentRole == "Admin")
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Admin/Index">Admin Panel</a>
+                                <a class="nav-link text-dark" href="/Admin/Index">Admin</a>
                             </li>
                              <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/AddEmployee">Add Employee</a>
@@ -80,6 +80,9 @@
                         </li>
                          <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/GenerateReports">Reports</a>
+                        </li>
+                          <li class="nav-item">
+                            <a class="nav-link text-dark" href="/Admin/Archived">Archived</a>
                         </li>
                         }
                         @if (currentRole == "Employee")
@@ -141,7 +144,7 @@
                                         <td>$@project.Paid</td>
                                         <td>$@project.Balance</td>
                                         <td>$@project.Factor</td>
-                                        <td>@project.EStatus</td>
+                                        <td>@project.Status</td>
                                         <td><a href="/Project?id=@project.SelfProjectId"><button class="btn btn-sm btn-success">Detalles</button></a></td>
                                     </tr>
                                 }
@@ -167,6 +170,41 @@
             </div>
             <div class="col-md-12">
                 <a id="generateReportHref" href="http://ec2-3-144-165-25.us-east-2.compute.amazonaws.com/api/Project/get-excel-report?projectStatus=0"> <button class="btn btn-sm btn-success" style="margin-top: 20px; margin-bottom: 50px">Generate Report</button></a>
+            </div>
+        </div>
+         <div class="row" style="margin-top: 80px">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <h3>Active Employees</h3>
+                        <table class="table table-sm  table-bordered" style="margin-top: 20px; margin-bottom: 50px">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">List of Projects</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employeeTableBody">
+                                @foreach (var employee in Model.Employees)
+                                {
+                                    <tr>
+                                        <td>@employee.Name</td>
+                                        <td>@employee.Email</td>
+                                        <td>
+                                            @foreach (var project in employee.ProjectsNames)
+                                            {
+                                                @project
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
             </div>
         </div>
     </main>

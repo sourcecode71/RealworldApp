@@ -1,6 +1,8 @@
 ﻿@{
     Layout = null;
 }
+@using Web.Models
+@model AdminPageDetails
 @{
     string currentName = "";
     string currentRole = "";
@@ -64,27 +66,26 @@
                             </li>
                         </ul>
                     }
-                <ul class="navbar-nav flex-grow-1 col-md-6">
-          
-                    @if (currentRole == "Admin")
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Admin/Index">Admin</a>
-                        </li>
-                        <li class="nav-item">
+                    <ul class="navbar-nav flex-grow-1 col-md-6">
+                        @if (currentRole == "Admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/Admin/Index">Admin</a>
+                            </li>
+                             <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/AddEmployee">Add Employee</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/AddProject">Add Project</a>
                         </li>
-                          <li class="nav-item">
+                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/GenerateReports">Reports</a>
                         </li>
-                            <li class="nav-item">
+                          <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/Archived">Archived</a>
                         </li>
-                    }
-                    @if (currentRole == "Employee")
+                        }
+                        @if (currentRole == "Employee")
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" href="/Employee/Index">Dashboard</a>
@@ -96,30 +97,54 @@
         </nav>
     </header>
     <main style="margin-left: 2%; margin-right: 2%">
-        <div class="row">
-            <div class="col-md-12 text-center"><h3><u>Add new Employee</u></h3></div>
-        </div>
-        <div class="row" style="margin-top: 20px">
-            <div class="col-md-5"></div>
-            <div class="col-md-2">
-                <label for="addNewName">Employee name:</label>
-                <input type="text" id="addNewName" class="form-control" />
-                <label for="addNewUserEmail" style="margin-top: 20px">Employee email:</label>
-                <input type="text" id="addNewUserEmail" class="form-control" />
-                <label for="addNewUserPassword" style="margin-top: 20px">Employee password:</label>
-                <input type="password" id="addNewUserPassword" class="form-control" />
-                <label for="addNewUserConfirmPassword" style="margin-top: 20px">Confirm password:</label>
-                <input type="password" id="addNewUserConfirmPassword" class="form-control" />
-                <label for="addNewUserRole" style="margin-top: 20px">Role:</label>
-                <select class="form-control" id="addNewUserRole">
-                    <option value="0">Please select a role...</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Employee">Employee</option>
-                </select>
+        <div class="row" style="margin-top: 80px">
+            <div class="col-md-12">
+                <h3>Completed, Invoiced and Archived Projects</h3>
                 <div class="row">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-6 text-center">
-                        <button class="btn btn-block btn-sm btn-success" style="margin-top: 20px; margin-bottom: 50px" onclick="AdminPanel.addNewEmployee()">Add</button>
+                    <div class="col-md-12">
+                        <table class="table table-sm  table-bordered" style="margin-top: 20px; margin-bottom: 50px">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">FOLIO</th>
+                                    <th scope="col">PROYECTO</th>
+                                    <th scope="col">CLIENTE</th>
+                                    <th scope="col">INGENIERÍA</th>
+                                    <th scope="col">DIBUJO</th>
+                                    <th scope="col">VISTO BUENO</th>
+                                    <th scope="col">FECHA DE ENTREGA</th>
+                                    <th scope="col">PROGRAMA</th>
+                                    <th scope="col">SEMANA DE TRABAJO</th>
+                                    <th scope="col">PRESUPUESTO</th>
+                                    <th scope="col">PAGADO</th>
+                                    <th scope="col">POR PAGAR</th>
+                                    <th scope="col">FACTOR</th>
+                                    <th scope="col">ESTATUS</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="projectTableBody">
+                                @foreach (var project in Model.Projects)
+                                {
+                                    <tr class="@(project.Status != "Delayed" ? project.Status == "Modified" ? "table-success" : "" : "table-danger")">
+                                        <td>@project.SelfProjectId</td>
+                                        <td>@project.Name</td>
+                                        <td>@project.Client</td>
+                                        <td>@project.Engineering</td>
+                                        <td>@project.Drawing</td>
+                                        <td>@project.Approval</td>
+                                        <td>@project.DeliveryDate</td>
+                                        <td>@project.Schedule</td>
+                                        <td>@project.Progress</td>
+                                        <td>$@project.Budget</td>
+                                        <td>$@project.Paid</td>
+                                        <td>$@project.Balance</td>
+                                        <td>$@project.Factor</td>
+                                        <td>@project.Status</td>
+                                        <td><a href="/Project?id=@project.SelfProjectId"><button class="btn btn-sm btn-success">Detalles</button></a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

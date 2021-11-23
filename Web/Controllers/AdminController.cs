@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using Web.Models;
 using Web.Services;
 
@@ -35,7 +36,7 @@ namespace Web.Controllers
                     List<ProjectModel> projects = _apiService.CallGetProjects().Result;
                     List<EmployeeModel> employees = _apiService.CallGetEmployees().Result;
 
-                    adminPage.Projects = projects;
+                    adminPage.Projects = projects.Where(x => x.Status != "Archived").ToList();
                     adminPage.Employees = employees;
 
                     return View(adminPage);
@@ -123,6 +124,37 @@ namespace Web.Controllers
                 if (currentRole == "Admin")
                 {
                     return View();
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+            }
+
+            return RedirectToAction("Login", "Home");
+        }
+
+        public IActionResult Archived()
+        {
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                if (currentRole == "Admin")
+                {
+                    AdminPageDetails adminPage = new AdminPageDetails();
+
+                    List<ProjectModel> projects = _apiService.CallGetProjects().Result;
+                    adminPage.Projects = projects.Where(x => x.Status == "Completed" || x.Status == "Invoiced" || x.Status == "Archived").ToList();
+
+                    return View(adminPage);
                 }
                 else
                 {

@@ -42,6 +42,8 @@ namespace Application.Core.Projects
                         return "Archived";
                     case ProjectStatus.Completed:
                         return "Completed";
+                    case ProjectStatus.Invoiced:
+                        return "Invoiced";
                     default:
                         return "On Time";
                 }
