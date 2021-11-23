@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
@@ -26,7 +27,7 @@ namespace Web.Controllers
 
             EmployeePageDetails employeePageDetails = new EmployeePageDetails();
 
-            employeePageDetails.Projects = _apiService.CallGetProjects().Result;
+            employeePageDetails.Projects = _apiService.CallGetProjects().Result.Where(x => x.Status != "Archived").ToList();
 
             if (!string.IsNullOrEmpty(currentEmail))
             {
