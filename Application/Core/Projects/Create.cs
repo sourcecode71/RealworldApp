@@ -33,7 +33,7 @@ namespace Application.Core.Projects
             {
                 int maxSelfId = 1;
                 if (_context.Projects.Count() > 0)
-                    _context.Projects.Max(x => x.SelfProjectId);
+                    maxSelfId = _context.Projects.Max(x => x.SelfProjectId);
 
                 request.Project.SelfProjectId = maxSelfId + 1;
                 request.Project.Id = Guid.NewGuid().ToString();

@@ -68,7 +68,8 @@ AdminPanel.savePaid = function () {
     var paid = $("#projectPaid").val();
     var selfProjectId = $("#projectId").val();
 
-    var paidFormat = paid.replace(",", "").replace("$", "").replace(" ", "");
+    var paidFormat = paid.replaceAll("$", "").replaceAll(" ", "").replaceAll(',', '');
+
     //Add validation
 
     var project = {
@@ -461,7 +462,7 @@ AdminPanel.addNewproject = function () {
         Approval: approval,
         DeliveryDate: delivery,
         Schedule: schedule,
-        Budget: budget,
+        Budget: parseFloat(budget.replaceAll("$", "").replaceAll(" ", "").replaceAll(',', '')),
         EStatus: estatus
     };
 
