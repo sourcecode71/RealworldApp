@@ -33,6 +33,7 @@
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Persistance\Persistance.csproj" />
+    <ProjectReference Include="..\PMG.Data.Repository\PMG.Data.Repository.csproj" />
   </ItemGroup>
 
 </Project>

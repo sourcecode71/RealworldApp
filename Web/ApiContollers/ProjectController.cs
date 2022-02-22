@@ -16,11 +16,19 @@ using System.Drawing;
 using System;
 using System.Globalization;
 using System.Linq;
+using PMG.Data.Repository.Projects;
 
 namespace Web.ApiControllers
 {
     public class ProjectController : BaseApiController
     {
+        private readonly IProjects _project;
+
+        public ProjectController(IProjects projects)
+        {
+            _project = projects;
+        }
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<ProjectDto>>> GetProjects()
@@ -39,12 +47,16 @@ namespace Web.ApiControllers
         {
             Dictionary<EmployeeType, string> employees = new Dictionary<EmployeeType, string>();
 
+            String ProjectNo = _project.GetProjectNumber(project);
+
             employees.Add(EmployeeType.Engineering, project.Engineering);
             employees.Add(EmployeeType.Drawing, project.Drawing);
             employees.Add(EmployeeType.Approval, project.Approval);
 
             Project projectDomain = new Project
             {
+                Year = DateTime.Now.Year,
+                ProjectNo = ProjectNo,
                 Balance = project.Budget,
                 Factor = project.Budget / (double)project.Schedule,
                 Client = project.Client,
@@ -154,6 +166,30 @@ namespace Web.ApiControllers
         {
             FileStream export = CreateExcel(projectType);
             return File(export, "application/octet-stream", "project_reports.xlsx");
+        }
+
+        [HttpGet("project-search")]
+        public async Task< ActionResult> GetProjectSearchResult(string searchTag)
+        {
+            var project = await _project.GetProjectBySearch(searchTag);
+            return Ok(project);
+        }
+
+        [HttpPost("project-approval/status")]
+        public async Task<ActionResult> SaveProjectApproval(ProjectApprovalDto project)
+        {
+            //String PmBudgetNo = _project.GetPmBudgetNumber(project);
+
+            bool isApproved = await _project.SaveProjectApproval(project);
+            return Ok(isApproved);
+        }
+
+
+        [HttpGet("project-activities/budget-load")]
+        public async Task<ActionResult> LoadProjectBudgetLoad(string PmName)
+        {
+            var ProjectBudgetAct = await _project.LoadProjectBudgetAcitivies(PmName);
+            return Ok(ProjectBudgetAct);
         }
 
         private FileStream CreateExcel(int projectStatus)

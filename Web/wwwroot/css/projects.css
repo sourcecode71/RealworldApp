@@ -1,0 +1,71 @@
+﻿
+.card-body{
+    font-size:16px;
+}
+.search-box {
+    position: absolute;
+    display: block;
+    z-index: 1;
+    width: 100%;
+}
+
+    .thead-src {
+        display: block;
+        width: 100%;
+    }
+
+    .tbody-src  {
+        display: block;
+        width: 100%;
+        
+    }
+
+   .scroller {
+        height: 150px;
+        overflow-y: scroll;
+    }
+
+    thead .tr-src, tbody tr-src{
+        width:100%;
+        display:block;
+    }
+
+    .scroll-box-table {
+        height: 150px;
+        overflow-y: scroll;
+    }
+
+    .card-body-sb {
+        flex: 1 1 auto;
+        padding: 0 .25rem .25rem;
+        height:130px;
+    }
+
+    .sb-header{
+        background-color:whitesmoke;
+    }
+
+    .pc-10{
+        width:10%;
+    }
+
+    .pc-30 {
+        width: 150px;
+    }
+
+    .tb-text-center {
+        text-align: center;
+        cursor: pointer !important;
+    }
+
+    .hide{
+        display:none !important;
+    }
+
+    .show{
+        display:block;
+    }
+
+.pmg-text {
+   color: #0986ac
+}

@@ -1,12 +1,20 @@
 using Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain
 {
     public class Project
     {
+       public Project()
+        {
+            IsBudgetApproved = true;
+        }
         public string Id { get; set; }
+        public int Year { get; set; }
+        [MaxLength(10)]
+        public string ProjectNo { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int SelfProjectId { get; set; }
@@ -21,6 +29,7 @@ namespace Domain
         public double Factor { get; set; }
         public string EStatus { get; set; }
         public bool Invoiced { get; set; }
+        public bool IsBudgetApproved { get; set; }
         public ProjectStatus Status { get; set; }
         public string AdminDelayedComment { get; set; }
         public string AdminModifiedComment { get; set; }

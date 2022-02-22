@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Context;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220221184558_Approval_update")]
+    partial class Approval_update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,9 +130,6 @@ namespace Persistance.Migrations
                     b.Property<bool>("Invoiced")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsBudgetApproved")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -230,7 +229,7 @@ namespace Persistance.Migrations
                     b.ToTable("ProjectEmployees");
                 });
 
-            modelBuilder.Entity("Domain.Projects.ProjectBudgetActivities", b =>
+            modelBuilder.Entity("Domain.Projects.ProjectApproval", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -267,14 +266,13 @@ namespace Persistance.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SetUser")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectBudgetActivities");
+                    b.ToTable("ProjectApproval");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -438,7 +436,7 @@ namespace Persistance.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("Domain.Projects.ProjectBudgetActivities", b =>
+            modelBuilder.Entity("Domain.Projects.ProjectApproval", b =>
                 {
                     b.HasOne("Domain.Project", "Project")
                         .WithMany()

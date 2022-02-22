@@ -37,7 +37,7 @@ namespace Application.Core.Projects
 
                 request.Project.SelfProjectId = maxSelfId + 1;
                 request.Project.Id = Guid.NewGuid().ToString();
-
+               // request.Project.Balance = request.Project.Budget;
                 _context.Projects.Add(request.Project);
 
                 var result = await _context.SaveChangesAsync() > 0;

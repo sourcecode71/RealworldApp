@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewData["Title"] = "Project Budget";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+   <div class="row">
+    <link rel="stylesheet" href="~/css/projects.css" />
+
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="main-card mb-3 card">
+            <div class="card-body"><h5 class="card-title">de Presupuesto </h5>
+                <form action="#" onsubmit="SubmitBudget();return false" >
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail" class=""> Project </label>
+                        <input name="project" id="projectName" placeholder="Search the project" class="form-control">
+
+                        <div id="projectNameError" class="alert alert-danger mt-1 hide">
+                        </div>
+                         
+                         <div id="SBoxDiv" class="main-card mb-3 card search-box hide">
+                                    <div style="min-height:140px" class="card-body-sb">
+                                        <table class="mb-0 table table-hover">
+                                            <thead class="thead-src">
+                                            <tr class="sb-header tr-src">
+                                                <th class="pc-10">#</th>
+                                                <th class="pc-30" >Name</th>
+                                                <th class="pc-30">Project No</th>
+                                                <th class="pc-30">Client</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody id="tableBody" class="hide tbody-src" >
+                                               
+                                            </tbody>
+                                        </table>
+                                       
+                                        <div id="SpinnerDiv" class="d-flex mt-3 justify-content-center hide">
+                                             <div class="spinner-border text-info" role="status">
+                                               <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+
+                    <div id="divPmDescription" class="position-relative form-group hide">
+                         <div class="row pmg-text">
+                            <div class="col-md-6 col-sm-12"> Project No   : <span id="pjNo" > </span> </div>
+                            <div class="col-md-6 col-sm-12"> Project Year : <span id="pjYear" > </span> </div>
+                            <div class="col-md-6 col-sm-12"> Client : <span id="pjClient" > </span> </div>
+                            <div class="col-md-6 col-sm-12"> Budget : <span id="pjBudget" > </span> </div>
+                             <input type="hidden" id="pmId" >
+                        </div>
+                    </div>
+
+                    <div class="position-relative form-group pd-4">
+                          <label for="exampleEmail" class=""> Budget Approval Status </label>
+
+                        <div class=" row m-3">
+                            <div class="col-md-5 col-sm-6  custom-radio custom-control">
+                                <input type="radio" id="exampleCustomRadio" value="1" name="apStatus" class="custom-control-input">
+                                <label class="custom-control-label" for="exampleCustomRadio"> Approved </label>
+                            </div>
+                            <div class="col-md-5 col-sm-6 custom-radio custom-control">
+                                <input type="radio" id="exampleCustomRadio2" value="2" name="apStatus" class="custom-control-input">
+                                <label class="custom-control-label" for="exampleCustomRadio2"> Not Approved </label>
+                            </div>
+                        </div>
+                    </div>
+
+                        <div id="divBudget" class="position-relative form-group">
+                            <div class="row">
+                              <div class =" col-md-5 col-sm-6 col-lg-5">
+                                   <label for="exampleEmail" class=""> Approved Budget:  </label>
+                                   <input name="project" id="addProjectBudget" placeholder="Approved Budget" class="form-control">
+                               
+                               </div>
+                                
+                                 <div class =" col-md-5 col-sm-6 col-lg-5">
+                                   <label for="exampleEmail" class=""> Budget Balance:  </label>
+                                   <div style="color:#0986ac;font-weight : 700" id="spBudgetBalance"> </div>
+                                 </div>
+                                  <div id="approvalBudgetError" class="alert alert-danger ml-3 hide"> </div>
+                            </div>
+                        
+                       </div>
+                 
+                    <div class="position-relative form-group">
+                        <label for="exampleText" class=""> <span id ="spComment"> Comments </span>  </label>
+                        <textarea name="text" id="comments" class="form-control"></textarea>
+                    </div>
+                   
+                    <button id="btnSubmitBudget"  class="mt-1 btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+     <div class="col-md-1"></div>
+       <div class="col-lg-10">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body"><h5 class="card-title">de Presupuesto Lista </h5>
+                                        <table class="mb-0 table table-striped">
+                                            <thead>
+                                            <tr style="font-size:14px">
+                                                <th> # </th>
+                                                <th> Budget No</th>
+                                                <th>Project Name </th>
+                                                <th>Client </th>
+                                                <th>Approved Budget</th>
+                                                <th>Balance </th>
+                                                <th>Approval Date </th>
+                                                <th> Actions </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="budgetApprovalAct">
+                                           
+                                           
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+      <div class="col-md-1"></div>
+
+  
+    @section Scripts {
+        <script src="~/js/projects.js"></script>
+    }
+  </div>

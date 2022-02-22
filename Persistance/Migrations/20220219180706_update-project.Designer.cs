@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Context;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220219180706_update-project")]
+    partial class updateproject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,9 +130,6 @@ namespace Persistance.Migrations
                     b.Property<bool>("Invoiced")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsBudgetApproved")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -153,8 +152,9 @@ namespace Persistance.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
+                    b.Property<string>("Year")
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
 
                     b.HasKey("Id");
 
@@ -228,53 +228,6 @@ namespace Persistance.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectEmployees");
-                });
-
-            modelBuilder.Entity("Domain.Projects.ProjectBudgetActivities", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("ApprovalStatus")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal?>("ApprovedBudget")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("ApprovedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("BalanceBudget")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("BudgetNo")
-                        .HasMaxLength(12)
-                        .HasColumnType("nvarchar(12)");
-
-                    b.Property<string>("Comments")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("ProjectId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProjectNo")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<DateTime>("SetDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SetUser")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ProjectBudgetActivities");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -434,15 +387,6 @@ namespace Persistance.Migrations
                         .HasForeignKey("ProjectId");
 
                     b.Navigation("Employee");
-
-                    b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("Domain.Projects.ProjectBudgetActivities", b =>
-                {
-                    b.HasOne("Domain.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
 
                     b.Navigation("Project");
                 });

@@ -5,9 +5,12 @@ namespace Application.DTOs
 {
     public class ProjectDto
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int SelfProjectId { get; set; }
+        public int Year { get; set; }
+        public string ProjectNo { get; set; }
         public string Client { get; set; }
         public DateTime DeliveryDate { get; set; }
         public int Schedule { get; set; }
@@ -29,4 +32,23 @@ namespace Application.DTOs
         public List<ProjectActivityDto> Activities { get; set; } = new List<ProjectActivityDto>();
         public List<EmployeeDto> Employees { get; set; }
     }
+
+    public class ProjectApprovalDto {
+        public string Id { get; set; }
+        public Guid ProjectId { get; set; }
+        public string ProjectName { get; set; }
+        public int ApporvalSatus { get; set; }
+        public string ProjectNo { get; set; }
+        public string BudegtNo { get; set; }
+        public string ClientName { get; set; }
+        public DateTime ApprovalDate { get; set; }
+        public String ApprovalDateStr { get; set; }
+        public bool ApprovalStatus { get; set; }
+        public int Status { get; set; }
+        public decimal? ApprovedBudget { get; set; }
+        public double Balance { get; set; }
+        public string Comments { get; set; }
+
+    }
+
 }

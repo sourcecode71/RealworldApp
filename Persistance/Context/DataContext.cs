@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Projects;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ namespace Persistance.Context
         public DbSet<Employee> Employees { get; set; }
         public DbSet<ProjectActivity> ProjectActivities { get; set; }
         public DbSet<ProjectEmployee> ProjectEmployees { get; set; }
+        public DbSet<ProjectBudgetActivities> ProjectBudgetActivities { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -32,6 +34,8 @@ namespace Persistance.Context
                 .HasOne(p => p.Employee)
                 .WithMany(e => e.ProjectActivities)
                 .HasForeignKey(aa => aa.EmployeeId);
+
+
         }
     }
 }

@@ -25,8 +25,13 @@
     <title>@ViewData["Title"] - Web</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    <link rel="stylesheet" href="~/lib/sweetalert2/dist/sweetalert2.css" />
-    <script src="/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="~/assets/main.css" />
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link rel="Stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css" />
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <body>
     <header>
@@ -92,9 +97,9 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+             <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
     </div>
 
     <footer class="border-top footer text-muted">
@@ -105,8 +110,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/adminPanel.js" asp-append-version="true"></script>
-    <script src="~/js/employeeDashboard.js" asp-append-version="true"></script>
+    <script src="~/assets/scripts/main.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -19,7 +19,7 @@ namespace Web.Setting.GlobalExceptionHandling
         {
             Logger log = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
-                     .WriteTo.File("log-" + DateTime.Today.ToString("yyyyMMdd") + ".txt").CreateLogger();
+                     .WriteTo.File("logs/log-" + DateTime.Today.ToString("yyyyMMdd") + ".txt").CreateLogger();
 
             DatabaseLogger = log;
             return log;

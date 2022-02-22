@@ -14,6 +14,7 @@ using Persistance.Context;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Web.Ioc;
 using Web.Services;
 using Web.Setting.GlobalExceptionHandling;
 
@@ -34,6 +35,8 @@ namespace Web
             services.AddSingleton(typeof(ApiService));
             services.AddSingleton(typeof(ConverterService<string>));
 
+
+
             services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
@@ -41,6 +44,8 @@ namespace Web
 
             services.AddMediatR(typeof(Create.Handler).Assembly);
             services.AddScoped<TokenService>();
+
+            ContainerSetup.Setup(services, Configuration);
 
             services.AddIdentity<Employee, IdentityRole>(opt =>
             {
