@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Context;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220222201633_work-order1")]
+    partial class workorder1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,16 +241,12 @@ namespace Persistance.Migrations
                     b.Property<DateTime>("ApprovalDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("ApprovedBudget")
-                        .HasColumnType("float");
+                    b.Property<decimal>("ApprovedBudget")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Comments")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasMaxLength(200)
-                        .HasColumnType("bit");
 
                     b.Property<string>("OTDescription")
                         .HasMaxLength(250)
@@ -265,7 +263,8 @@ namespace Persistance.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SetUser")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -315,10 +314,6 @@ namespace Persistance.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasMaxLength(200)
-                        .HasColumnType("bit");
-
                     b.Property<string>("ProjectId")
                         .HasColumnType("nvarchar(450)");
 
@@ -330,7 +325,8 @@ namespace Persistance.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SetUser")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -348,16 +344,12 @@ namespace Persistance.Migrations
                     b.Property<DateTime>("ApprovalDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("ApprovedBudget")
-                        .HasColumnType("float");
+                    b.Property<decimal>("ApprovedBudget")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Comments")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasMaxLength(200)
-                        .HasColumnType("bit");
 
                     b.Property<string>("OTDescription")
                         .HasMaxLength(250)
@@ -374,7 +366,8 @@ namespace Persistance.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SetUser")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");

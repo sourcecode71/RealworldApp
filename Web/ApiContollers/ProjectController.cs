@@ -22,9 +22,9 @@ namespace Web.ApiControllers
 {
     public class ProjectController : BaseApiController
     {
-        private readonly IProjects _project;
+        private readonly IProjectsRepository _project;
 
-        public ProjectController(IProjects projects)
+        public ProjectController(IProjectsRepository projects)
         {
             _project = projects;
         }

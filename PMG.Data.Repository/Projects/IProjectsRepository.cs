@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace PMG.Data.Repository.Projects
 {
-    public interface IProjects
+    public interface IProjectsRepository
     {
         string  GetProjectNumber(ProjectDto projectDto);
         string GetPmBudgetNumber(ProjectApprovalDto projectDto);

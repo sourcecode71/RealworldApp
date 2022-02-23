@@ -14,7 +14,8 @@ namespace Web.Ioc
 
         private static void ConfigureInject(IServiceCollection services)
         {
-            services.AddScoped<IProjects, Projects>();
+            services.AddScoped<IProjectsRepository, ProjectsRepository>();
+            services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
         }
     }
 }

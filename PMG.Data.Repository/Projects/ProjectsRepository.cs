@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace PMG.Data.Repository.Projects
 {
-    public class Projects : IProjects
+    public class ProjectsRepository : IProjectsRepository
     {
         private readonly DataContext _context;
-        public Projects(DataContext dataContext)
+        public ProjectsRepository(DataContext dataContext)
         {
             _context = dataContext;
         }

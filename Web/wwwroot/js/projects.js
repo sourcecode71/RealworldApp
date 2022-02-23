@@ -87,6 +87,21 @@
     //CallTagSearch("acti");
 }
 
+var SelectControls = function () {
+
+    $('input[type=radio][name=apStatus]').change(function () {
+
+        if (this.value == 1) {
+            $("#divBudget").addClass("show").removeClass("hide");
+            $("#spComment").text("Comments");
+
+        } else {
+            $("#divBudget").addClass("hide").removeClass("show");
+            $("#spComment").text("Reasonnot Approved Reason");
+            $("#addProjectBudget").val('');
+        }
+    });
+}
 
 function SubmitBudget() {
 
@@ -102,12 +117,13 @@ function SubmitBudget() {
         var slApproval = $("input[type='radio'][name='apStatus']:checked").val();
 
         var approvedBudget = $("#addProjectBudget").val().split(" ");
+        var dcMoney = approvedBudget[1].replace(",", "");
 
         var approvalData = {
             id: $("#pmId").val(),
             projectNo: $("#pjNo").text(),
             apporvalSatus: slApproval,
-            approvedBudget: approvedBudget.length > 0 ? approvedBudget[1] : $("#addProjectBudget").val() ,
+            approvedBudget: approvedBudget.length > 0 ? dcMoney : $("#addProjectBudget").val() ,
             comments: $("#comments").val()
         }
 
@@ -131,7 +147,7 @@ function SubmitBudget() {
                     showConfirmButton: false,
                     timer: 1500
                 })
-
+                ClearAllProjectActivities();
                 LoadProjectBudgetActivities();
                
             },
@@ -157,22 +173,6 @@ function SubmitBudget() {
 
 
     }
-}
-
-var SelectControls = function () {
-
-    $('input[type=radio][name=apStatus]').change(function () {
-
-        if (this.value == 1) {
-            $("#divBudget").addClass("show").removeClass("hide");
-            $("#spComment").text("Comments");
-
-        } else {
-            $("#divBudget").addClass("hide").removeClass("show");
-            $("#spComment").text("Reasonnot Approved Reason");
-            $("#addProjectBudget").val('');
-        }
-    });
 }
 
 
@@ -245,6 +245,194 @@ function SelectedProject() {
 
 }
 
+
+function SubmitWorkOrder() {
+
+    if ($("#spSaveUpdate").text().trim() == "Submit") {
+        SaveUpateWorkOrder("sb");
+    } else {
+        SaveUpateWorkOrder("up");
+    }
+
+}
+
+
+var SaveUpateWorkOrder = (operation) => {
+
+    console.log(" operation --- ", operation);
+
+    $("#SBoxDiv").removeClass("show").addClass("hide");
+
+    var validation = PmBudgetWorkOrderValidation();
+
+    console.log(" validation ", validation);
+
+    if (validation) {
+
+        var approvedBudget = $("#addProjectBudget").val().split(" ");
+        var dcMoney = approvedBudget[1].replace(",", "");
+
+        var approvalData = {
+            projectId: $("#pmId").val(),
+            workOrderId: $("#wrkId").val(),
+            projectNo: $("#pjNo").text(),
+            oTDescription: $("#consecutiveWork").val(),
+            approvedBudget: approvedBudget.length > 0 ? dcMoney : $("#addProjectBudget").val(),
+            comments: $("#comments").val()
+        }
+
+        var strOperation = operation == "sb" ? "store-work-order" : "update-work-order";
+
+        var base_url = window.location.origin;
+        var searchURL = base_url + "/api/WorkOrder/" + strOperation;
+
+        $.ajax({
+            url: searchURL,
+            type: operation == "sb"? 'post' : "put",
+            data: JSON.stringify(approvalData),
+            contentType: 'application/json; charset=utf-8',
+        }).then(
+            function fulfillHandler(data) {
+
+                console.log("  data ", data);
+
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Record has been added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                ClearAllWorkOrder();
+                LoadProjectWorkOrder();
+
+            },
+            function rejectHandler(jqXHR, textStatus, errorThrown) {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + errorThrown.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        ).catch(function errorHandler(error) {
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong.' + error,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        });
+    }
+}
+
+
+
+function LoadProjectWorkOrder() {
+
+    var base_url = window.location.origin;
+    var searchURL = base_url + "/api/WorkOrder/load-approved-orders";
+
+    $.ajax({
+        url: searchURL,
+        type: 'get',
+        contentType: 'application/json; charset=utf-8',
+    }).then(
+        function fulfillHandler(data) {
+
+            loadedWrkData = data;
+            $("#budgetApprovalAct").empty();
+            var tbRow = "";
+            data.forEach(function (item, index) {
+                tbRow += "<tr> <th scope='row'>" + (parseInt(index) + 1) + "</th>  <td class='pc-30 tb-text-center' > " + item.projectName + "</td>  <td class='pc-30 tb-text-center wrkNo'>" + item.workOrderNo + "</td>" +
+                    " <td class='pc-30 tr-src'>" + item.otDescription + "</td>   <td class='pc-30 tr-src tb-text-center '>" + formatMoney(item.approvedBudget) + "</td>  " +
+                    " <td class='pc-30 tr-src tb-text-center '>" + item.approvedDateStr + "</td>   <td class='pc-30 tr-src tb-text-center '>" +
+                    "<button class='mb-2 mr-2 btn-transition btn btn-outline-focus btn-wrk' >  <i class='fa fa-pencil-square-o' aria-hidden='true'> </i>  Edit </button > </td>  </tr > ";
+            });
+
+            $("#budgetApprovalAct").append(tbRow);
+        },
+        function rejectHandler(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong.' + errorThrown.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    ).catch(function errorHandler(error) {
+        Swal.fire({
+            position: 'top-end',
+            title: 'Error!',
+            text: 'Something went wrong.' + error,
+            icon: 'error',
+            confirmButtonText: 'Ok',
+        })
+    });
+
+}
+
+var SelectWrkRow = ()=> {
+
+    $("#budgetApprovalAct").on('click', '.btn-wrk', function () {
+
+        var wrkOD = $(this).closest("tr").find(".wrkNo").text();
+
+        if (loadedWrkData && wrkOD) {
+            var wrkRow = (loadedWrkData.filter(p => p.workOrderNo == wrkOD))[0];
+
+            $("#wrkId").val(wrkRow.id);
+            $("#pmId").val(wrkRow.projectId);
+            $("#workOrderNo").val(wrkOD);
+            $("#projectName").val(wrkRow.projectName);
+            $("#pjNo").text(wrkRow.projectNo);
+            $("#pjYear").text(wrkRow.projectYear);
+            $("#pjClient").text(wrkRow.clinetName);
+            $("#pjBudget").text(formatMoney(wrkRow.projectBudget, ',', '.'));
+            $("#divPmDescription").addClass("show").removeClass("hide");
+
+            $("#addProjectBudget").val(formatMoney(wrkRow.approvedBudget, ',', '.'));
+            $("#consecutiveWork").val(wrkRow.otDescription);
+            $("#comments").val(wrkRow.comments);
+            $("#spSaveUpdate").text("Update");
+
+
+        } else {
+            $("#divPmDescription").removeClass("show").addClass("hide");
+        }
+        $("#tableBody").html("");
+        $("#SBoxDiv").removeClass("show").addClass("hide");
+    });
+
+}
+
+// Commmon Work
+
+
+function ClearAllProjectActivities() {
+    $("#pmId").val("");
+    $("#pjNo").text("");
+    $("#SBoxDiv").removeClass("show").addClass("hide");
+    $("#divPmDescription").removeClass("show").addClass("hide");
+    $("#comments").val("");
+    $("#addProjectBudget").val("");
+    $("#projectName").val("");
+}
+
+function ClearAllWorkOrder() {
+    $("#pmId").val("");
+    $("#pjNo").text("");
+    $("#SBoxDiv").removeClass("show").addClass("hide");
+    $("#divPmDescription").removeClass("show").addClass("hide");
+    $("#comments").val("");
+    $("#addProjectBudget").val("");
+    $("#consecutiveWork").val("");
+    $("#projectName").val("");
+}
 function formatMoney(number, decPlaces, decSep, thouSep) {
 
     decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
@@ -254,7 +442,7 @@ function formatMoney(number, decPlaces, decSep, thouSep) {
     var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
     var j = (j = i.length) > 3 ? j % 3 : 0;
 
-    return "$" + sign +
+    return "$ " + sign +
         (j ? i.substr(0, j) + thouSep : "") +
         i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
         (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
@@ -292,12 +480,58 @@ function PmBudgetApprovalValidation() {
     return isFormValid;
 }
 
+function PmBudgetWorkOrderValidation() {
+    var isFormValid = true;
+
+    if (($("#projectName").val() == "" || $("#projectName").length == 0)  )  {
+        $("#projectNameError").addClass("show").removeClass("hide");
+        $("#projectNameError").text(" Please select the project name. ");
+        isFormValid = false;
+    }
+    else if (isFormValid) {
+        $("#projectNameError").addClass("hide").removeClass("show");
+        $("#projectNameError").text(" ");
+    }
+
+    if ($("#addProjectBudget").val() == "" || $("#addProjectBudget").length == 0) {
+        $("#addProjectBudgetError").addClass("show").removeClass("hide");
+        $("#addProjectBudgetError").text(" Please enter work order budget. ");
+        isFormValid = false;
+    }
+    else if (isFormValid ) {
+        var approvedBudget = $("#addProjectBudget").val().split(" ");
+
+        console.log(" approvedBudget -- ", approvedBudget);
+
+        if (parseInt(approvedBudget[1]) > 0) {
+            $("#addProjectBudgetError").addClass("hide").removeClass("show");
+            $("#addProjectBudgetError").text(" ");
+        } else {
+            $("#addProjectBudgetError").addClass("show").removeClass("hide");
+            $("#addProjectBudgetError").text(" Approved budget should be more than 0. ");
+            isFormValid = false;
+        }
+    }
+
+    if ($("#consecutiveWork").val() == "" || $("#consecutiveWork").length == 0) {
+        $("#consecutiveWorkError").addClass("show").removeClass("hide");
+        $("#consecutiveWorkError").text(" Please enter consecutive work description. ");
+        isFormValid = false;
+    }
+    else if (isFormValid) {
+        $("#consecutiveWorkError").addClass("hide").removeClass("show");
+        $("#consecutiveWorkError").text(" ");
+    }
+
+    return isFormValid;
+}
+
 
 var Projects = function () {
     "use strict";
 
     return {
-        init: function () {
+        initBudgetAct: function () {
             this.initProjects();
         },
         initProjects: function () {
@@ -305,10 +539,13 @@ var Projects = function () {
             SelectControls();
             LoadProjectBudgetActivities();
             SelectedProject();
+        },
+
+        initWorkOrder: function () {
+            SearchProjects();
+            LoadProjectWorkOrder();
+            SelectWrkRow();
         }
     }
 }();
 
-$(function () {
-    Projects.init();
-});

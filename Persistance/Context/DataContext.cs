@@ -17,6 +17,8 @@ namespace Persistance.Context
         public DbSet<ProjectActivity> ProjectActivities { get; set; }
         public DbSet<ProjectEmployee> ProjectEmployees { get; set; }
         public DbSet<ProjectBudgetActivities> ProjectBudgetActivities { get; set; }
+        public DbSet<WorkOrder> WorkOrder { get; set; }
+        public DbSet<HisWorkOrder> HisWorkOrder { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
