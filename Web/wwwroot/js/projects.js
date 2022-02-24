@@ -192,11 +192,12 @@ function LoadProjectBudgetActivities() {
 
             loadedData = data;
 
+            $("#budgetApprovalAct").empty();
             var tbRow = "";
             data.forEach(function (item, index) {
                 tbRow += "<tr> <th scope='row'>" + (parseInt(index) + 1) + "</th>  <td class='pc-30 tb-text-center budgetNo' > " + item.budegtNo + "</td>  <td class='pc-30 tb-text-center tagId'>" + item.projectName + "</td>" +
                     " <td class='pc-30 tr-src tb-text-center '>" + item.clientName + "</td>   <td class='pc-30 tr-src tb-text-center '>" + item.approvedBudget + "</td>  " +
-                    " <td class='pc-30 tr-src tb-text-center '>" + item.balance + "</td>   <td class='pc-30 tr-src tb-text-center '>" + item.approvalDateStr + "</td>   <td class='pc-30 tr-src tb-text-center '>"+
+                    " <td class='pc-30 tr-src tb-text-center '>" + item.approvalDateStr + "</td>   <td class='pc-30 tr-src tb-text-center '>"+
                     "<button class='mb-2 mr-2 btn-transition btn btn-outline-focus ' >  <i class='fa fa-check-square-o' aria-hidden='true'> </i>  Select </button > </td>  </tr > ";
             });
 
@@ -259,13 +260,11 @@ function SubmitWorkOrder() {
 
 var SaveUpateWorkOrder = (operation) => {
 
-    console.log(" operation --- ", operation);
 
     $("#SBoxDiv").removeClass("show").addClass("hide");
 
     var validation = PmBudgetWorkOrderValidation();
 
-    console.log(" validation ", validation);
 
     if (validation) {
 
@@ -399,6 +398,7 @@ var SelectWrkRow = ()=> {
             $("#consecutiveWork").val(wrkRow.otDescription);
             $("#comments").val(wrkRow.comments);
             $("#spSaveUpdate").text("Update");
+            $("#otBudget").text(" Modified Budget :");
 
 
         } else {

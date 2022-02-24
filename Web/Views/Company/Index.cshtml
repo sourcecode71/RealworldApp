@@ -13,9 +13,11 @@
             <div class="card-body"><h5 class="card-title">Client </h5>
                 <form class="p-2" action="#" onsubmit="SubmitClient();return false" >
                     <div class="position-relative form-group">
-                        <label for="exampleEmail" class=""> Clinet Name </label>
-                        <input name="project" id="clientName" placeholder="Search the project" class="form-control">
+                        <label for="clinetName" class=""> Clinet Name </label>
+                        <input name="project" id="clientName" placeholder="Clinet Name" class="form-control">
                      </div>
+                      <div id="clientNameError" class="alert alert-danger ml-1 hide">
+                      </div>
                  
                     <div class=" mt-1 position-relative form-group">
                         <label for="exampleEmail" class=""> Clinet Address </label>
@@ -31,12 +33,12 @@
                     <table class="mb-0 table table-striped">
                         <thead>
                         <tr style="font-size:14px">
-                            <th> # </th>
-                            <th>Client Name </th>
-                            <th> Client Address</th>
+                            <th style="width:10%"> # </th>
+                            <th style="width:30%">Client Name </th>
+                            <th style="width:60%"> Client Address</th>
                         </tr>
                         </thead>
-                        <tbody id="budgetApprovalAct">
+                        <tbody id="tbClient">
                                            
                         </tbody>
                     </table>
@@ -50,20 +52,26 @@
 
         <div class="main-card mb-3 card">
             <div class="card-body"><h5 class="card-title">Company </h5>
-                <form class="p-2" action="#" onsubmit="SubmitClient();return false" >
+                <form class="p-2" action="#" onsubmit="SubmitCompany();return false" >
                     <div class="position-relative form-group">
                         <label for="exampleEmail" class=""> Clinet </label>
-                        <input name="project" id="clientName" placeholder="Search the project" class="form-control">
+                      		<select id="companyCLient" class="mb-2 form-control">
+                                 
+                            </select>
                      </div>
+                      <div id="companyCLientError" class="alert alert-danger ml-1 hide">
+                      </div>
 
                       <div class="position-relative form-group">
                         <label for="exampleEmail" class=""> Company Name </label>
-                        <input name="project" id="clientName" placeholder="Search the project" class="form-control">
+                        <input name="project" id="companyName" placeholder="Company Name" class="form-control">
                      </div>
+                     <div id="clientNameError" class="alert alert-danger ml-1 hide">
+                      </div>
                  
                     <div class=" mt-1 position-relative form-group">
                         <label for="exampleEmail" class=""> Company Address </label>
-                          <textarea name="text" id="clientAddress" class="form-control"></textarea>
+                          <textarea name="text" id="companyAddress" class="form-control"></textarea>
                     </div>
                    
                     <button id="btnWrkBudget" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> </button>
@@ -77,10 +85,11 @@
                         <tr style="font-size:14px">
                             <th> # </th>
                             <th>Client Name </th>
-                            <th> Client Address</th>
+                            <th>Company Name </th>
+                            <th> Company Address</th>
                         </tr>
                         </thead>
-                        <tbody id="budgetApprovalAct">
+                        <tbody id="tbCompany">
                                            
                         </tbody>
                     </table>
@@ -98,7 +107,9 @@
 
         <script>
            $(function () {
-                Company.initClient();
+
+                Company.initCompany();
+
             });
         </script>
     }

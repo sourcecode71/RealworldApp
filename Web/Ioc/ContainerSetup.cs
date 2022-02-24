@@ -16,6 +16,7 @@ namespace Web.Ioc
         {
             services.AddScoped<IProjectsRepository, ProjectsRepository>();
             services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
         }
     }
 }

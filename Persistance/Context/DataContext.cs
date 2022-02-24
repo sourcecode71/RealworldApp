@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Common;
 using Domain.Projects;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,8 @@ namespace Persistance.Context
         public DbSet<ProjectBudgetActivities> ProjectBudgetActivities { get; set; }
         public DbSet<WorkOrder> WorkOrder { get; set; }
         public DbSet<HisWorkOrder> HisWorkOrder { get; set; }
-
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Company> Company { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

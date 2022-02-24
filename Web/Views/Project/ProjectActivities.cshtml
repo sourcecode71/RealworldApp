@@ -56,6 +56,23 @@
                         </div>
                     </div>
 
+                     <div id="divBudget" class="position-relative form-group">
+                            <div class="row">
+                              <div class =" col-md-5 col-sm-6 col-lg-5">
+                                   <label for="exampleEmail" class=""> Submit Budget:  </label>
+                                   <input name="project" id="addProjectBudget" placeholder="Submit Budget" class="form-control">
+                               
+                               </div>
+                                
+                                 <div class =" hide col-md-5 col-sm-6 col-lg-5">
+                                   <label for="exampleEmail" class=""> Budget Balance:  </label>
+                                   <div style="color:#0986ac;font-weight : 700" id="spBudgetBalance"> </div>
+                                 </div>
+                                  <div id="approvalBudgetError" class="alert alert-danger ml-3 hide hide"> </div>
+                            </div>
+                        
+                       </div>
+
                     <div class="position-relative form-group pd-4">
                           <label for="exampleEmail" class=""> Budget Approval Status </label>
 
@@ -71,22 +88,7 @@
                         </div>
                     </div>
 
-                        <div id="divBudget" class="position-relative form-group">
-                            <div class="row">
-                              <div class =" col-md-5 col-sm-6 col-lg-5">
-                                   <label for="exampleEmail" class=""> Approved Budget:  </label>
-                                   <input name="project" id="addProjectBudget" placeholder="Approved Budget" class="form-control">
-                               
-                               </div>
-                                
-                                 <div class =" col-md-5 col-sm-6 col-lg-5">
-                                   <label for="exampleEmail" class=""> Budget Balance:  </label>
-                                   <div style="color:#0986ac;font-weight : 700" id="spBudgetBalance"> </div>
-                                 </div>
-                                  <div id="approvalBudgetError" class="alert alert-danger ml-3 hide"> </div>
-                            </div>
-                        
-                       </div>
+                     
                  
                     <div class="position-relative form-group">
                         <label for="exampleText" class=""> <span id ="spComment"> Comments </span>  </label>
@@ -111,7 +113,6 @@
                                                 <th>Project Name </th>
                                                 <th>Client </th>
                                                 <th>Approved Budget</th>
-                                                <th>Balance </th>
                                                 <th>Approval Date </th>
                                                 <th> Actions </th>
                                             </tr>
