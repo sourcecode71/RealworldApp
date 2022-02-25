@@ -175,12 +175,17 @@ namespace Web.ApiControllers
             return Ok(project);
         }
 
-        [HttpPost("project-approval/status")]
-        public async Task<ActionResult> SaveProjectApproval(ProjectApprovalDto project)
+        [HttpPost("project-budget/submit")]
+        public async Task<ActionResult> SubmitProjectBUdget(ProjectApprovalDto project)
         {
-            //String PmBudgetNo = _project.GetPmBudgetNumber(project);
-
             bool isApproved = await _project.SaveProjectApproval(project);
+            return Ok(isApproved);
+        }
+
+        [HttpPost("project-approval/status")]
+        public async Task<ActionResult> SaveProjectApproval(ProjectApprovalDto dto)
+        {
+            bool isApproved = await _project.SaveProjectApproval(dto);
             return Ok(isApproved);
         }
 

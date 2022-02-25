@@ -79,5 +79,9 @@ $(function () {
 
     $('#addProjectBudget').keyup(function () {
         $(this).val("$ " + formatAmount($(this).val()));
-    });   
+    });
+
+    $('#approvedBudget').keyup(function () {
+        $(this).val("$ " + formatAmount($(this).val()));
+    });
 });

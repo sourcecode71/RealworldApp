@@ -1,7 +1,7 @@
 ﻿var SearchProjects = function () {
     $("#projectName").val("");
 
-    $('input:radio[name="apStatus"]').filter('[value="1"]').attr('checked', true);
+
 
     $('#projectName').on('input', function () {
         clearTimeout(this.delay);
@@ -87,21 +87,7 @@
     //CallTagSearch("acti");
 }
 
-var SelectControls = function () {
 
-    $('input[type=radio][name=apStatus]').change(function () {
-
-        if (this.value == 1) {
-            $("#divBudget").addClass("show").removeClass("hide");
-            $("#spComment").text("Comments");
-
-        } else {
-            $("#divBudget").addClass("hide").removeClass("show");
-            $("#spComment").text("Reasonnot Approved Reason");
-            $("#addProjectBudget").val('');
-        }
-    });
-}
 
 function SubmitBudget() {
 
@@ -114,7 +100,7 @@ function SubmitBudget() {
 
         //console.log($("#pmId").val(), " validation --- ", $("#pjNo").text());
 
-        var slApproval = $("input[type='radio'][name='apStatus']:checked").val();
+       
 
         var approvedBudget = $("#addProjectBudget").val().split(" ");
         var dcMoney = approvedBudget[1].replace(",", "");
@@ -122,13 +108,13 @@ function SubmitBudget() {
         var approvalData = {
             id: $("#pmId").val(),
             projectNo: $("#pjNo").text(),
-            apporvalSatus: slApproval,
+            apporvalSatus: 0,
             approvedBudget: approvedBudget.length > 0 ? dcMoney : $("#addProjectBudget").val() ,
             comments: $("#comments").val()
         }
 
         var base_url = window.location.origin;
-        var searchURL = base_url + "/api/project/project-approval/status";
+        var searchURL = base_url + "/api/project/project-budget/submit";
 
         $.ajax({
             url: searchURL,
@@ -188,8 +174,6 @@ function LoadProjectBudgetActivities() {
     }).then(
         function fulfillHandler(data) {
 
-            console.log(" project name ", data);
-
             loadedData = data;
 
             $("#budgetApprovalAct").empty();
@@ -198,7 +182,7 @@ function LoadProjectBudgetActivities() {
                 tbRow += "<tr> <th scope='row'>" + (parseInt(index) + 1) + "</th>  <td class='pc-30 tb-text-center budgetNo' > " + item.budegtNo + "</td>  <td class='pc-30 tb-text-center tagId'>" + item.projectName + "</td>" +
                     " <td class='pc-30 tr-src tb-text-center '>" + item.clientName + "</td>   <td class='pc-30 tr-src tb-text-center '>" + item.approvedBudget + "</td>  " +
                     " <td class='pc-30 tr-src tb-text-center '>" + item.approvalDateStr + "</td>   <td class='pc-30 tr-src tb-text-center '>"+
-                    "<button class='mb-2 mr-2 btn-transition btn btn-outline-focus ' >  <i class='fa fa-check-square-o' aria-hidden='true'> </i>  Select </button > </td>  </tr > ";
+                    "<button class='mb-2 mr-2 btn-transition btn btn-outline-warning ' >  <i class='fa fa-pencil-square-o' aria-hidden='true'> </i>  change </button > </td>  </tr > ";
             });
 
             $("#budgetApprovalAct").append(tbRow);
@@ -230,21 +214,112 @@ function SelectedProject() {
 
         var budgetID = $(this).closest("tr").find(".budgetNo").text();
 
-        if (loadedData && budgetID) {
+        $("#exampleModal").modal("show");
 
-            var rowData = loadedData.filter(p => parseInt(p.budegtNo) == parseInt(budgetID));
+        setTimeout(() => {
+            $('input:radio[name="apStatus"]').filter('[value="1"]').attr('checked', true);
+        }, 100);
 
-            console.log(" rowData ", rowData);
+       
+        $("#appComment").text("Comments :");
+
+       if (loadedData && budgetID) {
+
+           var rowData = loadedData.filter(p => parseInt(p.budegtNo) == parseInt(budgetID));
+           $("#submitBudget").text("Submitted Budget :  " + formatMoney(rowData[0].approvedBudget) );
+
+           /* console.log(" rowData ", rowData);
 
             $("#projectName").val(rowData[0].projectName);
             $("#spBudgetBalance").text(formatMoney(rowData[0].balance));
             $("#addProjectBudget").val(rowData[0].approvedBudget);
             $("#spComment").val(rowData[0].comments);
-            $("#pmId").val(rowData[0].projectId);
+            $("#pmId").val(rowData[0].projectId); */
         }
     });
 
 }
+
+var SelectControls = function () {
+    $("#spComment").text("Comments");
+    $('input[type=radio][name=apStatus]').change(function () {
+
+        if (this.value == 1) {
+            $("#divAppBudget").addClass("show").removeClass("hide");
+            $("#appComment").text("Comments :");
+
+        } else {
+            $("#divAppBudget").addClass("hide").removeClass("show");
+            $("#appComment").text("Not approval reason :");
+            $("#addProjectBudget").val('');
+        }
+
+
+
+    });
+}
+
+
+$("#submitBudgetApproval").click(() => {
+
+    if (ValidationApprovedBudget()) {
+
+
+
+        var approvedBudget = $("#approvedBudget").val().split(" ");
+        var dcMoney = approvedBudget[1].replace(",", "");
+
+        var slApproval = $("input[type='radio'][name='apStatus']:checked").val();
+        var appBudget = {
+            "appStatus": slApproval,
+            "approvedBudget": dcMoney,
+            "comments": $("appComments").val()
+        }
+
+        var base_url = window.location.origin;
+        var searchURL = base_url + "/api/project/project-approval/status";
+
+
+        $.ajax({
+            url: searchURL,
+            type: 'post',
+            data: JSON.stringify(appBudget),
+            contentType: 'application/json; charset=utf-8',
+        }).then(
+            function fulfillHandler(data) {
+
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Record has been added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                ClearAllProjectActivities();
+                LoadProjectBudgetActivities();
+
+            },
+            function rejectHandler(jqXHR, textStatus, errorThrown) {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + errorThrown.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        ).catch(function errorHandler(error) {
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong.' + error,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        });
+
+    }
+});
 
 
 function SubmitWorkOrder() {
@@ -433,20 +508,9 @@ function ClearAllWorkOrder() {
     $("#consecutiveWork").val("");
     $("#projectName").val("");
 }
-function formatMoney(number, decPlaces, decSep, thouSep) {
 
-    decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-        decSep = typeof decSep === "undefined" ? "." : decSep;
-    thouSep = typeof thouSep === "undefined" ? "," : thouSep;
-    var sign = number < 0 ? "-" : "";
-    var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
-    var j = (j = i.length) > 3 ? j % 3 : 0;
 
-    return "$ " + sign +
-        (j ? i.substr(0, j) + thouSep : "") +
-        i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
-        (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
-}
+
 
 function PmBudgetApprovalValidation() {
 
@@ -501,8 +565,6 @@ function PmBudgetWorkOrderValidation() {
     else if (isFormValid ) {
         var approvedBudget = $("#addProjectBudget").val().split(" ");
 
-        console.log(" approvedBudget -- ", approvedBudget);
-
         if (parseInt(approvedBudget[1]) > 0) {
             $("#addProjectBudgetError").addClass("hide").removeClass("show");
             $("#addProjectBudgetError").text(" ");
@@ -524,6 +586,73 @@ function PmBudgetWorkOrderValidation() {
     }
 
     return isFormValid;
+}
+
+var ValidationApprovedBudget = () =>
+{
+    var isFormValid = true;
+    var slApproval = $("input[type='radio'][name='apStatus']:checked").val();
+
+    if (slApproval == 1) {
+        var approvedBudget = $("#approvedBudget").val().split(" ");
+
+        if ($("#approvedBudget").val() == "" || $("#approvedBudget").length == 0) {
+
+            $("#approvedBudgetError").addClass("show").removeClass("hide");
+            $("#approvedBudgetError").text(" Please enter work order budget. ");
+            isFormValid = false;
+        }
+        else if (isFormValid) {
+
+            var approvedBudget = $("#approvedBudget").val().split(" ");
+            console.log("dcMoney -- ", approvedBudget);
+            var dcMoney = approvedBudget[1].replace(",", "");
+
+            if (dcMoney > 0) {
+                $("#approvedBudgetError").addClass("hide").removeClass("show");
+                $("#approvedBudgetError").text(" ");
+            } else {
+                $("#approvedBudgetError").addClass("show").removeClass("hide");
+                $("#approvedBudgetError").text(" Approved budget should be more than 0. ");
+                isFormValid = false;
+            }
+        }
+ }
+
+    if (slApproval == 2) {
+        if ($("#appComment").val() == "" || $("#appComment").length == 0) {
+            $("#appCommentError").addClass("show").removeClass("hide");
+            $("#appCommentError").text(" Please enter reason of not approved the budget. ");
+            isFormValid = false;
+        } else {
+            $("#appCommentError").addClass("hide").removeClass("show");
+            $("#appCommentError").text("  ");
+            isFormValid = true;
+        }
+    } else {
+        $("#appCommentError").addClass("hide").removeClass("show");
+        $("#appCommentError").text("  ");
+    }
+
+      
+    
+    return isFormValid;
+}
+
+
+function formatMoney(number, decPlaces, decSep, thouSep) {
+
+    decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+        decSep = typeof decSep === "undefined" ? "." : decSep;
+    thouSep = typeof thouSep === "undefined" ? "," : thouSep;
+    var sign = number < 0 ? "-" : "";
+    var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+    var j = (j = i.length) > 3 ? j % 3 : 0;
+
+    return "$ " + sign +
+        (j ? i.substr(0, j) + thouSep : "") +
+        i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+        (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
 }
 
 

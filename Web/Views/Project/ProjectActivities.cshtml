@@ -8,125 +8,171 @@
    <div class="row">
     <link rel="stylesheet" href="~/css/projects.css" />
 
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
-        <div class="main-card mb-3 card">
-            <div class="card-body"><h5 class="card-title">de Presupuesto </h5>
-                <form action="#" onsubmit="SubmitBudget();return false" >
-                    <div class="position-relative form-group">
-                        <label for="exampleEmail" class=""> Project </label>
-                        <input name="project" id="projectName" placeholder="Search the project" class="form-control">
+    <div class="col-md-10">
 
-                        <div id="projectNameError" class="alert alert-danger mt-1 hide">
-                        </div>
+           <div class="card-body"><h5 class="card-title">Justified Alignment</h5>
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="nav-item"><a data-toggle="tab" href="#tab-eg11-0" class="active nav-link"> De Presupuesto  </a></li>
+                    <li class="nav-item"><a data-toggle="tab" href="#tab-eg11-1" class="nav-link"> De Presupuesto Lista   </a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane col-md-8 active" id="tab-eg11-0" role="tabpanel">
+                          <div class="main-card mb-3   card">
+                            <div class="card-body">
+                                <h5 class="card-title"> </h5>
+                                <form action="#" onsubmit="SubmitBudget();return false" >
+                                    <div class="position-relative form-group">
+                                        <label for="exampleEmail" class=""> Project </label>
+                                        <input name="project" id="projectName" placeholder="Search the project" class="form-control">
+
+                                        <div id="projectNameError" class="alert alert-danger mt-1 hide">
+                                        </div>
                          
-                         <div id="SBoxDiv" class="main-card mb-3 card search-box hide">
-                                    <div style="min-height:140px" class="card-body-sb">
-                                        <table class="mb-0 table table-hover">
-                                            <thead class="thead-src">
-                                            <tr class="sb-header tr-src">
-                                                <th class="pc-10">#</th>
-                                                <th class="pc-30" >Name</th>
-                                                <th class="pc-30">Project No</th>
-                                                <th class="pc-30">Client</th>
-                                            </tr>
-                                            </thead>
+                                         <div id="SBoxDiv" class="main-card mb-3 card search-box hide">
+                                                    <div style="min-height:140px" class="card-body-sb">
+                                                        <table class="mb-0 table table-hover">
+                                                            <thead class="thead-src">
+                                                            <tr class="sb-header tr-src">
+                                                                <th class="pc-10">#</th>
+                                                                <th class="pc-30" >Name</th>
+                                                                <th class="pc-30">Project No</th>
+                                                                <th class="pc-30">Client</th>
+                                                            </tr>
+                                                            </thead>
 
-                                            <tbody id="tableBody" class="hide tbody-src" >
+                                                            <tbody id="tableBody" class="hide tbody-src" >
                                                
-                                            </tbody>
-                                        </table>
+                                                            </tbody>
+                                                        </table>
                                        
-                                        <div id="SpinnerDiv" class="d-flex mt-3 justify-content-center hide">
-                                             <div class="spinner-border text-info" role="status">
-                                               <span class="sr-only">Loading...</span>
-                                            </div>
+                                                        <div id="SpinnerDiv" class="d-flex mt-3 justify-content-center hide">
+                                                             <div class="spinner-border text-info" role="status">
+                                                               <span class="sr-only">Loading...</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                             </div>
+
+                                    <div id="divPmDescription" class="position-relative form-group hide">
+                                         <div class="row pmg-text">
+                                            <div class="col-md-6 col-sm-12"> Project No   : <span id="pjNo" > </span> </div>
+                                            <div class="col-md-6 col-sm-12"> Project Year : <span id="pjYear" > </span> </div>
+                                            <div class="col-md-6 col-sm-12"> Client : <span id="pjClient" > </span> </div>
+                                            <div class="col-md-6 col-sm-12"> Budget : <span id="pjBudget" > </span> </div>
+                                             <input type="hidden" id="pmId" >
                                         </div>
                                     </div>
-                                </div>
-                             </div>
 
-                    <div id="divPmDescription" class="position-relative form-group hide">
-                         <div class="row pmg-text">
-                            <div class="col-md-6 col-sm-12"> Project No   : <span id="pjNo" > </span> </div>
-                            <div class="col-md-6 col-sm-12"> Project Year : <span id="pjYear" > </span> </div>
-                            <div class="col-md-6 col-sm-12"> Client : <span id="pjClient" > </span> </div>
-                            <div class="col-md-6 col-sm-12"> Budget : <span id="pjBudget" > </span> </div>
-                             <input type="hidden" id="pmId" >
-                        </div>
-                    </div>
-
-                     <div id="divBudget" class="position-relative form-group">
-                            <div class="row">
-                              <div class =" col-md-5 col-sm-6 col-lg-5">
-                                   <label for="exampleEmail" class=""> Submit Budget:  </label>
-                                   <input name="project" id="addProjectBudget" placeholder="Submit Budget" class="form-control">
+                                     <div id="divBudget" class=" position-relative form-group">
+                                            <div class="row">
+                                              <div class =" col-md-5 col-sm-6 col-lg-5">
+                                                   <label for="exampleEmail" class=""> Submit Budget:  </label>
+                                                   <input name="project" id="addProjectBudget" placeholder="Submit Budget" class="form-control">
                                
-                               </div>
+                                               </div>
                                 
-                                 <div class =" hide col-md-5 col-sm-6 col-lg-5">
-                                   <label for="exampleEmail" class=""> Budget Balance:  </label>
-                                   <div style="color:#0986ac;font-weight : 700" id="spBudgetBalance"> </div>
-                                 </div>
-                                  <div id="approvalBudgetError" class="alert alert-danger ml-3 hide hide"> </div>
-                            </div>
+                                                 <div class =" hide col-md-5 col-sm-6 col-lg-5">
+                                                   <label for="exampleEmail" class=""> Budget Balance:  </label>
+                                                   <div style="color:#0986ac;font-weight : 700" id="spBudgetBalance"> </div>
+                                                 </div>
+                                                  <div id="approvalBudgetError" class="alert alert-danger ml-3 hide hide"> </div>
+                                            </div>
                         
-                       </div>
+                                       </div>
 
-                    <div class="position-relative form-group pd-4">
-                          <label for="exampleEmail" class=""> Budget Approval Status </label>
-
-                        <div class=" row m-3">
-                            <div class="col-md-5 col-sm-6  custom-radio custom-control">
-                                <input type="radio" id="exampleCustomRadio" value="1" name="apStatus" class="custom-control-input">
-                                <label class="custom-control-label" for="exampleCustomRadio"> Approved </label>
-                            </div>
-                            <div class="col-md-5 col-sm-6 custom-radio custom-control">
-                                <input type="radio" id="exampleCustomRadio2" value="2" name="apStatus" class="custom-control-input">
-                                <label class="custom-control-label" for="exampleCustomRadio2"> Not Approved </label>
-                            </div>
-                        </div>
-                    </div>
+                                
 
                      
                  
-                    <div class="position-relative form-group">
-                        <label for="exampleText" class=""> <span id ="spComment"> Comments </span>  </label>
-                        <textarea name="text" id="comments" class="form-control"></textarea>
-                    </div>
-                   
-                    <button id="btnSubmitBudget"   class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> Submit </strong>  </button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3"></div>
-     <div class="col-md-1"></div>
-       <div class="col-lg-10">
-                                <div class="main-card mb-3 card">
-                                    <div class="card-body"><h5 class="card-title">de Presupuesto Lista </h5>
-                                        <table class="mb-0 table table-striped">
-                                            <thead>
-                                            <tr style="font-size:14px">
-                                                <th> # </th>
-                                                <th> Budget No</th>
-                                                <th>Project Name </th>
-                                                <th>Client </th>
-                                                <th>Approved Budget</th>
-                                                <th>Approval Date </th>
-                                                <th> Actions </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="budgetApprovalAct">
-                                           
-                                           
-                                            </tbody>
-                                        </table>
+                                    <div class="position-relative form-group">
+                                        <label for="exampleText" class=""> <span id ="spComment"> Comments </span>  </label>
+                                        <textarea name="text" id="comments" class="form-control"></textarea>
                                     </div>
+                   
+                                    <button id="btnSubmitBudget"   class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> Submit </strong>  </button>
+                                </form>
+                            </div>
+                          </div>
+                    </div>
+                    <div class="tab-pane" id="tab-eg11-1" role="tabpanel">
+                        <div class="main-card mb-3 card">
+                            <div class="card-body"><h5 class="card-title">de Presupuesto Lista </h5>
+                                <table class="mb-0 table table-striped">
+                                    <thead>
+                                    <tr style="font-size:14px">
+                                        <th> # </th>
+                                        <th> Budget No</th>
+                                        <th>Project Name </th>
+                                        <th>Client </th>
+                                        <th>Submited Budget</th>
+                                        <th>Submited Date </th>
+                                        <th> Status Change </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="budgetApprovalAct">
+                                           
+                                           
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Budget Approval Status </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="recipient-name" id="submitBudget" class="col-form-label approval-status"> </label>
+                  </div>
+                  <div class="form-group">
+                      <div  class="position-relative form-group mt-1 pd-4">
+                                <label for="exampleEmail" class=""> Budget Approval Status : </label>
+
+                            <div class=" row m-3">
+                                <div class="col-md-5 col-sm-6  custom-radio custom-control">
+                                    <input type="radio" id="exampleCustomRadio" value="1" name="apStatus" class="custom-control-input" checked>
+                                    <label class="custom-control-label" for="exampleCustomRadio"> Approved </label>
+                                </div>
+                                <div class="col-md-5 col-sm-6 custom-radio custom-control">
+                                    <input type="radio" id="exampleCustomRadio2" value="2" name="apStatus" class="custom-control-input">
+                                    <label class="custom-control-label" for="exampleCustomRadio2"> Not Approved </label>
                                 </div>
                             </div>
+                        </div>
+                  </div>
+                   <div id="divAppBudget" class="form-group">
+                    <label for="recipient-name"  class="col-form-label"> Approved Budget : </label>
+                    <input type="text"  class="form-control moneyFormat" id="approvedBudget">
+                  </div>
+                   <div id="approvedBudgetError" class="alert alert-danger ml-1 hide hide"> </div>
 
-      <div class="col-md-1"></div>
+                  <div class="form-group mt-1">
+                    <label for="message-text" class="col-form-label" id="appComment"> </label>
+                    <textarea class="form-control" id="appComments"></textarea>
+                  </div>
+                   <div id="appCommentError" class="alert alert-danger ml-1 hide hide"> </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="submitBudgetApproval" type="button" class="btn btn-primary">  <strong> <i class='fa fa-save'></i> Submit </strong> </button>
+               
+              </div>
+            </div>
+          </div>
+        </div>
 
   
     @section Scripts {

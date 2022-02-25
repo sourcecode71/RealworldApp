@@ -1,8 +1,5 @@
 ﻿
-var CompanyActivity=()=>
-{
 
-}
 
 function SubmitClient() {
 

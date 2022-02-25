@@ -69,3 +69,8 @@
 .pmg-text {
    color: #0986ac
 }
+
+.approval-status {
+    font-weight: 700;
+    color: #1cbcec;
+}
