@@ -43,9 +43,14 @@ namespace Application.DTOs
         public string ClientName { get; set; }
         public DateTime ApprovalDate { get; set; }
         public String ApprovalDateStr { get; set; }
-        public bool ApprovalStatus { get; set; }
+        public String ApprovalSetUser { get; set; }
+        public int ApprovalStatus { get; set; }
+        public string ApprovalStatusStr { get; set; }
         public int Status { get; set; }
-        public decimal? ApprovedBudget { get; set; }
+        public double Budget { get; set; }
+        public DateTime BudgetSubmitDate { get; set; }
+        public string BudgetSubmitDateStr { get; set; }
+        public double? ApprovedBudget { get; set; }
         public double Balance { get; set; }
         public string Comments { get; set; }
 

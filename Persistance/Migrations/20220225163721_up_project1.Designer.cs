@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Context;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220225163721_up_project1")]
+    partial class up_project1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -369,58 +371,6 @@ namespace Persistance.Migrations
                     b.ToTable("HisWorkOrder");
                 });
 
-            modelBuilder.Entity("Domain.Projects.Invoice", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<double>("InvoiceBill")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("InvoiceDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("InvoiceNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasMaxLength(200)
-                        .HasColumnType("bit");
-
-                    b.Property<double>("PartialBill")
-                        .HasColumnType("float");
-
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ProjectId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("SetDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SetUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("WorkOrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("WorkOrderNo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId1");
-
-                    b.HasIndex("WorkOrderId");
-
-                    b.ToTable("Invoice");
-                });
-
             modelBuilder.Entity("Domain.Projects.ProjectBudgetActivities", b =>
                 {
                     b.Property<Guid>("Id")
@@ -712,23 +662,6 @@ namespace Persistance.Migrations
                     b.HasOne("Domain.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId");
-
-                    b.HasOne("Domain.Projects.WorkOrder", "WorkOrder")
-                        .WithMany()
-                        .HasForeignKey("WorkOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-
-                    b.Navigation("WorkOrder");
-                });
-
-            modelBuilder.Entity("Domain.Projects.Invoice", b =>
-                {
-                    b.HasOne("Domain.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId1");
 
                     b.HasOne("Domain.Projects.WorkOrder", "WorkOrder")
                         .WithMany()

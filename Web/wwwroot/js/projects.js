@@ -1,8 +1,6 @@
 ﻿var SearchProjects = function () {
     $("#projectName").val("");
 
-
-
     $('#projectName').on('input', function () {
         clearTimeout(this.delay);
         this.delay = setTimeout(function () {
@@ -63,10 +61,9 @@
 
         var tagID = $(this).closest("tr").find(".tagId").text();
 
+
         if (pmData && tagID) {
             var pmRow = (pmData.filter(p => p.projectNo == tagID))[0];
-
-            console.log(" data ", pmRow);
 
             $("#pmId").val(pmRow.id);
             $("#projectName").val(pmRow.name);
@@ -96,12 +93,6 @@ function SubmitBudget() {
     var validation = PmBudgetApprovalValidation();
 
     if (validation) {
-
-
-        //console.log($("#pmId").val(), " validation --- ", $("#pjNo").text());
-
-       
-
         var approvedBudget = $("#addProjectBudget").val().split(" ");
         var dcMoney = approvedBudget[1].replace(",", "");
 
@@ -109,7 +100,7 @@ function SubmitBudget() {
             id: $("#pmId").val(),
             projectNo: $("#pjNo").text(),
             apporvalSatus: 0,
-            approvedBudget: approvedBudget.length > 0 ? dcMoney : $("#addProjectBudget").val() ,
+            budget: approvedBudget.length > 0 ? dcMoney : $("#addProjectBudget").val() ,
             comments: $("#comments").val()
         }
 
@@ -179,10 +170,19 @@ function LoadProjectBudgetActivities() {
             $("#budgetApprovalAct").empty();
             var tbRow = "";
             data.forEach(function (item, index) {
+
+                console.log(" item.approvalDateStr  ", item.approvalDateStr);
+
+                var appBudget = item.approvedBudget ? formatMoney(item.approvedBudget) : " -";
+                var appDate = item.approvalDateStr == "01/01/0001" ? "-" : item.approvalDateStr;
+                
                 tbRow += "<tr> <th scope='row'>" + (parseInt(index) + 1) + "</th>  <td class='pc-30 tb-text-center budgetNo' > " + item.budegtNo + "</td>  <td class='pc-30 tb-text-center tagId'>" + item.projectName + "</td>" +
-                    " <td class='pc-30 tr-src tb-text-center '>" + item.clientName + "</td>   <td class='pc-30 tr-src tb-text-center '>" + item.approvedBudget + "</td>  " +
-                    " <td class='pc-30 tr-src tb-text-center '>" + item.approvalDateStr + "</td>   <td class='pc-30 tr-src tb-text-center '>"+
-                    "<button class='mb-2 mr-2 btn-transition btn btn-outline-warning ' >  <i class='fa fa-pencil-square-o' aria-hidden='true'> </i>  change </button > </td>  </tr > ";
+                    " <td class='pc-30 tr-src tb-text-center'>" + formatMoney(item.budget) + "</td> "+
+                    " <td class='pc-30 tr-src tb-text-center'>" + item.budgetSubmitDateStr + "</td> "+
+                    " <td class='pc-30 tr-src tb-text-center'>" + item.approvalStatusStr + "</td> "+
+                    " <td class='pc-30 tr-src tb-text-center'>" + appBudget + "</td> "+
+                    " <td class='pc-30 tr-src tb-text-center'>" + appDate + "</td>"+
+                    "<td class='pc-30 tr-src tb-text-center'> <button class='mb-2 mr-2 btn-transition btn btn-outline-warning btnBudgetApr ' >  <i class='fa fa-pencil-square-o' aria-hidden='true'> </i>  change </button > </td>  </tr > ";
             });
 
             $("#budgetApprovalAct").append(tbRow);
@@ -210,32 +210,43 @@ function LoadProjectBudgetActivities() {
 
 function SelectedProject() {
 
-    $("#budgetApprovalAct").on('click', '.btn', function () {
+    $("#budgetApprovalAct").on('click', '.btnBudgetApr', function () {
 
         var budgetID = $(this).closest("tr").find(".budgetNo").text();
+        var rowData = loadedData.filter(p => parseInt(p.budegtNo) == parseInt(budgetID));
 
-        $("#exampleModal").modal("show");
+        if (rowData[0].approvalStatus == 0) {
 
-        setTimeout(() => {
-            $('input:radio[name="apStatus"]').filter('[value="1"]').attr('checked', true);
-        }, 100);
+            $("#exampleModal").modal("show");
 
-       
-        $("#appComment").text("Comments :");
+            setTimeout(() => {
+                $('input:radio[name="apStatus"]').filter('[value="1"]').attr('checked', true);
+            }, 100);
 
-       if (loadedData && budgetID) {
 
-           var rowData = loadedData.filter(p => parseInt(p.budegtNo) == parseInt(budgetID));
-           $("#submitBudget").text("Submitted Budget :  " + formatMoney(rowData[0].approvedBudget) );
+            $("#appComment").text("Comments :");
 
-           /* console.log(" rowData ", rowData);
+            if (loadedData && budgetID) {
+                $("#submitBudget").text("Submitted Budget :  " + formatMoney(rowData[0].budget));
+                $("#pmId").val(rowData[0].projectId)
+            }
 
-            $("#projectName").val(rowData[0].projectName);
-            $("#spBudgetBalance").text(formatMoney(rowData[0].balance));
-            $("#addProjectBudget").val(rowData[0].approvedBudget);
-            $("#spComment").val(rowData[0].comments);
-            $("#pmId").val(rowData[0].projectId); */
+        } else {
+
+            var msg = rowData[0].approvalStatus == 1 ? "Already the budget is approved" : "Already the budget is refused";
+
+            Swal.fire({
+                position: 'top-end',
+                title: 'Info!',
+                text: msg,
+                icon: 'info',
+                showConfirmButton: false,
+                timer: 2000
+            });
+
         }
+
+        
     });
 
 }
@@ -264,20 +275,23 @@ $("#submitBudgetApproval").click(() => {
 
     if (ValidationApprovedBudget()) {
 
-
-
         var approvedBudget = $("#approvedBudget").val().split(" ");
         var dcMoney = approvedBudget[1].replace(",", "");
+        var pmId = $("#pmId").val();
 
+        var slBudget = loadedData.filter(p => p.projectId == pmId);
         var slApproval = $("input[type='radio'][name='apStatus']:checked").val();
+
         var appBudget = {
-            "appStatus": slApproval,
+            "id": pmId,
+            "budegtNo": slBudget[0].budegtNo,
+            "status": slApproval,
             "approvedBudget": dcMoney,
             "comments": $("appComments").val()
         }
 
         var base_url = window.location.origin;
-        var searchURL = base_url + "/api/project/project-approval/status";
+        var searchURL = base_url + "/api/project/budegt-approval/status";
 
 
         $.ajax({

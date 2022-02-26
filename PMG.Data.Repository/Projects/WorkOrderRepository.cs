@@ -17,13 +17,15 @@ namespace PMG.Data.Repository.Projects
             _context = dataContext;
         }
 
+       
+
         public IQueryable<WorkOrderDTO> LoadAllWorkOrders()
         {
             try
             {
                 IQueryable<WorkOrderDTO> wrkList = (from w in _context.WorkOrder
                                             join p in _context.Projects on w.ProjectId equals p.Id
-                                            where p.IsBudgetApproved == true
+                                            where p.BudgetApprovedStatus != 2
                                             orderby w.SetDate descending
                                             select new WorkOrderDTO
                                             {
@@ -131,12 +133,103 @@ namespace PMG.Data.Repository.Projects
                 }
         }
 
+
+        public IQueryable<WorkOrderDTO> GetFilteredWorkOrder(string strOT)
+        {
+            try
+            {
+                var wrkODT = from wrk in _context.WorkOrder
+                             join prj in _context.Projects on wrk.ProjectId equals prj.Id
+                             where wrk.OTDescription.Contains(strOT) 
+                             orderby wrk.ApprovalDate descending
+                             select new WorkOrderDTO
+                             {
+                                 Id = wrk.Id,
+                                 ApprovedBudget = wrk.ApprovedBudget,
+                                 OTDescription = wrk.OTDescription,
+                                 ApprovedDate = wrk.ApprovalDate,
+                                 ProjectId = wrk.ProjectId,
+                                 ProjectNo = wrk.ProjectNo,
+                                 WorkOrderNo = wrk.WorkOrderNo,
+                                 ProjectName = prj.Name,
+                                 ClinetName = prj.Name,
+                                 ProjectYear = prj.Year,
+                                 Comments = wrk.Comments
+                             };
+                return wrkODT;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<bool> SaveInvoice(InvoiceDTO invDTO)
+        {
+            try
+            {
+                var invData = new Invoice
+                {
+                    Id = Guid.NewGuid(),
+                    WorkOrderId = new Guid(invDTO.WorkOrderId),
+                    WorkOrderNo = invDTO.WorkNo,
+                    ProjectId = new Guid(invDTO.ProjectId),
+                    PartialBill = invDTO.PartialBill,
+                    InvoiceBill = invDTO.InvoiceBill,
+                    InvoiceDate = invDTO.InvoiceDate,
+                    InvoiceNumber = invDTO.InvoiceNumber,
+                    Remarks = invDTO.Remarks,
+                    SetUser = invDTO.SetUser,
+                    SetDate = DateTime.Now
+                };
+
+                _context.Invoice.Add(invData);
+
+                var State = await _context.SaveChangesAsync();
+
+                return State==1;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public IQueryable<InvoiceDTO> GetAllInvoices()
+        {
+            var invDTO = from inv in _context.Invoice
+                         join wrk in _context.WorkOrder on inv.WorkOrderId equals wrk.Id
+                         join prj in _context.Projects on wrk.ProjectId equals prj.Id
+                         orderby inv.Id descending
+                         select new InvoiceDTO
+                         {
+                             Id = inv.Id.ToString(),
+                             WorkOrderId = inv.WorkOrderId.ToString(),
+                             WorkNo = inv.WorkOrderNo,
+                             OTName = wrk.OTDescription,
+                             ProjectName = prj.Name,
+                             PartialBill = inv.PartialBill,
+                             InvoiceBill = inv.InvoiceBill,
+                             InvoiceNumber = inv.InvoiceNumber,
+                             InvoiceDate = inv.InvoiceDate,
+                             Remarks = inv.Remarks
+                         };
+            return invDTO;
+
+        }
+
         private string GetProjectNumber(WorkOrderDTO dTO)
         {
             var PmOTCount = _context.WorkOrder.Where(P => P.ProjectNo == dTO.ProjectNo).Count() + 1;
             string ProjectNumber = string.Format("{0}{1}{2}", dTO.ProjectNo,"OT", PmOTCount.ToString("00"));
             return ProjectNumber;
         }
+
+       
     }
 
 

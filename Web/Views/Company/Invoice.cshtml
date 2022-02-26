@@ -1,0 +1,152 @@
+﻿
+@{
+    ViewData["Title"] = "Invoice";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+ <div class="row">
+    <link rel="stylesheet" href="~/css/projects.css" />
+
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="main-card mb-3 card">
+            <div class="card-body"><h5 class="card-title">Partial Payment and Invoice </h5>
+                <form class="p-2" action="#" onsubmit="SubmitInvoice();return false" >
+                    <div class="position-relative form-group">
+                        <label for="exampleEmail" class=""> Work Order : </label>
+                        <input name="project" id="workOrderName" placeholder="Search the project" class="form-control">
+
+                        <div id="projectNameError" class="alert alert-danger mt-1 hide">
+                        </div>
+                         
+                         <div id="SBoxDiv" class="main-card mb-3 card search-box hide">
+                                    <div style="min-height:200px" class="card-body-sb">
+                                        <table class="mb-0 table table-hover">
+                                            <thead class="thead-src">
+                                            <tr class="sb-header tr-src">
+                                                <th class="pc-10">#</th>
+                                                <th class="pc-30" >Budget No</th>
+                                                <th class="pc-30">Work Order</th>
+                                                <th class="pc-30">Budget</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody id="tableBody" class="hide tbody-src" >
+                                               
+                                            </tbody>
+                                        </table>
+                                       
+                                        <div id="SpinnerDiv" class="d-flex mt-3 justify-content-center hide">
+                                             <div class="spinner-border text-info" role="status">
+                                               <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+
+                    <div id="divPmDescription" class="position-relative form-group hide">
+                         <div class="row pmg-text">
+                            <div class="col-md-6 col-sm-12"> Work Order No : <span id="wrkNoTx" > </span> </div>
+                            <div class="col-md-6 col-sm-12"> Work Order : <span id="wrkDes" > </span> </div>
+                            <div class="col-md-6 col-sm-12"> OT Budget : <span id="wrkBudget" > </span> </div>
+                            <div class="col-md-6 col-sm-12"> Client : <span id="pjClient" > </span> </div>
+
+                            <div class="col-md-6 col-sm-12"> Project No   : <span id="pjNo" > </span> </div>
+                            <div class="col-md-6 col-sm-12"> Project Year : <span id="pjYear" > </span> </div>
+                             <input type="hidden" id="wrkId" >
+                             <impu typeof="hidden" id="wrkNo"> 
+                             <impu typeof="hidden" id="projectId"> 
+                        </div>
+                    </div>
+
+                    <div id="divBudget" class="position-relative form-group">
+                        <div class="row">
+                            <div class =" col-md-6 col-sm-6 col-lg-6">
+                                <label for="consecutiveWork" class="">  Partial bill :  </label>
+                                <input name="project" id="partialbill" placeholder="Partial bill" class="form-control moneyFormat">
+                           
+                                <div id="partialbillError" class="alert alert-danger  ml-1 hide">
+                                </div>
+                            </div>
+
+                             <div class ="col-md-6 col-sm-6 col-lg-6">
+                                <label id="otBudget" for="exampleEmail" class=""> Invoice bill:  </label>
+                                <input name="project" id="invoicebill" placeholder="Approved Budget" class="form-control moneyFormat">
+                           
+                                <div id="invoicebillError" class="alert alert-danger  ml-1 hide">
+                                </div>
+                            
+                            </div>
+
+                             <div class =" mt-4 col-md-6 col-sm-6 col-lg-6">
+                                <label for="consecutiveWork" class="">  Invoice Number :  </label>
+                                <input name="project" id="invoiceNumber" placeholder="Invoice Number" class="form-control">
+                           
+                                <div id="invoiceNumberError" class="alert alert-danger  ml-1 hide">
+                                </div>
+                            </div>
+
+                             <div class =" mt-4 col-md-6 col-sm-6 col-lg-6">
+                                <label id="otBudget" for="exampleEmail" class=""> Invoice Date:  </label>
+                                <input name="project" type="date" id="invoiceDate" placeholder="Invoice Date" class="form-control">
+                           
+                                <div id="invoiceDateError" class="alert alert-danger  ml-1 hide">
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                 
+                    <div class=" mt-1 position-relative form-group">
+                        <label for="exampleText" class=""> <span id ="spComment"> Remarks : </span>  </label>
+                        <textarea name="text" id="remark" class="form-control"></textarea>
+                    </div>
+                   
+                    <button id="btnWrkBudget" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+     <div class="col-md-1"></div>
+       <div class="hide col-lg-10">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body"><h5 class="card-title">Work Order List </h5>
+                                        <table class="mb-0 table table-striped">
+                                            <thead>
+                                            <tr style="font-size:14px">
+                                                <th> # </th>
+                                                <th>Project Name </th>
+                                                <th> OT No</th>
+                                                <th style="width:290px" >Work Order</th>
+                                                <th> Budget </th>
+                                                <th> Approved Date </th>
+                                                <th> Actions </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="budgetApprovalAct">
+                                           
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+      <div class="col-md-1"></div>
+
+  
+    @section Scripts {
+        <script src="~/js/invoive.js"></script>
+        <script src="~/js/workOrderFilter.js"></script>
+
+        <script>
+           $(function () {
+                WorkOrder.initWorkOrderFilter();
+            });
+        </script>
+    }
+  </div>
+
+

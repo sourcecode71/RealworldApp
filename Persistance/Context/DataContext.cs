@@ -22,6 +22,7 @@ namespace Persistance.Context
         public DbSet<HisWorkOrder> HisWorkOrder { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Company> Company { get; set; }
+        public DbSet<Invoice> Invoice { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -178,14 +178,14 @@ namespace Web.ApiControllers
         [HttpPost("project-budget/submit")]
         public async Task<ActionResult> SubmitProjectBUdget(ProjectApprovalDto project)
         {
-            bool isApproved = await _project.SaveProjectApproval(project);
+            bool isApproved = await _project.SubmitBudget(project);
             return Ok(isApproved);
         }
 
-        [HttpPost("project-approval/status")]
+        [HttpPost("budegt-approval/status")]
         public async Task<ActionResult> SaveProjectApproval(ProjectApprovalDto dto)
         {
-            bool isApproved = await _project.SaveProjectApproval(dto);
+            bool isApproved = await _project.ApprovalBudget(dto);
             return Ok(isApproved);
         }
 

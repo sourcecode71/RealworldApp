@@ -25,7 +25,6 @@ namespace PMG.Data.Repository.Projects
             string Day = CurrentDate.Day.ToString("00");
             string Month = CurrentDate.Month.ToString("00");
             string Year = CurrentDate.Year.ToString();
-
             string ProjectNumber = string.Format("{0}{1}{2}{3}", Day, Month, Year, TodayPmCount.ToString("00"));
 
             return ProjectNumber;
@@ -59,56 +58,92 @@ namespace PMG.Data.Repository.Projects
             return PmBudgetNo;
         }
 
-        public async Task<bool> SaveProjectApproval(ProjectApprovalDto approvalDto)
+        public async Task<bool> SubmitBudget(ProjectApprovalDto dto)
         {
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                string PmBudgetNo = GetPmBudgetNumber(approvalDto);
-
-                var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == approvalDto.Id);
-
-                if(project == null)
+                try
                 {
-                    return false;
+                    string PmBudgetNo = GetPmBudgetNumber(dto);
+
+                    var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == dto.Id);
+
+                    if (project == null)
+                    {
+                        return false;
+                    }
+
+                    project.BudgetApprovedStatus = 0;
+                    project.BudgetSubmitDate = DateTime.Now;
+                    project.Budget = dto.Budget;
+
+                    var pmApproval = new ProjectBudgetActivities
+                    {
+                        Id = Guid.NewGuid(),
+                        BudgetNo = PmBudgetNo,
+                        ProjectId = dto.Id,
+                        ProjectNo = dto.ProjectNo,
+                        Budget = dto.Budget,
+                        Comments = dto.Comments,
+                        BudgetSubmitDate = DateTime.Now,
+                        ApprovalSetUser = dto.ApprovalSetUser
+                    };
+
+                    _context.Add(pmApproval);
+
+                    var Status = await _context.SaveChangesAsync();
+                   await transaction.CommitAsync();
+
+                    return Status == 1;
+
                 }
-
-                project.IsBudgetApproved = approvalDto.ApporvalSatus == 1;
-
-                decimal budgetBalance = (decimal)project.Balance;
-
-
-                if (approvalDto.ApporvalSatus == 1 && approvalDto.ApprovedBudget>0)
+                catch (Exception ex)
                 {
-                    project.Balance = project.Balance - (double)approvalDto.ApprovedBudget;
-
-                    budgetBalance = (decimal)project.Balance;
+                    await transaction.RollbackAsync();
+                    throw ex;
                 }
-
-
-                var pmApproval = new ProjectBudgetActivities
-                { 
-                     Id  = Guid.NewGuid(),
-                     BudgetNo = PmBudgetNo,
-                     ProjectId = approvalDto.Id,
-                     ProjectNo = approvalDto.ProjectNo,
-                     ApprovalStatus = approvalDto.ApporvalSatus ==1,
-                     ApprovedBudget = approvalDto.ApprovedBudget,
-                     BalanceBudget = budgetBalance,
-                     Comments = approvalDto.Comments,
-                     ApprovedDate = DateTime.Now,
-                };
-
-                _context.Add(pmApproval);
-
-                var Status = await _context.SaveChangesAsync();
-
-                return Status == 1 ;
-
             }
-            catch (Exception ex)
-            {
+        }
 
-                throw ex;
+        public async Task<bool> ApprovalBudget(ProjectApprovalDto dto)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    string PmBudgetNo = GetPmBudgetNumber(dto);
+
+                    var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == dto.Id);
+
+                    if (project != null)
+                    {
+                        project.BudgetApprovedStatus = dto.Status;
+                        project.BudgetApprovedDate = DateTime.Now;
+                        project.ApprovedBudget = dto.ApprovedBudget;
+                    }
+                   
+                    var pba = await _context.ProjectBudgetActivities.FirstOrDefaultAsync(p => p.BudgetNo == dto.BudegtNo);
+                    if(pba != null)
+                    {
+                        pba.Status = dto.Status;
+                        pba.ApprovedDate = DateTime.Now;
+                        pba.BudgetSubmitDate = pba.BudgetSubmitDate;
+                        pba.ApprovedBudget= dto.ApprovedBudget;
+                        pba.Comments    = dto.Comments;
+                        pba.ApprovalSetUser = dto.ApprovalSetUser;
+                    }
+                    
+                    var Status = await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    return Status == 1;
+
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
             }
         }
 
@@ -118,25 +153,27 @@ namespace PMG.Data.Repository.Projects
             {
                 var prjoect = (from pa in _context.ProjectBudgetActivities
                                join pj in _context.Projects on pa.ProjectId equals pj.Id
-                               orderby pa.SetDate descending
+                               orderby pa.BudgetSubmitDate descending
                                select new ProjectApprovalDto
                                {
-                                   Id = pj.Id,
+                                   Id = pa.Id.ToString(),
                                    ProjectNo = pj.ProjectNo,
                                    BudegtNo = pa.BudgetNo,
-                                   ApprovedBudget = pa.ApprovedBudget,
+                                   Budget = pa.Budget,
                                    ClientName = pj.Client,
-                                   ApprovalStatus = pa.ApprovalStatus,
-                                   ApprovalDateStr = pa.ApprovedDate.ToString("dd/MM/yyyy"),
+                                   ApprovalStatus = pa.Status,
+                                   ApprovedBudget = pj.ApprovedBudget,
+                                   BudgetSubmitDateStr = pa.BudgetSubmitDate.ToString("dd/MM/yyyy"),
                                    ProjectName = pj.Name,
                                    Balance = pj.Balance,
-                                   ProjectId = pa.Id
+                                   ProjectId = new Guid(pj.Id),
+                                   ApprovalStatusStr = pa.Status ==0 ? "Waiting" : pa.Status == 1 ? "Approved" : "Not Approved",
+                                   ApprovalDateStr = pa.ApprovedDate.ToString("dd/MM/yyyy")
+
 
                                }).Take(50).ToListAsync();
 
                 return await prjoect;
-
-
             }
             catch (Exception ex)
             {

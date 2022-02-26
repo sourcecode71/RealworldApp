@@ -1,6 +1,4 @@
 ﻿
-
-
 function SubmitClient() {
 
     var base_url = window.location.origin;

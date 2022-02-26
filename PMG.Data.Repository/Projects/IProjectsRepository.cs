@@ -8,8 +8,9 @@ namespace PMG.Data.Repository.Projects
     {
         string  GetProjectNumber(ProjectDto projectDto);
         string GetPmBudgetNumber(ProjectApprovalDto projectDto);
-        Task<List<ProjectDto>> GetProjectBySearch(string SearchTag);
-        Task<bool> SaveProjectApproval(ProjectApprovalDto approvalDto);
+        Task<List<ProjectDto>> GetProjectBySearch(string SearchTag); 
+        Task<bool> SubmitBudget(ProjectApprovalDto approvalDto);
+        Task<bool> ApprovalBudget(ProjectApprovalDto approvalDto);
         Task<List<ProjectApprovalDto>> LoadProjectBudgetAcitivies(string projectName);
     }
 }

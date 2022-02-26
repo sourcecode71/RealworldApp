@@ -38,5 +38,19 @@ namespace Web.ApiContollers
             return Ok(wrkList);
         }
 
+        [HttpGet("work-order-search")]
+        public ActionResult GetFilteredWorkOrder(string strOT)
+        {
+            var wrkList = _woRepository.GetFilteredWorkOrder(strOT);
+            return Ok(wrkList);
+        }
+
+        [HttpPost("save-invoic")]
+        public async Task<ActionResult> SaveInvoice(InvoiceDTO invDTO)
+        {
+            var invStatus = await _woRepository.SaveInvoice(invDTO);
+            return Ok(invStatus);
+        }
+
     }
 }
