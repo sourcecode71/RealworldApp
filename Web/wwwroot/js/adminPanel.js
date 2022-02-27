@@ -453,18 +453,26 @@ AdminPanel.addNewproject = function () {
     var schedule = $("#addProjectSchedule").val();
     var budget = $("#addProjectBudget").val();
     var estatus = $("#addProjectEStatus").val();
+    var prjStartDate = $("#projectStartDate").val();
+    var engHour = $("#engineerHour").val().trim();
+    var drwHour = $("#drawingBudgetHour").val();
 
     var project = {
         Name: name,
         Client: client,
         Engineering: eng,
         Drawing: drawing,
+        EngineeringHours: parseFloat(engHour),
+        DrawingHours: parseFloat(drwHour),
         Approval: approval,
         DeliveryDate: delivery,
+        StartDate: prjStartDate,
         Schedule: schedule,
         Budget: parseFloat(budget.replaceAll("$", "").replaceAll(" ", "").replaceAll(',', '')),
         EStatus: estatus
     };
+
+    console.log(" project param ----- ", project);
 
     $.ajax({
         url: '/Admin/AddNewProject',

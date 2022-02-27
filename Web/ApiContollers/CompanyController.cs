@@ -45,5 +45,15 @@ namespace Web.ApiContollers
             return Ok(savingStatus);
         }
 
+
+        [HttpPost("save-hour-log")]
+        public async Task<IActionResult> SaveEmployeeHourlog(HourlogsDTO dTO)
+        {
+            dTO.EmpId = new System.Guid("89eac876-cd03-4049-974c-c0c759063e75");
+
+            bool savingStatus = await _cmRepository.SaveEmployeHourLog(dTO);
+            return Ok(savingStatus);
+        }
+
     }
 }

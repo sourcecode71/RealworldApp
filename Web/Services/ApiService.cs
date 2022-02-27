@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Application.DTOs;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -140,6 +141,18 @@ namespace Web.Services
             string apiResponse = await response.Content.ReadAsStringAsync();
 
             List<EmployeeModel> employees = JsonConvert.DeserializeObject<List<EmployeeModel>>(apiResponse);
+
+            return employees;
+        }
+
+
+        public async Task<List<ClientDTO>> CallAllClient()
+        {
+            HttpResponseMessage response = await client.GetAsync($"{ProjectEndpoint}/all-client");
+
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            List<ClientDTO> employees = JsonConvert.DeserializeObject<List<ClientDTO>>(apiResponse);
 
             return employees;
         }

@@ -12,5 +12,8 @@ namespace PMG.Data.Repository.Projects
         Task<bool> SubmitBudget(ProjectApprovalDto approvalDto);
         Task<bool> ApprovalBudget(ProjectApprovalDto approvalDto);
         Task<List<ProjectApprovalDto>> LoadProjectBudgetAcitivies(string projectName);
+        Task<List<ClientDTO>> GetAllClient();
+        Task<List<ProjectDto>> GetAllProjects(string empId);
+        Task<List<ProjectDto>> GetAllActiveProjects();
     }
 }

@@ -23,6 +23,7 @@ namespace Persistance.Context
         public DbSet<Client> Clients { get; set; }
         public DbSet<Company> Company { get; set; }
         public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<Hourlogs> Hourlogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

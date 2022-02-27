@@ -75,17 +75,31 @@
                              <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/AddEmployee">Add Employee</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Admin/AddProject">Add Project</a>
-                        </li>
+                           <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Project
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">  
+                              <a class="dropdown-item" href="/Admin/AddProject">Add Project</a>
+                              <a class="dropdown-item" href="/project/projectActivities">Project Budget</a>
+                              <a class="dropdown-item" href="/company/hourlogs">Hour Log </a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="/company/invoice">
+                                  Payment and Invoice 
+                              </a>
+                            </div>
+                          </li>
 
-                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="/project/projectActivities"> Budget</a>
-                        </li>
 
-                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="/project/projectWorkOrder">OT</a>
-                        </li>
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Work Order
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">  
+                               <a class="dropdown-item" href="/project/projectWorkOrder">Create Work Order</a>
+                               <a class="dropdown-item" href="/company">Company setup</a>
+                            </div>
+                          </li>
 
                          <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/GenerateReports">Reports</a>
@@ -229,5 +243,12 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/adminPanel.js" asp-append-version="true"></script>
     <script src="~/js/employeeDashboard.js" asp-append-version="true"></script>
+
+      <script>
+     $(document).ready(function(){
+        $('.dropdown-toggle').dropdown()
+    });
+</script>
+
 </body>
 </html>

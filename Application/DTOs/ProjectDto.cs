@@ -1,3 +1,5 @@
+using Domain;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -12,6 +14,8 @@ namespace Application.DTOs
         public int Year { get; set; }
         public string ProjectNo { get; set; }
         public string Client { get; set; }
+        public string ClientName { get; set; }
+        public DateTime StartDate { get; set; }
         public DateTime DeliveryDate { get; set; }
         public int Schedule { get; set; }
         public double Progress { get; set; }
@@ -27,8 +31,14 @@ namespace Application.DTOs
         public string EmployeeModifiedComment { get; set; }
         public string Engineering { get; set; }
         public string Drawing { get; set; }
+        public double BudgetHours { get; set; }
+        public double DrawingHours { get; set; }
+        public double EngineeringHours { get; set; }
         public string Approval { get; set; }
+        public string BudgetApprovalStr { get; set; }
         public string EmployeesNames { get; set; }
+        public ProjectStatus ProejctStatus { get; set; }
+        public ICollection<ProjectEmployee> ProjectEmployees { get; set; }
         public List<ProjectActivityDto> Activities { get; set; } = new List<ProjectActivityDto>();
         public List<EmployeeDto> Employees { get; set; }
     }

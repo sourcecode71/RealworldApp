@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.DTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,9 +36,12 @@ namespace Web.Controllers
 
                     List<ProjectModel> projects = _apiService.CallGetProjects().Result;
                     List<EmployeeModel> employees = _apiService.CallGetEmployees().Result;
+                    List<ClientDTO> clientModels = _apiService.CallAllClient().Result;
+
 
                     adminPage.Projects = projects.Where(x => x.Status != "Archived").ToList();
                     adminPage.Employees = employees;
+                    adminPage.Clients = clientModels;
 
                     return View(adminPage);
                 }
@@ -94,8 +98,10 @@ namespace Web.Controllers
                     AdminPageDetails adminPage = new AdminPageDetails();
 
                     List<EmployeeModel> employees = _apiService.CallGetEmployees().Result;
+                    List<ClientDTO> clientModels = _apiService.CallAllClient().Result;
 
                     adminPage.Employees = employees;
+                    adminPage.Clients = clientModels;
 
                     return View(adminPage);
                 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.DTOs;
 using Domain;
 using Domain.Enums;
 using MediatR;
@@ -17,7 +18,7 @@ namespace Application.Core.Projects
         public class Command : IRequest<Unit>
         {
             public Project Project { get; set; }
-            public Dictionary<EmployeeType, string> Employees { get; set; }
+            public List<ProjectEmployDTO> ProejctEmp { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -50,9 +51,9 @@ namespace Application.Core.Projects
 
                 List<ProjectEmployee> projectEmployees = new List<ProjectEmployee>();
 
-                foreach (var employee in request.Employees)
+                foreach (var employee in request.ProejctEmp)
                 {
-                    var employeeInDb = _context.Employees.FirstOrDefault(x => x.Email == employee.Value);
+                    var employeeInDb = _context.Employees.FirstOrDefault(x => x.Email == employee.EmpId);
 
                     if (employeeInDb != null)
                     {
@@ -60,7 +61,8 @@ namespace Application.Core.Projects
                         {
                             EmployeeId = employeeInDb.Id,
                             ProjectId = project.Id,
-                            EmployeeType = employee.Key
+                            EmployeeType = employee.EmpType,
+                            BudgetHours = employee.BudgetHours
                         });
 
                     }

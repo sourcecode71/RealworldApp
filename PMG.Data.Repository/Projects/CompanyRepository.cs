@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Domain.Common;
+using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
 using System;
@@ -15,6 +16,7 @@ namespace PMG.Data.Repository.Projects
         Task<bool> SaveCompany(CompanyDTO dTO);
         IQueryable<Client> GetAllClient();
         Task <List<CompanyDTO>> GetAllCompany();
+        Task<bool> SaveEmployeHourLog(HourlogsDTO dTO);
     }
     public class CompanyRepository : ICompanyRepository
     {
@@ -95,6 +97,44 @@ namespace PMG.Data.Repository.Projects
             }
         }
 
-      
+        public async Task<bool> SaveEmployeHourLog(HourlogsDTO dTO)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var budgetProject = await _context.ProjectEmployees.FirstOrDefaultAsync(p => p.ProjectId == dTO.ProjectId.ToString() && p.EmployeeId == dTO.EmpId.ToString());
+                    if (budgetProject == null)
+                    {
+                        return false;
+                    }
+
+                    budgetProject.TotalHourLog = budgetProject.TotalHourLog + dTO.SpentHour;
+
+                    Hourlogs hourlogs = new Hourlogs
+                    {
+                        Id = new Guid(),
+                        EmpId = dTO.EmpId,
+                        ProjectId = dTO.ProjectId,
+                        SpentHour = dTO.SpentHour,
+                        SpentDate = dTO.SpentDate,
+                        BalanceHour = (budgetProject.BudgetHours - dTO.SpentHour),
+                        Remarks = dTO.Remarks,
+                        SetDate=dTO.SpentDate,
+                        SetUser = dTO.EmpId.ToString()
+                    };
+
+                    var state = await _context.SaveChangesAsync();
+                    transaction.Commit();
+                    return state == 1;
+
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw ex;
+                }
+            }
+        }
     }
 }

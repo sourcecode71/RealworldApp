@@ -1,7 +1,5 @@
-﻿using System;
+﻿using Application.DTOs;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Web.Models
 {
@@ -9,5 +7,6 @@ namespace Web.Models
     {
         public List<ProjectModel> Projects { get; set; }
         public List<EmployeeModel> Employees { get; set; }
+        public List<ClientDTO> Clients { get; set; }
     }
 }

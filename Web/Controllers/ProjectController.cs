@@ -44,6 +44,8 @@ namespace Web.Controllers
             return View();
         }
 
+       
+
         public ResultModel AddActivity(ActivityModel activity)
         {
             return _apiService.CallAddActivity(activity).Result;

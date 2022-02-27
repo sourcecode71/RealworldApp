@@ -8,6 +8,8 @@ namespace Domain
         public int Id { get; set; }
         public string ProjectId { get; set; }
         public string EmployeeId { get; set; }
+        public double BudgetHours { get; set; }
+        public double TotalHourLog { get; set; }
 
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }

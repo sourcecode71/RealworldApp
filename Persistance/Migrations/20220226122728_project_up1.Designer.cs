@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Context;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220226122728_project_up1")]
+    partial class project_up1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,9 +195,6 @@ namespace Persistance.Migrations
                     b.Property<string>("Client")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ClientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -310,9 +309,6 @@ namespace Persistance.Migrations
                     b.Property<string>("ProjectId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("TotalHourLog")
-                        .HasColumnType("float");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
@@ -379,45 +375,6 @@ namespace Persistance.Migrations
                     b.HasIndex("WorkOrderId");
 
                     b.ToTable("HisWorkOrder");
-                });
-
-            modelBuilder.Entity("Domain.Projects.Hourlogs", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<double>("BalanceHour")
-                        .HasColumnType("float");
-
-                    b.Property<Guid>("EmpId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("ProjectEmployeesId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ProjectsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("SpentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("SpentHour")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectEmployeesId");
-
-                    b.HasIndex("ProjectsId");
-
-                    b.ToTable("Hourlogs");
                 });
 
             modelBuilder.Entity("Domain.Projects.Invoice", b =>
@@ -773,21 +730,6 @@ namespace Persistance.Migrations
                     b.Navigation("Project");
 
                     b.Navigation("WorkOrder");
-                });
-
-            modelBuilder.Entity("Domain.Projects.Hourlogs", b =>
-                {
-                    b.HasOne("Domain.ProjectEmployee", "ProjectEmployees")
-                        .WithMany()
-                        .HasForeignKey("ProjectEmployeesId");
-
-                    b.HasOne("Domain.Project", "Projects")
-                        .WithMany()
-                        .HasForeignKey("ProjectsId");
-
-                    b.Navigation("ProjectEmployees");
-
-                    b.Navigation("Projects");
                 });
 
             modelBuilder.Entity("Domain.Projects.Invoice", b =>

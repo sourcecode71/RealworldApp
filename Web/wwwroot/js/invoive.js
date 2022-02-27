@@ -10,7 +10,6 @@ var LoadInvoices = () => {
         contentType: 'application/json; charset=utf-8',
     }).then(
         function fulfillHandler(data) {
-            pmData = data;
 
             if (data.length > 3) {
                 $("#tableBody").addClass("scroller");
@@ -110,6 +109,109 @@ var SubmitInvoice = () => {
     }
 }
 
+var LoadProject = () => {
+
+    var base_url = window.location.origin;
+    var searchURL = base_url + "/api/project/emp-wise/load-project?empId=" + "";
+
+    $.ajax({
+        url: searchURL,
+        type: 'get',
+        contentType: 'application/json; charset=utf-8',
+    }).then(
+        function fulfillHandler(result) {
+            allProject = result
+            var $dropdown = $("#project");
+            $.each(result, function () {
+                $dropdown.append($("<option />").val(this.id).text(this.name));
+            });
+
+        },
+        function rejectHandler(jqXHR, textStatus, errorThrown) {
+            console.log(" error ", textStatus);
+        }
+    ).catch(function errorHandler(error) {
+        console.log(" error ", error);
+    });
+
+
+    $('#project').change(function () {
+        var pRow = allProject.filter(p => p.id == $(this).val());
+        if (pRow.length > 0) {
+
+            $("#divPmDescription").removeClass("hide").addClass("show");
+
+            $("#prjNo").text(pRow[0].projectNo);
+            $("#prjName").text(pRow[0].name);
+            $("#pjClient").text(pRow[0].clientName);
+            $("#pjClient").text(pRow[0].clientName);
+            $("#pjBudgetHours").text(pRow[0].budgetHours);
+
+        }
+
+    });
+}
+
+var SubmitHourLogs = () => {
+
+    if (HourLogValidation()) {
+
+        var projectId = $('#project :selected').val();
+        var spentHour = $("#spentHours").val();
+        var spenDate = $("#hourLogDate").val();
+
+        var hrl = {
+            projectId: projectId,
+            spentHour: spentHour,
+            spentDate: spenDate
+        }
+
+
+        var base_url = window.location.origin;
+        var searchURL = base_url + "/api/company/save-hour-log";
+
+        $.ajax({
+            url: searchURL,
+            type: "post",
+            data: JSON.stringify(hrl),
+            contentType: 'application/json; charset=utf-8',
+        }).then(
+            function fulfillHandler(data) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Record has been save successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                clearAllHourLog();
+
+            },
+            function rejectHandler(jqXHR, textStatus, errorThrown) {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + errorThrown.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        ).catch(function errorHandler(error) {
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong.' + error,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        });
+
+    }
+
+}
+
+
 var InvoiceValidation = () => {
     var isFormValid = true;
     var partialBill = $("#partialbill").val();
@@ -177,6 +279,49 @@ var InvoiceValidation = () => {
     return isFormValid;
 }
 
+
+var HourLogValidation = () => {
+    var isFormValid = true;
+
+    var project = $('#project :selected').val();
+    var hspent = $("#spentHours").val();
+    var invDate = $("#hourLogDate").val();
+
+    if (project == "Select the project" || project.length == 0) {
+        $("#projectError").addClass("show").removeClass("hide");
+        $("#projectError").text(" Please select your project. ");
+        isFormValid = false;
+    }
+    else if (isFormValid) {
+        $("#projectError").addClass("hide").removeClass("show");
+        $("#projectError").text(" ");
+    }
+
+    if (hspent == "" || hspent.length == 0) {
+        $("#spentHoursError").addClass("show").removeClass("hide");
+        $("#spentHoursError").text(" Please enter your spent hour. ");
+        isFormValid = false;
+    }
+    else if (isFormValid) {
+        $("#spentHoursError").addClass("hide").removeClass("show");
+        $("#spentHoursError").text(" ");
+    }
+
+    if (invDate == "" || invDate.length == 0) {
+        $("#hourLogDateError").addClass("show").removeClass("hide");
+        $("#hourLogDateError").text(" Please select hour log date. ");
+        isFormValid = false;
+    }
+    else if (isFormValid) {
+        $("#hourLogDateError").addClass("hide").removeClass("show");
+        $("#hourLogDateError").text(" ");
+    }
+
+   
+
+    return isFormValid;
+}
+
 var clearAllInvoice = () => {
     $("#workOrderName").val("");
     $("#divPmDescription").removeClass("show").addClass("hide");
@@ -194,6 +339,18 @@ var clearAllInvoice = () => {
     $("#invoiceDateError").addClass("hide").removeClass("show");
 }
 
+var clearAllHourLog = () => {
+    $("#divPmDescription").removeClass("show").addClass("hide");
+    $("#spentHours").val("");
+    $("#hourLog").val("");
+    $("#remarks").val("");
+    $("#spentHoursError").addClass("hide").removeClass("show");
+    $("#hourLogDateError").addClass("hide").removeClass("show");
+    $("#projectError").addClass("hide").removeClass("show");
+}
+
+
+
 var Invoice = function () {
     "use strict";
     return {
@@ -201,6 +358,14 @@ var Invoice = function () {
             this.InvoiceInitialize();
         },
 
+        initHourLog: function () {
+            this.HourLogInisilize();
+        },
+
+        HourLogInisilize: function () {
+            clearAllHourLog();
+            LoadProject();
+        },
         InvoiceInitialize: function () {
             clearAllInvoice();
            // LoadInvoices();

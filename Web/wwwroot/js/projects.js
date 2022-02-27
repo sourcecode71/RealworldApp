@@ -208,7 +208,7 @@ function LoadProjectBudgetActivities() {
 
 }
 
-function SelectedProject() {
+function SelectedActivitiesProject() {
 
     $("#budgetApprovalAct").on('click', '.btnBudgetApr', function () {
 
@@ -464,6 +464,7 @@ function LoadProjectWorkOrder() {
 
 }
 
+
 var SelectWrkRow = ()=> {
 
     $("#budgetApprovalAct").on('click', '.btn-wrk', function () {
@@ -495,6 +496,93 @@ var SelectWrkRow = ()=> {
         }
         $("#tableBody").html("");
         $("#SBoxDiv").removeClass("show").addClass("hide");
+    });
+
+}
+
+var LoadActiveProject = () => {
+
+    var base_url = window.location.origin;
+    var searchURL = base_url + "/api/project/load-active-projects";
+
+    $.ajax({
+        url: searchURL,
+        type: 'get',
+        contentType: 'application/json; charset=utf-8',
+    }).then(
+        function fulfillHandler(data) {
+
+            console.log(" data -- active- proejct ", data);
+
+            loadedPrjData = data;
+            $("#tbProjectStatus").empty();
+            var tbRow = "";
+            data.forEach(function (item, index) {
+                tbRow += "<tr> <th scope='row'>" + (parseInt(index) + 1) + "</th>  <td class='pc-30 tb-text-center prjNo' > " + item.projectNo + "</td>  <td class='pc-30 tb-text-center'>" + item.name + "</td>" +
+                    " <td class='pc-30 tr-src'>" + item.clientName + "</td>  <td class='pc-30 tr-src'>" + item.budgetApprovalStr + "</td>  <td class='pc-30 tr-src tb-text-center '>" + formatMoney(item.budget) + "</td>  " +
+                    " <td class='pc-30 tr-src tb-text-center '>" + item.status + "</td>   <td class='pc-30 tr-src tb-text-center '>" +
+                    "<button class='mb-2  btn-transition btn btn-outline-info btn-prj' >  <i class='fa fa-pencil-square-o' aria-hidden='true'> </i>  Status Change </button > </td>  </tr > ";
+            });
+
+            $("#tbProjectStatus").append(tbRow);
+        },
+        function rejectHandler(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong.' + errorThrown.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    ).catch(function errorHandler(error) {
+        Swal.fire({
+            position: 'top-end',
+            title: 'Error!',
+            text: 'Something went wrong.' + error,
+            icon: 'error',
+            confirmButtonText: 'Ok',
+        })
+    });
+}
+
+
+var SelectedProject=()=> {
+
+    $("#tbProjectStatus").on('click', '.btn-prj', function () {
+
+        var projectNo = $(this).closest("tr").find(".prjNo").text();
+        var rowData = loadedPrjData.filter(p => parseInt(p.projectNo) == parseInt(projectNo));
+
+        console.log(projectNo, " ---- ", rowData);
+
+
+        if (rowData[0].approvalStatus != 0) {
+
+            $("#projectstatusModal").modal("show");
+
+
+
+            if (loadedPrjData && projectNo) {
+                console.log(" row data ", rowData);
+            }
+
+        } else {
+
+            var msg = rowData[0].approvalStatus == 0 ? "The budget is not approved" : "Already the budget is refused";
+
+            Swal.fire({
+                position: 'top-end',
+                title: 'Info!',
+                text: msg,
+                icon: 'info',
+                showConfirmButton: false,
+                timer: 2000
+            });
+
+        }
+
+
     });
 
 }
@@ -619,7 +707,6 @@ var ValidationApprovedBudget = () =>
         else if (isFormValid) {
 
             var approvedBudget = $("#approvedBudget").val().split(" ");
-            console.log("dcMoney -- ", approvedBudget);
             var dcMoney = approvedBudget[1].replace(",", "");
 
             if (dcMoney > 0) {
@@ -681,7 +768,9 @@ var Projects = function () {
             SearchProjects();
             SelectControls();
             LoadProjectBudgetActivities();
+            SelectedActivitiesProject();
             SelectedProject();
+            LoadActiveProject();
         },
 
         initWorkOrder: function () {

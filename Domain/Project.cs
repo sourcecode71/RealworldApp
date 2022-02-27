@@ -18,9 +18,11 @@ namespace Domain
         public string Name { get; set; }
         public string Description { get; set; }
         public int SelfProjectId { get; set; }
+        public Guid ClientId { get; set; }
         public string Client { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime DeliveryDate { get; set; }
+        public DateTime StartDate { get; set; }
         public int Schedule { get; set; }
         public int Progress { get; set; }
         public double Budget { get; set; }

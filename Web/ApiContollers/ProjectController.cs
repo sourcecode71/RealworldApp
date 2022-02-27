@@ -43,15 +43,36 @@ namespace Web.ApiControllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProject(ProjectDto project)
+        public async Task<IActionResult> CreateProject([FromBody] ProjectDto project)
         {
-            Dictionary<EmployeeType, string> employees = new Dictionary<EmployeeType, string>();
+            List<ProjectEmployDTO> employees = new List<ProjectEmployDTO>();
 
             String ProjectNo = _project.GetProjectNumber(project);
+            var emp1 = new ProjectEmployDTO
+            {
+                EmpType = EmployeeType.Engineering,
+                EmpId = project.Engineering,
+                BudgetHours = project.EngineeringHours
+            };
+            employees.Add(emp1);
 
-            employees.Add(EmployeeType.Engineering, project.Engineering);
-            employees.Add(EmployeeType.Drawing, project.Drawing);
-            employees.Add(EmployeeType.Approval, project.Approval);
+            var emp2 = new ProjectEmployDTO
+            {
+                EmpType = EmployeeType.Drawing,
+                EmpId = project.Drawing,
+                BudgetHours = project.DrawingHours
+            };
+
+            employees.Add(emp2);
+
+            var emp3 = new ProjectEmployDTO
+            {
+                EmpType = EmployeeType.Approval,
+                EmpId = project.Approval,
+                BudgetHours = 0
+            };
+
+            employees.Add(emp3);
 
             Project projectDomain = new Project
             {
@@ -59,19 +80,20 @@ namespace Web.ApiControllers
                 ProjectNo = ProjectNo,
                 Balance = project.Budget,
                 Factor = project.Budget / (double)project.Schedule,
-                Client = project.Client,
+                ClientId = new Guid(project.Client),
                 DeliveryDate = project.DeliveryDate,
+                StartDate = project.StartDate,
                 Paid = 0,
                 Name = project.Name,
                 EStatus = project.EStatus,
                 Progress = 0,
                 Schedule = project.Schedule,
-                Status = ProjectStatus.OnTime,
+                Status = ProjectStatus.Budgeted,
                 CreatedDate = DateTime.Now,
                 Budget = project.Budget
             };
 
-            return Ok(await Mediator.Send(new Create.Command { Project = projectDomain, Employees = employees }));
+            return Ok(await Mediator.Send(new Create.Command { Project = projectDomain, ProejctEmp = employees }));
         }
 
         [HttpPost("archive")]
@@ -195,6 +217,32 @@ namespace Web.ApiControllers
         {
             var ProjectBudgetAct = await _project.LoadProjectBudgetAcitivies(PmName);
             return Ok(ProjectBudgetAct);
+        }
+
+
+        [HttpGet("load-active-projects")]
+        public async Task<ActionResult> LoadActiveProjects()
+        {
+            var ProjectBudgetAct = await _project.GetAllActiveProjects();
+            return Ok(ProjectBudgetAct);
+        }
+
+
+        [HttpGet("all-client")]
+        public async Task<ActionResult> LoadAllClients()
+        {
+            var allClients = await _project.GetAllClient();
+            return Ok(allClients);
+        }
+
+        [HttpGet("emp-wise/load-project")]
+        public async Task<ActionResult> LoadAllProjectByEmp(string empId)
+        {
+            if (empId == null)
+                empId = "89eac876-cd03-4049-974c-c0c759063e75";
+
+            var allClients = await _project.GetAllProjects(empId);
+            return Ok(allClients);
         }
 
         private FileStream CreateExcel(int projectStatus)

@@ -76,9 +76,31 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/AddEmployee">Add Employee</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Admin/AddProject">Add Project</a>
-                        </li>
+                         <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Project
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">  
+                              <a class="dropdown-item" href="/Admin/AddProject">Add Project</a>
+                              <a class="dropdown-item" href="/project/projectActivities">Project Budget</a>
+                              <a class="dropdown-item" href="/company/hourlogs">Hour Log </a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="/company/invoice">
+                                  Payment and Invoice 
+                              </a>
+                            </div>
+                          </li>
+
+
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Work Order
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">  
+                               <a class="dropdown-item" href="/project/projectWorkOrder">Create Work Order</a>
+                               <a class="dropdown-item" href="/company">Company setup</a>
+                            </div>
+                          </li>
                           <li class="nav-item">
                             <a class="nav-link text-dark" href="/Admin/GenerateReports">Reports</a>
                         </li>
@@ -100,53 +122,99 @@
     <main style="margin-left: 2%; margin-right: 2%">
         <div class="col-md-12 text-center"><h3><u>Add new Project</u></h3></div>
         <div class="row" style="margin-top: 50px">
-            <div class="col-md-4"></div>
-            <div class="col-md-2">
-                <label for="addProjectName">Project name:</label>
-                <input type="text" id="addProjectName" class="form-control" />
+            <div class="col-md-2 col-sm-0"></div>
+            <div class="col-md-6 col-sm-12">
+                <div class="row">
+                    <div class="com-md-6 col-sm-12 col-lg-6">
+                        <label for="addProjectName">Project name:</label>
+                        <input type="text" id="addProjectName" class="form-control" />
+                    </div>
+                    <div class="com-md-6 col-sm-12 col-lg-6">
+                        <label for="addProjectClient" >Project client:</label>
+                          <select id="addProjectClient" class="form-control">
+                                <option value="0">Please select a Clinet...</option>
+                                @foreach (var client in Model.Clients)
+                                {
+                                    <option value="@client.Id">@client.Name</option>
+                                } 
+                            </select>
+                    </div>
+                </div>
 
-                <label for="addProjectClient" style="margin-top: 20px">Project client:</label>
-                <input type="text" id="addProjectClient" class="form-control" />
+                <div class="row">
+                    <div class="com-md-6 col-sm-12 col-lg-6">
+                        <label for="projectStartDate"> Project Start Date:</label>
+                        <input type="date" id="projectStartDate" class="form-control" />
+                    </div>
+                     <div class="com-md-6 col-sm-12 col-lg-6">
+                          <label for="addProjectDelivery" >Project Delivery Date:</label>
+                           <input type="date" id="addProjectDelivery" class="form-control" />
+                     </div>
 
-                <label for="addProjectEngineering" style="margin-top: 20px">Engineering:</label>
-                <select id="addProjectEngineering" class="form-control">
-                    <option value="0">Please select an employee...</option>
-                    @foreach (var employee in Model.Employees)
-                    {
-                    <option value="@employee.Email">@employee.Email</option>
-                    }
-                </select>
+                </div>
+                  <div class="row">
+                        <div class="com-md-6 col-sm-12 col-lg-6">
+                        <label for="addProjectEngineering" style="margin-top: 20px">Engineering:</label>
+                        <select id="addProjectEngineering" class="form-control">
+                            <option value="0">Please select an employee...</option>
+                            @foreach (var employee in Model.Employees)
+                            {
+                            <option value="@employee.Email">@employee.Email</option>
+                            }
+                             </select>
+                        </div>
+                        <div class="com-md-6 col-sm-12 col-lg-6">
+                             <label for="addProjectDelivery" style="margin-top: 20px" >Engineer Budget Hours:</label>
+                             <input type="number" id="engineerHour" class="form-control" />
+                        </div>
 
-                <label for="addProjectDrawing" style="margin-top: 20px">Drawing:</label>
-                <select id="addProjectDrawing" class="form-control">
-                    <option value="0">Please select an employee...</option>
-                    @foreach (var employee in Model.Employees)
-                    {
-                    <option value="@employee.Email">@employee.Email</option>
-                    }
-                </select>
+                    </div>
 
-                <label for="addProjectApproval" style="margin-top: 20px">Approval:</label>
-                <select id="addProjectApproval" class="form-control">
-                    <option value="0">Please select an employee...</option>
-                    @foreach (var employee in Model.Employees)
-                    {
-                    <option value="@employee.Email">@employee.Email</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label for="addProjectDelivery" >Project Delivery Date:</label>
-                <input type="date" id="addProjectDelivery" class="form-control" />
+                    <div class="row">
+                         <div class="com-md-6 col-sm-12 col-lg-6"> 
+                               <label for="addProjectDrawing" style="margin-top: 20px">Drawing:</label>
+                                <select id="addProjectDrawing" class="form-control">
+                                    <option value="0">Please select an employee...</option>
+                                    @foreach (var employee in Model.Employees)
+                                    {
+                                    <option value="@employee.Email">@employee.Email</option>
+                                    }
+                               </select>
+                         </div>
+                         <div class="com-md-6 col-sm-12 col-lg-6"> 
+                             <label for="addProjectDelivery" style="margin-top: 20px" >Engineer Budget Hours:</label>
+                             <input type="number" id="drawingBudgetHour" class="form-control" />
+                         </div>
 
-                <label for="addProjectSchedule" style="margin-top: 20px">Project Schedule Weeks:</label>
-                <input type="number" id="addProjectSchedule" class="form-control" />
+                    </div>
 
-                <label for="addProjectBudget" style="margin-top: 20px">Project Budget in $:</label>
-                <input type="text" id="addProjectBudget" value="$ 0" class="form-control" />
-
-                <label for="addProjectEStatus" style="margin-top: 20px">Project EStatus:</label>
-                <input type="text" id="addProjectEStatus" class="form-control" />
+                    <div class="row">
+                         <div class="com-md-6 col-sm-12 col-lg-6"> 
+                               <label for="addProjectBudget" style="margin-top: 20px">Project Budget in $:</label>
+                               <input type="text" id="addProjectBudget" value="$ 0" class="form-control" />
+                         </div>
+                         <div class="com-md-6 col-sm-12 col-lg-6">
+                                 <label for="addProjectSchedule" style="margin-top: 20px">Project Schedule Weeks:</label>
+                                  <input type="number" id="addProjectSchedule" class="form-control" />
+                         </div>
+                    </div>
+                
+                    <div class="row">
+                         <div class="com-md-6 col-sm-12 col-lg-6"> 
+                                 <label for="addProjectApproval" style="margin-top: 20px">Approval:</label>
+                                <select id="addProjectApproval" class="form-control">
+                                    <option value="0">Please select an employee...</option>
+                                    @foreach (var employee in Model.Employees)
+                                    {
+                                    <option value="@employee.Email">@employee.Email</option>
+                                    }
+                                </select>
+                         </div>
+                        <div class="com-md-6 col-sm-12 col-lg-6">
+                            <label for="addProjectEStatus" style="margin-top: 20px">Project EStatus:</label>
+                            <input type="text" id="addProjectEStatus" class="form-control" />
+                        </div>
+                    </div>
 
                 <div class="row">
                     <div class="col-md-3"></div>
@@ -154,7 +222,9 @@
                         <button class="btn btn-block btn-sm btn-success" style="margin-top: 50px; margin-bottom: 50px" onclick="AdminPanel.addNewproject()">Add</button>
                     </div>
                 </div>
+             
             </div>
+
         </div>
     </main>
     <footer class="border-top footer text-muted">
@@ -167,5 +237,10 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/adminPanel.js" asp-append-version="true"></script>
     <script src="~/js/employeeDashboard.js" asp-append-version="true"></script>
+     <script>
+     $(document).ready(function(){
+        $('.dropdown-toggle').dropdown()
+    });
+</script>
 </body>
 </html>

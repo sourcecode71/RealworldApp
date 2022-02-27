@@ -1,7 +1,9 @@
 ﻿using Application.DTOs;
+using Domain.Enums;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
+using PMG.Data.Repository.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -174,6 +176,92 @@ namespace PMG.Data.Repository.Projects
                                }).Take(50).ToListAsync();
 
                 return await prjoect;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<List<ClientDTO>> GetAllClient()
+        {
+            try
+            {
+                var clDTO = await (from cl in _context.Clients
+                             where cl.IsActive == true
+                             select new ClientDTO { Name = cl.Name, Id = cl.Id, Address = cl.Address }).
+                             ToListAsync();
+                return clDTO;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<List<ProjectDto>> GetAllProjects(string empId)
+        {
+            try
+            {
+                var projects = await (from prj in _context.Projects
+                               join emw in _context.ProjectEmployees on prj.Id equals emw.ProjectId
+                               join cli in _context.Clients on prj.ClientId equals cli.Id into cliList
+                               from cts in cliList.DefaultIfEmpty()
+                                where emw.EmployeeId == empId && prj.Status != ProjectStatus.Completed
+                               select new ProjectDto
+                               {
+                                   Name = prj.Name,
+                                   Id = prj.Id,
+                                   ProjectNo = prj.ProjectNo,
+                                   Year = prj.Year,
+                                   Budget = prj.Budget,
+                                   Description = prj.Description,
+                                   ClientName = cts.Name,
+                                   
+                               }).Distinct().ToListAsync();
+
+                return projects;
+
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<List<ProjectDto>> GetAllActiveProjects()
+        {
+            try
+            {
+                var projects = await (from prj in _context.Projects
+                                     join emw in _context.ProjectEmployees on prj.Id equals emw.ProjectId
+                                     join cli in _context.Clients on prj.ClientId equals cli.Id into cliList
+                                     from cts in cliList.DefaultIfEmpty()
+                                     join pa in _context.ProjectBudgetActivities on prj.Id equals pa.ProjectId into paActs
+                                     from paAct in paActs.DefaultIfEmpty()
+                                     where  prj.Status != ProjectStatus.Completed
+                                     select new ProjectDto
+                                     {
+                                         Name = prj.Name,
+                                         Id = prj.Id,
+                                         ProjectNo = prj.ProjectNo,
+                                         Year = prj.Year,
+                                         Budget = prj.Budget,
+                                         Description = prj.Description,
+                                         ClientName = cts.Name,
+                                         BudgetApprovalStr = paAct.Status == 0 ? "Waiting" : paAct.Status == 1 ? "Approved" : "Not Approved",
+                                         Status = EnumConverter.ProjectStatusString(prj.Status)
+
+                                     }).Distinct().ToListAsync();
+
+                return projects;
+
+
             }
             catch (Exception ex)
             {
