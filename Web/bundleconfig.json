@@ -1,0 +1,25 @@
+﻿[
+    {
+        "outputFileName": "wwwroot/op/plexo.min.css",
+        "inputFiles": [
+            "wwwroot/css/projects.css",
+            "wwwroot/css/site.css"
+        ]
+    },
+
+    {
+        "outputFileName": "wwwroot/op/plexo.min.js",
+        "inputFiles": [
+          "wwwroot/js/site.js",
+          "wwwroot/js/company.js",
+          "wwwroot/js/project.js"
+
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": false
+    }
+
+]

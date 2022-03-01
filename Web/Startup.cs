@@ -35,8 +35,6 @@ namespace Web
             services.AddSingleton(typeof(ApiService));
             services.AddSingleton(typeof(ConverterService<string>));
 
-
-
             services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));

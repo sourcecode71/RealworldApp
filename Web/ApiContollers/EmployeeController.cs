@@ -58,19 +58,27 @@ namespace Web.ApiControllers
         [HttpPost("login")]
         public async Task<ActionResult<EmployeeDto>> Login(LoginDto loginDto)
         {
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
-
-            if (user == null) return Unauthorized();
-
-            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
-
-            if (result.Succeeded)
+            try
             {
-                IList<string> roles = await _userManager.GetRolesAsync(user);
-                return CreateEmployeeObject(user, roles.Count > 0 ? roles[0] : string.Empty);
-            }
+                var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
-            return Unauthorized();
+                if (user == null) return Unauthorized();
+
+                var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
+                if (result.Succeeded)
+                {
+                    IList<string> roles = await _userManager.GetRolesAsync(user);
+                    return CreateEmployeeObject(user, roles.Count > 0 ? roles[0] : string.Empty);
+                }
+
+                return Unauthorized();
+            }
+            catch (System.Exception ex)
+            {
+
+                throw;
+            }
         }
 
         [Authorize]

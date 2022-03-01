@@ -1,53 +1,55 @@
 ﻿
 function SubmitClient() {
 
-    var base_url = window.location.origin;
-    var clientURL = base_url + "/api/Company/save-client";
+    if (ValidationClient()) {
+        var base_url = window.location.origin;
+        var clientURL = base_url + "/api/Company/save-client";
 
-    var clientData = {
-        name: $("#clientName").val(),
-        address: $("#clientAddress").val()
-    }
+        var clientData = {
+            name: $("#clientName").val(),
+            address: $("#clientAddress").val()
+        }
 
-    $.ajax({
-        url: clientURL,
-        type: 'post',
-        data: JSON.stringify(clientData),
-        contentType: 'application/json; charset=utf-8',
-    }).then(
-        function fulfillHandler(data) {
+        $.ajax({
+            url: clientURL,
+            type: 'post',
+            data: JSON.stringify(clientData),
+            contentType: 'application/json; charset=utf-8',
+        }).then(
+            function fulfillHandler(data) {
 
-            console.log("  data ", data);
+                console.log("  data ", data);
 
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Record has been added successfully!',
-                showConfirmButton: false,
-                timer: 1500
-            })
-            ClearAllClient();
-            LoadAllClient();
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Record has been added successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                ClearAllClient();
+                LoadAllClient();
 
-        },
-        function rejectHandler(jqXHR, textStatus, errorThrown) {
+            },
+            function rejectHandler(jqXHR, textStatus, errorThrown) {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + errorThrown.errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+        ).catch(function errorHandler(error) {
             Swal.fire({
                 position: 'top-end',
                 title: 'Error!',
-                text: 'Something went wrong.' + errorThrown.errorMessage,
+                text: 'Something went wrong.' + error,
                 icon: 'error',
                 confirmButtonText: 'Ok',
             })
-        }
-    ).catch(function errorHandler(error) {
-        Swal.fire({
-            position: 'top-end',
-            title: 'Error!',
-            text: 'Something went wrong.' + error,
-            icon: 'error',
-            confirmButtonText: 'Ok',
-        })
-    });
+        });
+    }
 
 
 }
@@ -177,7 +179,7 @@ var LoadAllCompany = () => {
             $("#tbCompany").empty();
             var tbRow = "";
             data.forEach(function (item, index) {
-                tbRow += "<tr> <th scope='row'>" + (parseInt(index) + 1) + "</th> <td class='pc-30 tb-text-left clientName' > " + item.clientName + "</td>  <td class='pc-30 tb-text-left clientName' > " + item.name + "</td>  <td class='pc-30 tb-text-left clientAddress'>" + item.address + "</td> </tr>";
+                tbRow += "<tr> <th scope='row'>" + (parseInt(index) + 1) + "</th> <td class='tb-text-left clientName' > " + item.clientName + "</td>  <td class='tb-text-left clientName' > " + item.name + "</td>  <td class='tb-text-left clientAddress'>" + item.address + "</td> </tr>";
             });
             $("#tbCompany").append(tbRow);
         },
@@ -274,7 +276,6 @@ var Company = function () {
         CompanyInitialize : function()
         {
             LoadAllClient();
-            CompanyActivity();
             ClearAllClient();
             LoadAllCompany();
             ClearCompany();
