@@ -15,5 +15,6 @@ namespace PMG.Data.Repository.Projects
         Task<List<ClientDTO>> GetAllClient();
         Task<List<ProjectDto>> GetAllProjects(string empId);
         Task<List<ProjectDto>> GetAllActiveProjects();
+        Task<bool> UpdateProjectStatus(ProjectCorrentStatusDTO statusDTO);
     }
 }

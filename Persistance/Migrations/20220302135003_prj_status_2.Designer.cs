@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Context;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220302135003_prj_status_2")]
+    partial class prj_status_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -574,7 +576,10 @@ namespace Persistance.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("bit");
 
-                    b.Property<string>("ProjectId")
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProjectId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("SatusSetDate")
@@ -591,7 +596,7 @@ namespace Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("ProjectId1");
 
                     b.ToTable("ProjectsStatus");
                 });
@@ -884,8 +889,8 @@ namespace Persistance.Migrations
             modelBuilder.Entity("Domain.Projects.ProjectsStatus", b =>
                 {
                     b.HasOne("Domain.Project", "Project")
-                        .WithMany("ProjectsStatus")
-                        .HasForeignKey("ProjectId");
+                        .WithMany()
+                        .HasForeignKey("ProjectId1");
 
                     b.Navigation("Project");
                 });
@@ -962,8 +967,6 @@ namespace Persistance.Migrations
                     b.Navigation("Activities");
 
                     b.Navigation("ProjectEmployees");
-
-                    b.Navigation("ProjectsStatus");
                 });
 #pragma warning restore 612, 618
         }

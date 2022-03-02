@@ -92,7 +92,7 @@ namespace PMG.Data.Repository.Projects
                 {
                     try
                     {
-                    WorkOrder workOrder = await _context.WorkOrder.FirstOrDefaultAsync(p => p.Id == dTO.WorkOrderId);
+                    WorkOrder workOrder = await _context.WorkOrder.FirstOrDefaultAsync(p => p.Id == new Guid(dTO.WorkOrderId) );
 
                     HisWorkOrder hisWork = new HisWorkOrder
                         {

@@ -60,8 +60,6 @@
     $("#tableBody").on('click', '.pc-30', function () {
 
         var tagID = $(this).closest("tr").find(".tagId").text();
-
-
         if (pmData && tagID) {
             var pmRow = (pmData.filter(p => p.projectNo == tagID))[0];
 
@@ -382,8 +380,6 @@ var SaveUpateWorkOrder = (operation) => {
         }).then(
             function fulfillHandler(data) {
 
-                console.log("  data ", data);
-
                 Swal.fire({
                     position: 'top-end',
                     icon: 'success',
@@ -511,9 +507,6 @@ var LoadActiveProject = () => {
         contentType: 'application/json; charset=utf-8',
     }).then(
         function fulfillHandler(data) {
-
-            console.log(" data -- active- proejct ", data);
-
             loadedPrjData = data;
             $("#tbProjectStatus").empty();
             var tbRow = "";
@@ -554,18 +547,29 @@ var SelectedProject=()=> {
         var projectNo = $(this).closest("tr").find(".prjNo").text();
         var rowData = loadedPrjData.filter(p => parseInt(p.projectNo) == parseInt(projectNo));
 
-        console.log(projectNo, " ---- ", rowData);
+        if (projectNo == null || projectNo == 'null'  || rowData.length == 0) {
+            return false;
+        }
 
+        $("#pmNo").val(projectNo);
+        $("#pmId").val(rowData[0].id);
 
-        if (rowData[0].approvalStatus != 0) {
+        if (rowData.length>0 && rowData[0].approvalStatus != 0) {
 
+            var pStatusText = (rowData[0].status).toLowerCase();
             $("#projectstatusModal").modal("show");
 
+            
 
 
-            if (loadedPrjData && projectNo) {
-                console.log(" row data ", rowData);
-            }
+            $("#projectStatus").each(function () {
+                $('option', this).each(function () {
+                    if ($(this).text().toLowerCase() == pStatusText) {
+                        $(this).attr('selected', 'selected')
+                    };
+                });
+            });
+
 
         } else {
 
@@ -583,6 +587,165 @@ var SelectedProject=()=> {
         }
 
 
+    });
+
+}
+
+var LoadProjectStatus = () => {
+
+
+    var base_url = window.location.origin;
+    var searchURL = base_url + "/api/project/project-status";
+
+    $.ajax({
+        url: searchURL,
+        type: 'get',
+        contentType: 'application/json; charset=utf-8',
+    }).then(
+        function fulfillHandler(data) {
+            loadedPrjData = data;
+            var $dropdown = $("#projectStatus");
+            $dropdown.append($("<option />").val(0).text(" Select Project Status "));
+            $.each(loadedPrjData, function () {
+                $dropdown.append($("<option />").val(this.value).text(this.statusName));
+            });
+
+        },
+        function rejectHandler(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong.' + errorThrown.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    ).catch(function errorHandler(error) {
+        Swal.fire({
+            position: 'top-end',
+            title: 'Error!',
+            text: 'Something went wrong.' + error,
+            icon: 'error',
+            confirmButtonText: 'Ok',
+        })
+    });
+
+
+
+
+}
+
+
+$("#submitProjectStatusChange").click(()=> {
+
+    var projectNo=  $("#pmNo").val();
+    var projectId = $("#pmId").val();
+
+
+    if (projectNo || projectId) {
+        if (ValidateStatusChange()) {
+
+            var pStatus = {
+                projectId: projectId,
+                projectNo: projectNo,
+                Status: $("#projectStatus").children("option:selected").val()
+            }
+
+            console.log(" projectNo ---  ", pStatus);
+
+            var base_url = window.location.origin;
+            var statusChangeURL = base_url + "/api/project/project-activities/status";
+
+
+            $.ajax({
+                url: statusChangeURL,
+                type: 'put',
+                data: JSON.stringify(pStatus),
+                contentType: 'application/json; charset=utf-8',
+            }).then(
+                function fulfillHandler(data) {
+
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Record has been added successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    LoadActiveProject();
+
+                },
+                function rejectHandler(jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        position: 'top-end',
+                        title: 'Error!',
+                        text: 'Something went wrong.' + errorThrown.errorMessage,
+                        icon: 'error',
+                        confirmButtonText: 'Ok',
+                    })
+                }
+            ).catch(function errorHandler(error) {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + error,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            });
+
+
+
+            $("#projectstatusModal").modal('hide');
+
+        }
+
+    } else {
+        Swal.fire({
+            position: 'top-end',
+            title: 'Info!',
+            text: "something went wrong",
+            icon: 'info',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    }
+
+});
+
+var LoadProjectActivitiesStatus = () => {
+
+    var base_url = window.location.origin;
+    var searchURL = base_url + "/api/project/load-active-projects";
+
+    $.ajax({
+        url: searchURL,
+        type: 'get',
+        contentType: 'application/json; charset=utf-8',
+    }).then(
+        function fulfillHandler(data) {
+            prjActStatusData = data;
+
+            console.log(" prjActStatusData --- ", prjActStatusData);
+
+        },
+        function rejectHandler(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                position: 'top-end',
+                title: 'Error!',
+                text: 'Something went wrong.' + errorThrown.errorMessage,
+                icon: 'error',
+                confirmButtonText: 'Ok',
+            })
+        }
+    ).catch(function errorHandler(error) {
+        Swal.fire({
+            position: 'top-end',
+            title: 'Error!',
+            text: 'Something went wrong.' + error,
+            icon: 'error',
+            confirmButtonText: 'Ok',
+        })
     });
 
 }
@@ -610,9 +773,6 @@ function ClearAllWorkOrder() {
     $("#consecutiveWork").val("");
     $("#projectName").val("");
 }
-
-
-
 
 function PmBudgetApprovalValidation() {
 
@@ -740,6 +900,23 @@ var ValidationApprovedBudget = () =>
     return isFormValid;
 }
 
+var ValidateStatusChange = () => {
+
+    var isFormValid = true;
+    if ($("#projectStatus").children("option:selected").val() == 0 ) {
+
+        $("#projectStatusError").addClass("show").removeClass("hide");
+        $("#projectStatusError").text(" Please select the status. ");
+        isFormValid = false;
+    }
+    else if (isFormValid) {
+        $("#projectStatusError").addClass("hide").removeClass("show");
+    }
+
+    return isFormValid;
+
+}
+
 
 function formatMoney(number, decPlaces, decSep, thouSep) {
 
@@ -771,6 +948,7 @@ var Projects = function () {
             SelectedActivitiesProject();
             SelectedProject();
             LoadActiveProject();
+            LoadProjectStatus();
         },
 
         initWorkOrder: function () {

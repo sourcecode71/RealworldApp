@@ -67,9 +67,6 @@ function SubmitCompany() {
         address: $("#companyAddress").val()
         }
 
-        console.log(" companyData ---- ", companyData);
-
-
     $.ajax({
         url: companyURL,
         type: 'post',

@@ -37,7 +37,7 @@ namespace Application.DTOs
         public string Approval { get; set; }
         public string BudgetApprovalStr { get; set; }
         public string EmployeesNames { get; set; }
-        public ProjectStatus ProejctStatus { get; set; }
+        public ProjectStatusDTO ProejctStatus { get; set; }
         public ICollection<ProjectEmployee> ProjectEmployees { get; set; }
         public List<ProjectActivityDto> Activities { get; set; } = new List<ProjectActivityDto>();
         public List<EmployeeDto> Employees { get; set; }

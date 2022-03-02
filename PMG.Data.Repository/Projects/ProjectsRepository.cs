@@ -34,19 +34,22 @@ namespace PMG.Data.Repository.Projects
 
         public async Task< List<ProjectDto>> GetProjectBySearch(string SearchTag)
         {
-            var projects = await _context.Projects.Where(p => p.Name.Contains(SearchTag)).Take(20).Select(p=> new
-            ProjectDto()
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Client=p.Client,
-                Budget=p.Budget,
-                Balance =p.Balance,
-                DeliveryDate=p.DeliveryDate,
-                Description =p.Description,
-                Year = p.Year,
-                ProjectNo = p.ProjectNo
-            }).ToListAsync();
+            var projects = await _context.Projects.Join(_context.Clients,
+                prj =>prj.ClientId,
+                cln=>cln.Id,(prj,cln) =>new { Proj =prj,client=cln})
+                .Where(pp => pp.Proj.Name.Contains(SearchTag)).Take(20).Select(pp=> new
+                ProjectDto()
+                {
+                    Id = pp.Proj.Id,
+                    Name = pp.Proj.Name,
+                    Client=pp.client.Name,
+                    Budget=pp.Proj.Budget,
+                    Balance =pp.Proj.Balance,
+                    DeliveryDate=pp.Proj.DeliveryDate,
+                    Description =pp.Proj.Description,
+                    Year = pp.Proj.Year,
+                    ProjectNo = pp.Proj.ProjectNo
+                }).ToListAsync();
            
             return projects;
         }
@@ -267,6 +270,40 @@ namespace PMG.Data.Repository.Projects
             {
 
                 throw ex;
+            }
+        }
+
+        public async Task<bool> UpdateProjectStatus(ProjectCorrentStatusDTO statusDTO)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == statusDTO.ProjectId);
+                    project.Status = (ProjectStatus)statusDTO.Status;
+
+                    ProjectsStatus prodStatus = new ProjectsStatus
+                    {
+                        Id = new Guid(),
+                        ProjectId = statusDTO.ProjectId,
+                        SatusSetDate = DateTime.Now,
+                        Comments = statusDTO.Comments,
+                        Status = (ProjectStatus)statusDTO.Status,
+                    };
+
+                    _context.ProjectsStatus.Add(prodStatus);
+
+                    int State = await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    return State == 1;
+
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                } 
             }
         }
     }

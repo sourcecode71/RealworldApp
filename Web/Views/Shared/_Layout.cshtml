@@ -66,7 +66,7 @@
                             </li>
                         </ul>
                     }
-                <ul class="navbar-nav flex-grow-1 col-md-8">
+                <ul class="navbar-nav flex-grow-1 col-md-9">
                     @if (currentRole == "Admin")
                     {
                         <li class="nav-item">
@@ -83,7 +83,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">  
                               <a class="dropdown-item" href="/Admin/AddProject">Add Project</a>
-                              <a class="dropdown-item" href="/project/projectActivities">Project Budget</a>
+                              <a class="dropdown-item" href="/project/projectActivities">Project Activities</a>
                               <a class="dropdown-item" href="/company/hourlogs">Hour Log </a>
                               <div class="dropdown-divider"></div>
                             
@@ -119,6 +119,11 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" href="/Employee/Index">Dashboard</a>
                             </li>
+
+                              <li class="nav-item">
+                                <a class="nav-link text-dark" href="/company/hourlogs">Hour Log</a>
+                            </li>
+
                         }
                 </ul>
                 </div>

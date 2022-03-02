@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Domain.Enums;
 using Application.Core.Employees;
 using System.IO;
@@ -15,8 +14,8 @@ using OfficeOpenXml.Drawing;
 using System.Drawing;
 using System;
 using System.Globalization;
-using System.Linq;
 using PMG.Data.Repository.Projects;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Web.ApiControllers
 {
@@ -244,6 +243,34 @@ namespace Web.ApiControllers
             var allClients = await _project.GetAllProjects(empId);
             return Ok(allClients);
         }
+
+        [HttpGet("project-status")]
+        public ActionResult LoadProjectStatus()
+        {
+            Array values = Enum.GetValues(typeof(ProjectStatus));
+            List<ProjectStatusDTO> items = new List<ProjectStatusDTO>(values.Length);
+
+            foreach (var i in values)
+            {
+                items.Add(new ProjectStatusDTO
+                {
+                    StatusName = Enum.GetName(typeof(ProjectStatus), i),
+                    Value = (int)i
+                });
+            }
+
+            return Ok(items);
+        }
+
+
+        [HttpPut("project-activities/status")]
+        public async Task<ActionResult> UpdateProjectStatus(ProjectCorrentStatusDTO dTO)
+        {
+            bool isStatusChange = await _project.UpdateProjectStatus(dTO);
+            return Ok(isStatusChange);
+        }
+
+
 
         private FileStream CreateExcel(int projectStatus)
         {

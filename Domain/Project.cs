@@ -1,4 +1,5 @@
 using Domain.Enums;
+using Domain.Projects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,6 +12,7 @@ namespace Domain
         {
             BudgetApprovedStatus = 0; //Budget waiting for approval
         }
+        [Key]
         public string Id { get; set; }
         public int Year { get; set; }
         [MaxLength(10)]
@@ -40,5 +42,6 @@ namespace Domain
         public string AdminModifiedComment { get; set; }
         public List<ProjectActivity> Activities { get; set; } = new List<ProjectActivity>();
         public virtual ICollection<ProjectEmployee> ProjectEmployees { get; set; } = new List<ProjectEmployee>();
+        public virtual ICollection<ProjectsStatus> ProjectsStatus { get; set; }
     }
 }

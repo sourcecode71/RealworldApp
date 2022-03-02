@@ -4,9 +4,14 @@ namespace Application.DTOs
 {
     public class WorkOrderDTO
     {
+        public WorkOrderDTO()
+        {
+            Id = Guid.NewGuid();
+            
+        }
         public Guid Id { get; set; }
 
-        public Guid WorkOrderId { get; set; }
+        public string WorkOrderId { get; set; }
         public string ProjectId { get; set; }
         public string ProjectNo { get; set; }
         public int ProjectYear { get; set; }

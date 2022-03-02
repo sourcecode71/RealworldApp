@@ -24,6 +24,8 @@ namespace Persistance.Context
         public DbSet<Company> Company { get; set; }
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<Hourlogs> Hourlogs { get; set; }
+        public DbSet<ProdStatus> ProdStatus { get; set; }
+        public DbSet<ProjectsStatus> ProjectsStatus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -40,8 +42,6 @@ namespace Persistance.Context
                 .HasOne(p => p.Employee)
                 .WithMany(e => e.ProjectActivities)
                 .HasForeignKey(aa => aa.EmployeeId);
-
-
         }
     }
 }
