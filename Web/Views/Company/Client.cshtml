@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <link rel="stylesheet" href="~/css/projects.css" />
+
+        <div class="main-card mb-3 card">
+            <div class="card-body">
+	        <h5 class="card-title">Clinet</h5>
+                <div class="row"> </div>
+                <form class="" action="#" onsubmit="SubmitClient();return false" >
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="position-relative form-group">
+                                <label for="name" class="">Name</label>
+                                <input name="name" id="clientName" placeholder="Name" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="position-relative form-group">
+                                <label for="email" class="">Email</label>
+                                <input name="email" id="email" placeholder="Client email" type="email"class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-relative form-group">
+                        <label for="exampleAddress" class="">Address</label>
+                            <input name="address" id="clientAddress" placeholder=" " type="text" class="form-control">
+                     </div>
+                  
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="position-relative form-group">
+                                <label for="exampleCity" class="">City</label>
+                                <input name="city" id="exampleCity" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="position-relative form-group">
+                                <label for="exampleState" class="">State</label>
+                                <input name="state" id="exampleState" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="position-relative form-group">
+                                <label for="exampleZip" class="">Zip</label>
+                                <input name="zip" id="exampleZip" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="btnWrkBudget" class="mt-2 ml-3 btn btn-primary"> Submit</button>
+                </form>
+
+                    <div class="mb-3">
+                    <div class="card-body"><h5 class="card-title">Client List </h5>
+                        <table class="mb-0 table table-striped">
+                            <thead>
+                            <tr style="font-size:14px">
+                                <th style="width:10%"> # </th>
+                                <th style="width:30%">Client Name </th>
+                                <th style="width:60%"> Client Address</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbClient">
+                                           
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+      
+
+
+  
+    @section Scripts {
+        <script src="~/js/company.js"></script>
+
+        <script>
+           $(function () {
+
+                Company.initCompany();
+
+            });
+        </script>
+    }
+  </div>
+

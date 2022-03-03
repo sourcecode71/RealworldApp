@@ -46,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\assets\images\avatars\" />
     <Folder Include="wwwroot\op\" />
   </ItemGroup>
 
