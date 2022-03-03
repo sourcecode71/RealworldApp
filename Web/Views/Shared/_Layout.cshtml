@@ -25,14 +25,24 @@
     <title>@ViewData["Title"] - Web</title>
     <link rel="stylesheet" href="~/lib/sweetalert2/dist/sweetalert2.css" />
     <link href="~/main.css" rel="stylesheet">
+     <style>
+         .app-header__logo .logo-src{
+            height: 0px ;
+        }
+        .mt-33{
+            margin-top:-33px;
+        }
+     </style>
 </head>
 
 <body>
-
+    
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
         <div class="app-header header-shadow">
             <div class="app-header__logo">
-                <div class="logo-src"></div>
+                <div class="logo-src">
+                    <img class="mt-33" height="65" width="150" src=~/assets/images/logo-inverse.png />
+                </div>
                 <div class="header__pane ml-auto">
                     <div>
                         <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
@@ -129,7 +139,7 @@
 
       @if(!string.IsNullOrEmpty(currentRole))
         {
-             // await Html.RenderPartialAsync("_CurrentActiveProjects");
+             await Html.RenderPartialAsync("_CurrentActiveProjects");
         }
         
         <div class="app-main">
