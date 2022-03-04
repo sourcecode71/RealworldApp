@@ -19,6 +19,12 @@ namespace Domain.Common
         [MaxLength(250)]
         public string Address { get; set; }
         [Required]
+        [MaxLength(100)]
+        public string ContactName { get; set; }
+        [MaxLength(50)]
+        public string email { get; set; }
+        [MaxLength(50)]
+        public string phone { get; set; }
         public bool IsActive { get; set; }
     }
     public class Company : BasedModel
@@ -35,6 +41,14 @@ namespace Domain.Common
         public string Name { get; set; }
         public Guid ClientId { get; set; }
         public virtual Client Client { get; set; }
+        [MaxLength(100)]
+        public string ContactName { get; set; }
+        [MaxLength(50)]
+        public string Email { get; set; }
+
+        [MaxLength(50)]
+        public string Phone { get; set; }
+
         [MaxLength(250)]
         public string Address { get; set; }
         [Required]

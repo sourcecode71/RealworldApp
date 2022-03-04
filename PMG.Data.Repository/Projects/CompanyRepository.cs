@@ -63,7 +63,10 @@ namespace PMG.Data.Repository.Projects
                Client  client = new Client
                {
                    Name =dTO.Name,
-                   Address =dTO.Address
+                   Address =dTO.Address,
+                   ContactName = dTO.ContactName,
+                   email = dTO.Email,
+                   phone= dTO.Phone,
                };
                 _context.Clients.Add(client);
                 int State = await _context.SaveChangesAsync();
