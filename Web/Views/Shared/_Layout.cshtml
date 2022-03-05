@@ -24,7 +24,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Web</title>
     <link rel="stylesheet" href="~/lib/sweetalert2/dist/sweetalert2.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
     <link href="~/main.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+
      <style>
          .app-header__logo .logo-src{
             height: 0px ;
@@ -32,7 +38,19 @@
         .mt-33{
             margin-top:-33px;
         }
+        .modal-backdrop.show{
+            display:none;
+        }
      </style>
+      
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.0/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"> </script>
+     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+
+
 </head>
 
 <body>
@@ -165,8 +183,8 @@
         </div>
     </div>
     
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
     <script src="~/op/plexo.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
    <script src="~/assets/scripts/main.js"></script>
