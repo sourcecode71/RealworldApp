@@ -2,6 +2,7 @@
 using Domain.Common;
 using Microsoft.AspNetCore.Mvc;
 using PMG.Data.Repository.Projects;
+using System;
 using System.Threading.Tasks;
 using Web.ApiControllers;
 
@@ -35,6 +36,13 @@ namespace Web.ApiContollers
         public async Task<ActionResult> GetAllCompaniesResult()
         {
             var project = await _cmRepository.GetAllCompany();
+            return Ok(project);
+        }
+
+        [HttpGet("all-companies-client")]
+        public async Task<ActionResult> GetAllCompaniesByClient(Guid guid)
+        {
+            var project = await _cmRepository.GetAllCompany(guid);
             return Ok(project);
         }
 

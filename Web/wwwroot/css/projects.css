@@ -74,3 +74,11 @@
     font-weight: 700;
     color: #1cbcec;
 }
+
+
+table th, .table td {
+    padding: 0.35rem !important;
+    vertical-align: top;
+}
+
+

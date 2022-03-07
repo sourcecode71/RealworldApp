@@ -1,11 +1,11 @@
 ﻿[
-    {
+     {
         "outputFileName": "wwwroot/op/plexo.min.css",
         "inputFiles": [
-            "wwwroot/css/projects.css",
-            "wwwroot/css/site.css"
+          "wwwroot/css/projects.css",
+          "wwwroot/scc/site_sass.css"
         ]
-    },
+      },
 
     {
         "outputFileName": "wwwroot/op/plexo.min.js",

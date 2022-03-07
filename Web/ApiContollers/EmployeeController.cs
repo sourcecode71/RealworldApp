@@ -102,6 +102,18 @@ namespace Web.ApiControllers
             return true;
         }
 
+        [HttpGet("all-role")]
+        public async Task<ActionResult<List<RolesDTO>>> GetAllRoles()
+        {
+            var Roles = await _context.Roles.Select(p=> new RolesDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+            }).ToListAsync();
+
+            return Roles;
+        }
+
 
         [HttpPost("register")]
         public async Task<ActionResult<EmployeeDto>> Register(RegisterDto registerDto)
@@ -115,7 +127,10 @@ namespace Web.ApiControllers
             {
                 Name = registerDto.Name,
                 Email = registerDto.Email,
-                UserName = registerDto.Email
+                UserName = registerDto.Email,
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName,
+                Phone = registerDto.Phone,
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);

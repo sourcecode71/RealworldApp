@@ -7,17 +7,7 @@ namespace Persistance.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_ProjectsStatus_Projects_ProjectId1",
-                table: "ProjectsStatus");
-
-            migrationBuilder.DropIndex(
-                name: "IX_ProjectsStatus_ProjectId1",
-                table: "ProjectsStatus");
-
-            migrationBuilder.DropColumn(
-                name: "ProjectId1",
-                table: "ProjectsStatus");
+           
 
             migrationBuilder.AlterColumn<string>(
                 name: "ProjectId",
@@ -32,20 +22,12 @@ namespace Persistance.Migrations
                 table: "ProjectsStatus",
                 column: "ProjectId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_ProjectsStatus_Projects_ProjectId",
-                table: "ProjectsStatus",
-                column: "ProjectId",
-                principalTable: "Projects",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+           
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_ProjectsStatus_Projects_ProjectId",
-                table: "ProjectsStatus");
+           
 
             migrationBuilder.DropIndex(
                 name: "IX_ProjectsStatus_ProjectId",

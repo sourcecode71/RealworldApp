@@ -13,7 +13,8 @@
             phone:'',
             address: null,
             seen: false,
-            clients :[]
+            clients: [],
+            companies:[]
 
         },
       methods: {
@@ -86,8 +87,8 @@
         
         handleUserInput: function (e)
         {
-            var replacedInput = e.target.value.replace(/\D/g, '').match(/(\d{0, 3})(\d{0, 3})(\d{0, 4})/);
-            this.phone = !replacedInput[2] ? replacedInput[1] : '(' + replacedInput[1] + ') ' + replacedInput[2] + (replacedInput[3] ? '-' + replacedInput[3] : '');
+            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+            this.phone = '(' + x[1] + ') ' + x[2] + '-' + x[3];
         },
         clearAll: function ()
         {
@@ -116,7 +117,7 @@
                     this.clients = result.data;
 
                     setTimeout(() => {
-                        $('#example').DataTable({
+                        $('#allClients').DataTable({
                             "scrollY": "500px",
                             "scrollCollapse": true,
                             "paging": false
@@ -130,9 +131,40 @@
                 });
 
           },
-          showDetails: function (client) {
-              console.log("client ", client);
-              $("#myModal").modal("show");
+        showCompanyByClient: function (client) {
+            console.log("client ", client);
+
+            const config = { headers: { 'Content-Type': 'application/json' } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/company/all-companies-client?guid=" + client.id;
+
+            $("#allCompany").modal("show");
+
+            axios.get(clientURL, config).then(result => {
+
+                console.log(result.data);
+                this.companies = result.data;
+
+              /* setTimeout(() => {
+                    $('#clientCompany').DataTable({
+                        "scrollY": "300px",
+                        "scrollCollapse": true,
+                        "paging": false
+                    });
+                }, 100); */
+
+
+
+            }, error => {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + error,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            });
+
           }
 
       }

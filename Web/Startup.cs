@@ -1,4 +1,5 @@
 using Application.Core.Projects;
+using AspNetCore.SassCompiler;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -43,6 +44,8 @@ namespace Web
             services.AddMediatR(typeof(Create.Handler).Assembly);
             services.AddScoped<TokenService>();
 
+            services.AddSassCompiler();
+
             ContainerSetup.Setup(services, Configuration);
 
             services.AddIdentity<Employee, IdentityRole>(opt =>
@@ -74,22 +77,7 @@ namespace Web
                         };
                     });
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("IsAdmin", policy =>
-            //    {
-            //        policy.RequireClaim("role", "Admin").Build();
-            //    });
-            //    options.AddPolicy("IsEmployee", policy =>
-            //    {
-            //        policy.RequireClaim("role", "Employee").Build();
-            //    });
-            //});
-
             services.AddAuthorization();
-
-            //services.AddIdentityServices(_config);
-            // services.AddApplicationServices(_config);
 
             services.AddCors(opt =>
             {
@@ -119,7 +107,6 @@ namespace Web
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();

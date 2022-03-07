@@ -16,6 +16,7 @@ namespace PMG.Data.Repository.Projects
         Task<bool> SaveCompany(CompanyDTO dTO);
         IQueryable<Client> GetAllClient();
         Task <List<CompanyDTO>> GetAllCompany();
+        Task<List<CompanyDTO>> GetAllCompany(Guid guid);
         Task<bool> SaveEmployeHourLog(HourlogsDTO dTO);
     }
     public class CompanyRepository : ICompanyRepository
@@ -46,6 +47,30 @@ namespace PMG.Data.Repository.Projects
                                          ClientName = cl.Name
                                      }).ToListAsync();
 
+                return company;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<List<CompanyDTO>> GetAllCompany(Guid guid)
+        {
+            try
+            {
+                var company = await (from cm in _context.Company
+                                     join cl in _context.Clients on cm.ClientId equals cl.Id
+                                     where (cm.IsActive && cl.IsActive && cm.ClientId == guid)
+                                     select new CompanyDTO
+                                     {
+                                         Id = cm.Id,
+                                         Address = cm.Address,
+                                         Name = cm.Name,
+                                         ClientName = cl.Name
+                                     }).ToListAsync();
 
                 return company;
             }

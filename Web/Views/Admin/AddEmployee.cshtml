@@ -24,46 +24,134 @@
 
 
 
-  
-    <main style="margin-left: 2%; margin-right: 2%">
-        <div class="row">
-            <div class="col-md-12 text-center"><h3><u>Add new Employee</u></h3></div>
+
+<main style="margin-left: 2%; margin-right: 2%;display : none">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3><u>Add new Employee</u></h3>
         </div>
-        <div class="row" style="margin-top: 20px">
-            <div class="col-md-5"></div>
-            <div class="col-md-2">
-                <label for="addNewName">Employee name:</label>
-                <input type="text" id="addNewName" class="form-control" />
-                <label for="addNewUserEmail" style="margin-top: 20px">Employee email:</label>
-                <input type="text" id="addNewUserEmail" class="form-control" />
-                <label for="addNewUserPassword" style="margin-top: 20px">Employee password:</label>
-                <input type="password" id="addNewUserPassword" class="form-control" />
-                <label for="addNewUserConfirmPassword" style="margin-top: 20px">Confirm password:</label>
-                <input type="password" id="addNewUserConfirmPassword" class="form-control" />
-                <label for="addNewUserRole" style="margin-top: 20px">Role:</label>
-                <select class="form-control" id="addNewUserRole">
-                    <option value="0">Please select a role...</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Employee">Employee</option>
-                </select>
-                <div class="row">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-6 text-center">
-                        <button class="btn btn-block btn-sm btn-success" style="margin-top: 20px; margin-bottom: 50px" onclick="AdminPanel.addNewEmployee()">Add</button>
-                    </div>
+    </div>
+    <div class="row" style="margin-top: 20px">
+
+        <div class="col-md-5"></div>
+        <div class="col-md-2">
+            <label for="addNewName">Employee name:</label>
+            <input type="text" id="addNewName" class="form-control" />
+            <label for="addNewUserEmail" style="margin-top: 20px">Employee email:</label>
+            <input type="text" id="addNewUserEmail" class="form-control" />
+            <label for="addNewUserPassword" style="margin-top: 20px">Employee password:</label>
+            <input type="password" id="addNewUserPassword" class="form-control" />
+            <label for="addNewUserConfirmPassword" style="margin-top: 20px">Confirm password:</label>
+            <input type="password" id="addNewUserConfirmPassword" class="form-control" />
+            <label for="addNewUserRole" style="margin-top: 20px">Role:</label>
+            <select class="form-control" id="addNewUserRole">
+                <option value="0">Please select a role...</option>
+                <option value="Admin">Admin</option>
+                <option value="Employee">Employee</option>
+            </select>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6 text-center">
+                    <button class="btn btn-block btn-sm btn-success" style="margin-top: 20px; margin-bottom: 50px"
+                        onclick="AdminPanel.addNewEmployee()">Add</button>
                 </div>
             </div>
         </div>
+    </div>
 
-     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/adminPanel.js" asp-append-version="true"></script>
     <script src="~/js/employeeDashboard.js" asp-append-version="true"></script>
 
-      <script>
-         $(document).ready(function(){
+    <script>
+        $(document).ready(function () {
             $('.dropdown-toggle').dropdown()
         });
     </script>
-    </main>
-   
+</main>
 
+<div class="main-card mb-3 card">
+    <div id="app" class="card-body">
+        <div id="addEmploye" class="card-body">
+            <h5 class="card-title">Add Employee</h5>
+            <form v-on:submit.prevent="submitForm" method="post" novalidate="true">
+                <p v-if="errors.length">
+                    <b class="text-danger">Please correct the following error(s):</b>
+                <ul>
+                    <li v-for="error in errors" class="text-danger">{{ error }}</li>
+                </ul>
+                </p>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="name" class="">First Name</label>
+                            <input name="name" placeholder="First Name" type="text" class="form-control"
+                                v-model="firstName">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="lastName" class="">Last Name</label>
+                            <input name="lastName" placeholder="Last Name" type="email" v-model="lastName"
+                                class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="email" class="">Email</label>
+                            <input name="email" placeholder="Please enter valid email" type="text" class="form-control"
+                                v-model="email" v-on:blur="validateEmail">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="phone" class="">Phone</label>
+                            <input name="phone" id="phone" placeholder="(99) 9999-9999" type="text" v-model="phone"
+                                v-on:input="handlePhoneInput" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="email" class="">Password</label>
+                            <input name="password" placeholder="Please enter password" type="password" class="form-control"
+                                v-model="password" v-validate="'required|min:8|max:16'">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="phone" class="">Confirm Password</label>
+                            <input name="password" placeholder="Please enter confirm password" type="password"
+                                class="form-control" v-model="confirmPassword">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="role" class="">Role</label>
+                            <select v-model="role" class="form-control">
+                                <option :value="0"> Please select a role </option>
+                                <option v-for="role in roles" :value="role.id">
+                                    {{ role.name }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <button style="width:140px" type="submit" class="btn btn-outline-primary"> Submit
+                    </button>
+                </div>
+            </form>
+            <script src="~/views/Employee.js"></script>
+        </div>
+    </div>
+</div>
