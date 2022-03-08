@@ -106,6 +106,7 @@ const app = new Vue({
             this.phone = "";
             this.password = "";
             this.confirmPassword = "";
+            this.role = "0";
         },
         validateEmail() {
             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {

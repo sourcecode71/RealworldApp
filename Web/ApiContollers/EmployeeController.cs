@@ -81,6 +81,8 @@ namespace Web.ApiControllers
             }
         }
 
+
+
         [Authorize]
         [HttpPost("Logout")]
         public async Task<bool> Logout(EmployeeDto loggedInUser)
@@ -100,6 +102,20 @@ namespace Web.ApiControllers
             await _signInManager.SignOutAsync();
 
             return true;
+        }
+
+        [HttpPost("create-role")]
+        public async Task<bool> CreateRole(RegisterDto registerDto)
+        {
+            bool existRole = await _roleManager.RoleExistsAsync(registerDto.Role);
+
+            
+                IdentityRole role = new IdentityRole();
+                role.Name = registerDto.Role;
+
+              var result=  await _roleManager.CreateAsync(role);
+
+            return result.Succeeded == true; 
         }
 
         [HttpGet("all-role")]
@@ -130,7 +146,7 @@ namespace Web.ApiControllers
                 UserName = registerDto.Email,
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,
-                Phone = registerDto.Phone,
+                PhoneNumber = registerDto.Phone,
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
