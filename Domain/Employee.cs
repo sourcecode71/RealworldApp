@@ -15,5 +15,6 @@ namespace Domain
         public List<ProjectActivity> ProjectActivities { get; set; }
         public virtual ICollection<ProjectEmployee> ProjectEmployees { get; set; } = new List<ProjectEmployee>();
         public string ProjectsId { get; set; }
+        public bool isActive { get; set; }= true;
     }
 }

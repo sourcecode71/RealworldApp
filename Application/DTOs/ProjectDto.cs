@@ -12,6 +12,7 @@ namespace Application.DTOs
         public string Description { get; set; }
         public int SelfProjectId { get; set; }
         public int Year { get; set; }
+        public double Week { get; set; }
         public string ProjectNo { get; set; }
         public string Client { get; set; }
         public string ClientName { get; set; }
@@ -37,10 +38,13 @@ namespace Application.DTOs
         public string Approval { get; set; }
         public string BudgetApprovalStr { get; set; }
         public string EmployeesNames { get; set; }
+        public string Remarks { get; set; }
         public ProjectStatusDTO ProejctStatus { get; set; }
         public ICollection<ProjectEmployee> ProjectEmployees { get; set; }
         public List<ProjectActivityDto> Activities { get; set; } = new List<ProjectActivityDto>();
         public List<EmployeeDto> Employees { get; set; }
+        public List<ProjectEmp> Engineers { get; set; }
+        public List<ProjectEmp> Drawings { get; set; }
     }
 
     public class ProjectApprovalDto {
@@ -63,7 +67,12 @@ namespace Application.DTOs
         public double? ApprovedBudget { get; set; }
         public double Balance { get; set; }
         public string Comments { get; set; }
+    }
 
+    public class ProjectEmp
+    {
+        public string Id { get; set; }
+        public double hour { get; set; }
     }
 
 }

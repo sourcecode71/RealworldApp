@@ -2,6 +2,7 @@
     el: '#addProject',
     beforeMount() {
         this.loadAllClients();
+        this.LoadEmployee();
     },
     data: {
         errors: [],
@@ -19,6 +20,7 @@
         drawings: [],
         drawhours: '',
         drwErrors: [],
+        allEmp:[]
 
     },
     methods: {
@@ -31,6 +33,18 @@
 
             axios.get(clientURL, config).then(result => {
                 this.clients = result.data;
+            }, error => {
+                console.error(error);
+            });
+
+        },
+        LoadEmployee: function () {
+            const config = { headers: { 'Content-Type': 'application/json' } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/Employee/all-active-employee";
+
+            axios.get(clientURL, config).then(result => {
+                this.allEmp = result.data;
             }, error => {
                 console.error(error);
             });
@@ -107,18 +121,11 @@
         },
         SubmitProject: function () {
 
+            this.drwErrors = [];
             
             let clId = this.client.id;
 
-            let project = {
-                name: this.name,
-                client: clId,
-                budegt: this.budget,
-                week: this.pweek,
-                engineer: this.engineers,
-                drawings: this.drawings,
-                remarks: this.remarks
-            }
+          
             this.validateProject();
 
             if (this.errors.length == 0)
@@ -126,20 +133,19 @@
 
                 const config = { headers: { 'Content-Type': 'application/json' } };
                 var base_url = window.location.origin;
-                const clientURL = base_url + "/api/project/createProject";
+                const clientURL = base_url + "/api/project/create-new-project";
 
-                const clientData =
-                {
+                let project = {
                     name: this.name,
-                    address: this.address,
-                    contactName: this.contactName,
-                    email: this.email,
-                    phone: this.phone
-                };
+                    client: clId,
+                    budegt: this.budget,
+                    week: this.pweek,
+                    engineers: this.engineers,
+                    drawings: this.drawings,
+                    description: this.workorderDesc
+                }
 
-                console.log(" kaka  --- ", clientData);
-
-                axios.post(clientURL, clientData, config)
+                axios.post(clientURL, project, config)
                     .then(response => {
                         Swal.fire({
                             position: 'top-end',
@@ -190,7 +196,6 @@
                 this.engErrors.push("Please add the budgeted hours");
             }
         },
-
         validateDrawingHours: function () {
             if (!this.drawing || this.drawing.id == "01") {
                 this.drwErrors.push("Please select the drawing man");
@@ -199,7 +204,6 @@
                 this.drwErrors.push("Please add the budgeted hours");
             }
         },
-
         validateProject: function () {
             if (!this.name) {
                 this.errors.push("Project name is required");
@@ -225,6 +229,19 @@
             if (this.drawings.length == 0) {
                 this.errors.push("Project drwaing man required");
             }
+        },
+        clearAll: function () {
+            this.errors = [];
+            this.name = '';
+            this.budget = '';
+            this.pweek = '';
+            this.client='0';
+            this.workorderDesc = '';
+            this.engineers=[],
+            this.engineer = '0';
+            this.peHours= '';
+            this.drawing = '0';
+            this.drawings=[]
         }
     },
 

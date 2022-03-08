@@ -84,7 +84,6 @@ namespace Web.ApiControllers
                 StartDate = project.StartDate,
                 Paid = 0,
                 Name = project.Name,
-                EStatus = project.EStatus,
                 Progress = 0,
                 Schedule = project.Schedule,
                 Status = ProjectStatus.Budgeted,
@@ -180,6 +179,13 @@ namespace Web.ApiControllers
                 SelfProjectId = project.SelfProjectId,
                 Paid = project.Paid
             }));
+        }
+
+        [HttpPost("create-new-project")]
+        public async Task<IActionResult> CreateNewProject([FromBody] ProjectDto dto)
+        {
+            bool Status = await _project.CreateProject(dto);
+            return Ok(Status);
         }
 
         [HttpGet("get-excel-report")]

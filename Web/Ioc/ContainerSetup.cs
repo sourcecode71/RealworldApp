@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PMG.Data.Repository.Employee;
 using PMG.Data.Repository.Projects;
 using System;
 
@@ -17,6 +18,7 @@ namespace Web.Ioc
             services.AddScoped<IProjectsRepository, ProjectsRepository>();
             services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         }
     }
 }

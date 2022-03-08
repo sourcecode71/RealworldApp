@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Web.Services;
 using Application.DTOs;
 using Application.Core.Employees;
+using PMG.Data.Repository.Employee;
 
 namespace Web.ApiControllers
 {
@@ -22,15 +23,17 @@ namespace Web.ApiControllers
         private readonly DataContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly TokenService _tokenService;
+        private readonly IEmployeeRepository _empRepository;
 
         public EmployeeController(DataContext context, UserManager<Employee> userManager, SignInManager<Employee> signInManager,
-         RoleManager<IdentityRole> roleManager, TokenService tokenService)
+         RoleManager<IdentityRole> roleManager, TokenService tokenService, IEmployeeRepository empRepository)
         {
             _tokenService = tokenService;
             _roleManager = roleManager;
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
+            _empRepository = empRepository;
         }
 
         [Authorize]
@@ -201,6 +204,13 @@ namespace Web.ApiControllers
             return result.ToList().Select(x => x.Email).ToList();
         }
 
+        [HttpGet("all-active-employee")]
+        public async Task<ActionResult<List<EmployeeDto>>> GetAllEmployes()
+        {
+            var empDto = await _empRepository.GetAllActiveEmployee();
+            return empDto;
+        }
+
         [Authorize]
         [HttpGet("activity-by-employee")]
         public async Task<ActionResult<List<ProjectActivityDto>>> GetActivitiesForEmployee(string email)
@@ -212,6 +222,13 @@ namespace Web.ApiControllers
         public async Task<ActionResult<List<ProjectActivityDto>>> GetActivitiesForProject(int id)
         {
             return Ok(await Mediator.Send(new GetActivitiesForProject.Query { SelfProjectId = id }));
+        }
+
+        [HttpGet("all-emp-project")]
+        public async Task<ActionResult<List<EpmProjectsDto>>> GetEmpProjects(string EmpId)
+        {
+            var PempDto = await _empRepository.GetEmpProjects(EmpId);
+            return PempDto;
         }
     }
 }

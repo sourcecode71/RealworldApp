@@ -23,9 +23,10 @@
 }
 
 <div class="main-card mb-3 card">
-    <div id="app" class="card-body">
-        <div id="addEmploye" class="card-body">
-            <h5 class="card-title">Add Employee</h5>
+    <div id="addEmploye"  class="card-body">
+        <h5 class="card-title">Add Employee</h5>
+        <div  class="card-body">
+           <div  v-if="isSeenEmp"> 
             <form v-on:submit.prevent="submitForm" method="post" novalidate="true">
                 <p v-if="errors.length">
                     <b class="text-danger">Please correct the following error(s):</b>
@@ -98,12 +99,112 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-0">
                     <button style="width:140px" type="submit" class="btn btn-outline-primary"> Submit
                     </button>
                 </div>
             </form>
-            <script src="~/views/Employee.js"></script>
+          </div>
         </div>
+
+        <div class="col-md-3">
+            <button v-on:click="isSeenEmp = !isSeenEmp" type="button" class="btn btn-outline-warning mt-4">
+                <i v-if="!isSeenEmp" class="pe-7s-plus"> </i> 
+                <i v-if="isSeenEmp" class="pe-7s-less"> </i>
+                <strong> Employee   </strong> 
+            </button>
+        </div>
+
+     <div class="mb-3">
+      <div v-if="allEmp.length > 0" class="card-body">
+                <h5 class="card-title">Client List </h5>
+                <table id="allClients" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                <tr>
+                    <th>SL</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+               
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(emp,index) in allEmp" :key="emp.id">
+                    <td>{{index+1}}</td>
+                    <td>{{emp.name}}</td>
+                    <td>{{emp.phoneNumber}}</td>
+                    <td>{{emp.email}}</td>
+                    <td>{{emp.role}}</td>
+
+                    <td> 
+                        <button type="button" v-on:click="showProjectsByemp(emp)" class="btn btn-outline-info btn-sm">
+                            <i class="metismenu-icon pe-7s-more"></i> Projects
+                        </button>  
+                     </td>
+                </tr>
+        
+                </tbody>
+              
+              </table>
+                
+              
+       
+              
+              
+       <div class="modal fade ml-5" id="EmpProject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Projects </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+               <div class="pl-4">
+                   <h6 style="color:#17a2b8" > Employee : {{empName}}; Email : {{empEmail}}; Phone : {{empPhone}} </h6>
+              </div>
+            
+
+          <div class="modal-body" style="width:100%">
+
+            <table id="clientCompany" class="table table-striped table-bordered" style="width:100%">
+                <thead style="width:100%">
+                    <tr>
+                        <th>SL</th>
+                        <th>Name </th>
+                        <th>Client</th>
+                        <th> Bugdet Hour </th>
+                        <th> Due Date </th>
+                    </tr>
+                </thead>
+            <tbody>
+              <tr v-for="(pemp,index) in empProjects" :key="pemp.id">
+                    <td>{{index+1}}</td>
+                    <td>{{pemp.name}}</td>
+                    <td>{{pemp.client}}</td>
+                    <td>{{pemp.bHours}}</td>
+                    <td>{{pemp.deliveryDateStr}}</td>
+                </tr>
+        
+             </tbody>
+            </table>
+            
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          </div>     
+     </div>
+
+      
+
+      <script src="~/views/Employee.js"></script>
     </div>
 </div>

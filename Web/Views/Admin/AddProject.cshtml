@@ -107,7 +107,7 @@
                             </div>
 
 
-                              <div class="p-3 project-man  mt-2">
+                              <div style="width:100%" class="p-2 project-man  mt-2">
                                  <div class="address-border">
                                    <h5 class="div-legent"> Engineer </h5>
                                      <ul v-show="engErrors.length>0">
@@ -119,9 +119,9 @@
                                         <label for="engineer" >Select engineer:</label>
                                          <select v-model="engineer" class="form-control">
                                             <option :value="0" > Please select an engineer </option>
-                                            <option v-for="client in clients" :value="client">
-                                                {{ client.name }}
-                                         </option>
+                                            <option v-for="emp in allEmp" :value="emp">
+                                                {{ emp.name }}
+                                            </option>
                                      </select>
                                    </div>
                                    <div class ="col-md-4 col-lg-4 col-sm-4">
@@ -134,10 +134,10 @@
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-s-12">
                                   </div>
-                                    <div v-show="engineers.length>0" style="box-shadow:0 !important;" class="main-card mb-3 card mt-2 ">
-                                          <div class="card-body">
+                                    <div v-show="engineers.length>0" style="box-shadow:0 !important;width:97%" class="main-card mb-3 card mt-2 ">
+                                       <div class="card-body">
                                         <h5 class="card-title">Engineer </h5>
-                                        <table style="box-shadow:0" class="mb-0 table table-borderless">
+                                        <table style="box-shadow:0;width:98%" class="mb-0 table table-borderless">
                                             <thead>
                                             <tr>
                                                 <th>#</th>
@@ -164,7 +164,7 @@
                              </div>
 
                              
-                              <div class="p-3 project-man  mt-2">
+                              <div style="width:100%" class="p-3 project-man  mt-2">
                                  <div class="address-border">
                                    <h5 class="div-legent"> Drawing </h5>
                                      <ul v-show="drwErrors.length>0">
@@ -176,9 +176,9 @@
                                         <label for="engineer" >Select Drawing :</label>
                                          <select v-model="drawing" class="form-control">
                                             <option :value="0" > Please select a drawing man </option>
-                                            <option v-for="client in clients" :value="client">
-                                                {{ client.name }}
-                                         </option>
+                                            <option v-for="emp in allEmp" :value="emp">
+                                                {{ emp.name }}
+                                            </option>
                                      </select>
                                    </div>
                                    <div class ="col-md-4 col-lg-4 col-sm-4">
@@ -191,7 +191,7 @@
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-s-12">
                                   </div>
-                                    <div v-show="drawings.length>0" style="box-shadow:0 !important;" class="main-card mb-3 card mt-2 ">
+                                    <div v-show="drawings.length>0" style="box-shadow:0 !important;width:97%" class="main-card mb-3 card mt-2 ">
                                           <div class="card-body">
                                         <h5 class="card-title">Drwaing </h5>
                                         <table style="box-shadow:0" class="mb-0 table table-borderless">

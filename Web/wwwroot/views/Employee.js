@@ -3,6 +3,7 @@ const app = new Vue({
     el: '#addEmploye',
     beforeMount() {
         this.loadAllRoles();
+        this.LoadEmployee();
     },
     data: {
         errors: [],
@@ -11,9 +12,15 @@ const app = new Vue({
         email: null,
         phone: null,
         password: null,
+        empName: null,
+        empEmail: null,
+        empPhone:null,
         confirmPassword:'',
         role: '0',
-        roles: []
+        roles: [],
+        allEmp: [],
+        empProjects:[],
+        isSeenEmp: false
     },
     methods: {
 
@@ -45,6 +52,8 @@ const app = new Vue({
                             timer: 1500
                         })
                         this.clearAll();
+                        this.LoadEmployee();
+
                     }).catch(errors => {
                         Swal.fire({
                             position: 'top-end',
@@ -115,8 +124,7 @@ const app = new Vue({
                 return false;
             }
         },
-
-    loadAllRoles: function () {
+        loadAllRoles: function () {
             const config = { headers: { 'Content-Type': 'application/json' } };
             var base_url = window.location.origin;
             const clientURL = base_url + "/api/employee/all-role";
@@ -126,6 +134,45 @@ const app = new Vue({
                 this.roles = result.data;
             }, error => {
                 console.error(error);
+            });
+
+        },
+        LoadEmployee: function () {
+            const config = { headers: { 'Content-Type': 'application/json' } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/Employee/all-active-employee";
+
+            axios.get(clientURL, config).then(result => {
+                console.log(result.data);
+                this.allEmp = result.data;
+            }, error => {
+                console.error(error);
+            });
+
+        },
+
+        showProjectsByemp: function (emp)
+        {
+            const config = { headers: { 'Content-Type': 'application/json' } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/Employee/all-emp-project?empId=" + emp.id;
+
+            this.empName = emp.name;
+            this.empEmail = emp.email;
+            this.empPhone = emp.phoneNumber;
+
+            $("#EmpProject").modal("show");
+
+            axios.get(clientURL, config).then(result => {
+                this.empProjects = result.data;
+            }, error => {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Error!',
+                    text: 'Something went wrong.' + error,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
             });
 
         }

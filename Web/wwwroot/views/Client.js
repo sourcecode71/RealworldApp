@@ -132,7 +132,6 @@
 
           },
         showCompanyByClient: function (client) {
-            console.log("client ", client);
 
             const config = { headers: { 'Content-Type': 'application/json' } };
             var base_url = window.location.origin;
@@ -144,17 +143,6 @@
 
                 console.log(result.data);
                 this.companies = result.data;
-
-              /* setTimeout(() => {
-                    $('#clientCompany').DataTable({
-                        "scrollY": "300px",
-                        "scrollCollapse": true,
-                        "paging": false
-                    });
-                }, 100); */
-
-
-
             }, error => {
                 Swal.fire({
                     position: 'top-end',

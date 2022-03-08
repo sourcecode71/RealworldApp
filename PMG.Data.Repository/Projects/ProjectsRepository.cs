@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Domain;
 using Domain.Enums;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
@@ -302,6 +303,81 @@ namespace PMG.Data.Repository.Projects
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
+                    throw ex;
+                } 
+            }
+        }
+
+        public async Task<bool> CreateProject(ProjectDto dto)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    string ProjectNo = this.GetProjectNumber(dto);
+                    string cnPid = Guid.NewGuid().ToString();
+
+                    Project projectDomain = new Project
+                    {
+                        Id = cnPid,
+                        Year = DateTime.Now.Year,
+                        ProjectNo = ProjectNo,
+                        Balance = dto.Budget,
+                        ClientId = new Guid(dto.Client),
+                        Week = dto.Week,
+                        DeliveryDate = DateTime.Now.AddDays(dto.Week * 7),
+                        StartDate = DateTime.Now,
+                        Paid = 0,
+                        Name = dto.Name,
+                        Progress = 0,
+                        Status = ProjectStatus.Budgeted,
+                        CreatedDate = DateTime.Now,
+                        Budget = dto.Budget,
+                        Description =dto.Description
+                    };
+
+                    _context.Projects.Add(projectDomain);
+
+                    foreach(ProjectEmp emp in dto.Engineers)
+                    {
+                        string pId= (Guid.NewGuid()).ToString();
+                        ProjectEmployee empP = new ProjectEmployee
+                        {
+                            ProjectId = cnPid,
+                            EmployeeId = emp.Id,
+                            BudgetHours=emp.hour,
+                            EmployeeType = EmployeeType.Engineering
+                        };
+
+                        _context.ProjectEmployees.Add(empP);
+                    }
+
+                    foreach (ProjectEmp emp in dto.Drawings)
+                    {
+                        string pId = (Guid.NewGuid()).ToString();
+                        ProjectEmployee empP = new ProjectEmployee
+                        {
+                            ProjectId = cnPid,
+                            EmployeeId = emp.Id,
+                            BudgetHours = emp.hour,
+                            EmployeeType = EmployeeType.Drawing
+                        };
+
+                        _context.ProjectEmployees.Add(empP);
+                    }
+
+                    int State = await _context.SaveChangesAsync();
+
+                    transaction.Commit();
+
+                    return State == 1;
+
+
+
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
                     throw ex;
                 } 
             }

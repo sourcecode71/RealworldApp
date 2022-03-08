@@ -4,6 +4,11 @@ namespace Application.DTOs
 {
     public class EmployeeDto
     {
+        public EmployeeDto()
+        {
+            this.Name = string.Format("{0} {1}",this.FirstName,this.LastName);
+        }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
