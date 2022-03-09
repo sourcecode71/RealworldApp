@@ -20,7 +20,9 @@
         drawings: [],
         drawhours: '',
         drwErrors: [],
-        allEmp:[]
+        allEmp: [],
+        allEng: [],
+        allDrw: []
 
     },
     methods: {
@@ -45,6 +47,11 @@
 
             axios.get(clientURL, config).then(result => {
                 this.allEmp = result.data;
+                this.allEng = result.data.filter(p => p.role == "Engineering");
+                this.allDrw = result.data.filter(p => p.role == "Drawing");
+
+                console.log(this.allEng, " ----- this.allEmp --- ", this.allDrw);
+
             }, error => {
                 console.error(error);
             });

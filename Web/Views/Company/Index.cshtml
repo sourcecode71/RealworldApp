@@ -9,11 +9,38 @@
 
 
         
-        <div class="col-md-11 col-lg-11 col-sm-12 mb-3 card">
-                <div class="card-body">
-                        <div style="width:80%;margin-left:4%" class="card-body">
+        <div class="main-card mb-3 card">
+
+                <div  id="addCompany" class="card-body">
+                        <div  class="card-body">
                                 <h5 class="card-title">Company </h5>
-                                <form class="p-2" action="#" onsubmit="SubmitCompany();return false" >
+                                
+                                <form class="p-2"  method="post" novalidate="true" >
+
+                                    <p v-if="errors.length">
+                                        <b class="text-danger">Please correct the following error(s):</b>
+                                        <ul>
+                                        <li v-for="error in errors" class="text-danger">{{ error }}</li>
+                                        </ul>
+                                    </p>
+
+                                <div class="com-md-6 col-sm-12 col-lg-6">
+                                    <label for="addProjectClient">Client </label>
+                                        <select v-model="client" class="form-control">
+                                        <option :value="0"> Please select a client </option>
+                                        <option v-for="client in clients" :value="client">
+                                            {{ client.name }}
+                                        </option>
+                                        </select>
+                                </div>
+
+                                <div class="com-md-6 col-sm-12 col-lg-6 mt-2">
+                                    <label for="addbudget" >Budget </label>
+                                    <input type="text" v-model="budget" v-on:keypress="isNumber($event)"
+                                        v-on:blur="formatNumber" value="$ 0" class="form-control" />
+                                </div>
+
+
                                     <div class="position-relative form-group">
                                         <label for="exampleEmail" class=""> Clinet </label>
                                          <select id="companyCLient" class="mb-2 form-control">
@@ -30,28 +57,31 @@
                                         <label for="exampleEmail" class=""> Company Address </label>
                                         <textarea name="text" id="companyAddress" class="form-control"></textarea>
                                     </div>
-                                    <button id="btnWrkBudget" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> </button>
-                                </form>
-                            </div>
 
-                              <div style="padding:0px" class="card-body">
-                                  <h5 class="card-title">Company List </h5>
-                                    <table class="mb-0 table table-striped">
-                                        <thead>
-                                            <tr style="font-size:14px">
-                                                <th> # </th>
-                                                <th>Client Name </th>
-                                                <th>Company Name </th>
-                                                <th> Company Address</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbCompany">
+                                      <button id="btnWrkBudget" class="mt-1 btn btn-primary">
+                                           <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> 
+                                      </button>
+                                </form>
+                        </div>
+
+                        <div style="padding:0px" class="card-body">
+                            <h5 class="card-title">Company List </h5>
+                            <table class="mb-0 table table-striped">
+                                <thead>
+                                    <tr style="font-size:14px">
+                                        <th> # </th>
+                                        <th>Client Name </th>
+                                        <th>Company Name </th>
+                                        <th> Company Address</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbCompany">
                                            
-                                      </tbody>
-                                   </table>
-                                </div>
-                  </div>
-            </div>
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+        </div>
 
   
     @section Scripts {

@@ -61,7 +61,7 @@
     </style>
  
 
-    <div id="addProject" class="main-card mb-3 card">
+    <div class="main-card mb-3 card">
         <div id="addProject" class="card-body">
             <h5 class="card-title"> Projects</h5>
             <div class="row">
@@ -86,7 +86,7 @@
                             </div>
 
                             <div class="com-md-6 col-sm-12 col-lg-6">
-                                <label for="addProjectClient">Client:</label>
+                                <label for="addProjectClient">Client </label>
                                 <select v-model="client" class="form-control">
                                     <option :value="0"> Please select a client </option>
                                     <option v-for="client in clients" :value="client">
@@ -96,12 +96,12 @@
                             </div>
 
                             <div class="com-md-6 col-sm-12 col-lg-6 mt-2">
-                                <label for="addbudget" >Budget $:</label>
+                                <label for="addbudget" >Budget </label>
                                 <input type="text" v-model="budget" v-on:keypress="isNumber($event)"
                                     v-on:blur="formatNumber" value="$ 0" class="form-control" />
                             </div>
                             <div class="com-md-6 col-sm-12 col-lg-6 mt-2">
-                                <label for="pWeek" >Schedule Weeks:</label>
+                                <label for="pWeek" >Schedule Weeks </label>
                                 <input type="text" v-model="pweek" v-on:keypress="isNumber($event)"
                                     class="form-control" />
                             </div>
@@ -116,10 +116,10 @@
                                   <div class="row">
                                     
                                    <div class="col-md-6 col-lg-6 col-sm-6">
-                                        <label for="engineer" >Select engineer:</label>
+                                        <label for="engineer" >Select engineer </label>
                                          <select v-model="engineer" class="form-control">
                                             <option :value="0" > Please select an engineer </option>
-                                            <option v-for="emp in allEmp" :value="emp">
+                                            <option v-for="emp in allEng" :value="emp">
                                                 {{ emp.name }}
                                             </option>
                                      </select>
@@ -173,10 +173,10 @@
                                   <div class="row">
                                     
                                    <div class="col-md-6 col-lg-6 col-sm-6">
-                                        <label for="engineer" >Select Drawing :</label>
+                                        <label for="engineer" >Select Drawing </label>
                                          <select v-model="drawing" class="form-control">
                                             <option :value="0" > Please select a drawing man </option>
-                                            <option v-for="emp in allEmp" :value="emp">
+                                            <option v-for="emp in allDrw" :value="emp">
                                                 {{ emp.name }}
                                             </option>
                                      </select>
@@ -221,7 +221,7 @@
                              </div>
 
                             <div class="com-md-12 col-sm-12 col-lg-12 ">
-                                 <label for="workOrder"> Work Order description : </label>
+                                 <label for="workOrder"> Work Order description  </label>
                                  <textarea v-model="workorderDesc" class="form-control" > </textarea>
                             </div>
                         </div>
