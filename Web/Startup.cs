@@ -1,5 +1,4 @@
 using Application.Core.Projects;
-using AspNetCore.SassCompiler;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -44,7 +43,7 @@ namespace Web
             services.AddMediatR(typeof(Create.Handler).Assembly);
             services.AddScoped<TokenService>();
 
-            services.AddSassCompiler();
+           // services.AddSassCompiler();
 
             ContainerSetup.Setup(services, Configuration);
 

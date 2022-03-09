@@ -44,7 +44,11 @@ namespace PMG.Data.Repository.Projects
                                          Id = cm.Id,
                                          Address = cm.Address,
                                          Name = cm.Name,
-                                         ClientName = cl.Name
+                                         ClientName = cl.Name,
+                                         Email = cm.Email,
+                                         Phone = cm.Phone,
+                                         ContactName = cm.ContactName,
+
                                      }).ToListAsync();
 
                 return company;
@@ -112,7 +116,10 @@ namespace PMG.Data.Repository.Projects
                 {
                     Name = dTO.Name,
                     Address = dTO.Address,
-                    ClientId = dTO.ClientId
+                    ClientId = dTO.ClientId,
+                    ContactName =dTO.ContactName,
+                    Email = dTO.Email,
+                    Phone=dTO.Phone
                 };
 
                 _context.Company.Add(company);
