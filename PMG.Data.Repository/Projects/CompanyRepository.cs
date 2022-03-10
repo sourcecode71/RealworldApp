@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Domain.Common;
+using Domain.Enums;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
@@ -18,6 +19,8 @@ namespace PMG.Data.Repository.Projects
         Task <List<CompanyDTO>> GetAllCompany();
         Task<List<CompanyDTO>> GetAllCompany(Guid guid);
         Task<bool> SaveEmployeHourLog(HourlogsDTO dTO);
+        Task<List<HourlogsDTO>> GetAllHourLogs(string empId,string empType);
+
     }
     public class CompanyRepository : ICompanyRepository
     {
@@ -84,6 +87,8 @@ namespace PMG.Data.Repository.Projects
                 throw ex;
             }
         }
+
+     
 
         public async Task<bool> SaveCleint(ClientDTO dTO)
         {
@@ -159,6 +164,8 @@ namespace PMG.Data.Repository.Projects
                         SetUser = dTO.EmpId.ToString()
                     };
 
+                    _context.Hourlogs.Add(hourlogs);
+
                     var state = await _context.SaveChangesAsync();
                     transaction.Commit();
                     return state == 1;
@@ -169,6 +176,35 @@ namespace PMG.Data.Repository.Projects
                     transaction.Rollback();
                     throw ex;
                 }
+            }
+        }
+
+        public async Task<List<HourlogsDTO>> GetAllHourLogs(string empId, string empType)
+        {
+            try
+            {
+                var hrLogs = await (from hr in _context.Hourlogs
+                                    join p in _context.Projects on hr.ProjectId.ToString() equals p.Id
+                                    join e in _context.Employees on hr.EmpId.ToString() equals e.Id
+                                    where (p.Status != ProjectStatus.Completed)
+                                    select new HourlogsDTO
+                                    {
+                                        EmpName = e.Name,
+                                        SpentHour = hr.SpentHour,
+                                        SpentDate = hr.SpentDate,
+                                        Project = p.Name,
+                                        ProjectNo = p.ProjectNo,
+                                        SpentDateStr = hr.SetDate.ToString("MM/dd/yyyy"),
+                                        Remarks = hr.Remarks
+                                    }).ToListAsync();
+
+                         return hrLogs;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
             }
         }
     }

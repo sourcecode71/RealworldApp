@@ -34,6 +34,7 @@ namespace Domain.Common
             IsActive= true;
             Id= Guid.NewGuid();
         }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }

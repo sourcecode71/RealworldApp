@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Common;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,11 +12,18 @@ namespace Domain.Projects
         public Guid Id { get; set; }
         [MaxLength(15)]
         public string WorkOrderNo { get; set; }
+        [MaxLength(150)]
+        public string ConsWork { get; set; }
         public string ProjectId { get; set; }
         public virtual Project Project { get; set; }
+        public Guid CompanyId { get; set; }
+
         [MaxLength(10)]
         public string ProjectNo { get; set; }
+        public double OriginalBudget { get; set; }
         public double ApprovedBudget { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public DateTime ApprovalDate { get; set; }
         [MaxLength(250)]
         public string OTDescription { get; set; }

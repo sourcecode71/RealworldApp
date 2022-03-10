@@ -151,10 +151,7 @@
               const clientURL = base_url + "/api/company/all-companies";
 
               axios.get(clientURL, config).then(result => {
-
-                  console.log(result.data);
                   this.companies = result.data;
-
                   setTimeout(() => {
                       $('#allCompanies').DataTable({
                           "scrollY": "500px",
@@ -162,8 +159,6 @@
                           "paging": false
                       });
                   }, 100); 
-
-
 
               }, error => {
                   console.error(error);

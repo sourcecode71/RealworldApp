@@ -3,6 +3,7 @@ using Domain.Common;
 using Microsoft.AspNetCore.Mvc;
 using PMG.Data.Repository.Projects;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web.ApiControllers;
 
@@ -62,6 +63,17 @@ namespace Web.ApiContollers
             bool savingStatus = await _cmRepository.SaveEmployeHourLog(dTO);
             return Ok(savingStatus);
         }
+
+        [HttpGet("load-hour-log")]
+        public async Task<List<HourlogsDTO>> LoadAllHourLog()
+        {
+            string empId = "89eac876-cd03-4049-974c-c0c759063e75";
+            string type = "04";
+            var logs = await _cmRepository.GetAllHourLogs(empId,type);
+            return logs;
+
+        }
+
 
     }
 }

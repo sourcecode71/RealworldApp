@@ -25,21 +25,28 @@ namespace PMG.Data.Repository.Projects
             {
                 IQueryable<WorkOrderDTO> wrkList = (from w in _context.WorkOrder
                                             join p in _context.Projects on w.ProjectId equals p.Id
+                                            join cm in _context.Company on w.CompanyId equals cm.Id
+                                            join cl in _context.Clients on p.ClientId equals cl.Id into gj
+                                            from xx in gj.DefaultIfEmpty()
                                             where p.BudgetApprovedStatus != 2
                                             orderby w.SetDate descending
                                             select new WorkOrderDTO
                                             {
                                                 Id = w.Id,
                                                 ProjectId = w.ProjectId,
-                                                ClinetName = p.Client,
+                                                ClinetName = xx.Name,
                                                 ProjectName = p.Name,
+                                                OriginalBudget = w.OriginalBudget,
                                                 ApprovedBudget = w.ApprovedBudget,
+                                                ConsecutiveWork = w.ConsWork,
                                                 Comments = w.Comments,
                                                 OTDescription = w.OTDescription,
                                                 ProjectNo = w.ProjectNo,
                                                 ProjectYear = p.Year,
                                                 WorkOrderNo = w.WorkOrderNo,
                                                 ProjectBudget = p.Budget,
+                                                StartDateStr = w.StartDate.ToString("MM/dd/yyyy"),
+                                                EndDateStr = w.EndDate.ToString("MM/dd/yyyy"),
                                                 ApprovedDateStr = w.ApprovalDate.ToString("MM/dd/yyyy")
 
                                             }).Take(50);
@@ -57,17 +64,18 @@ namespace PMG.Data.Repository.Projects
         {
             try
             {
-                string OTNo = GetProjectNumber(dTO);
+                string OTNo = GetWorkOrderNumber(dTO);
 
                 var pmWorkOrder = new WorkOrder
                 {
                     Id = Guid.NewGuid(),
                     WorkOrderNo = OTNo,
-                    ProjectNo = dTO.ProjectNo,
+                    ConsWork = dTO.ConsecutiveWork,
                     ProjectId = dTO.ProjectId,
-                    ApprovedBudget = dTO.ApprovedBudget,
-                    ApprovalDate = DateTime.Now,
-                    Comments = dTO.Comments,
+                    CompanyId = new Guid(dTO.CompanyId),
+                    OriginalBudget = dTO.OriginalBudget,
+                    StartDate = dTO.StartDate,
+                    EndDate = dTO.EndDate,
                     OTDescription = dTO.OTDescription
                 };
 
@@ -222,11 +230,19 @@ namespace PMG.Data.Repository.Projects
 
         }
 
-        private string GetProjectNumber(WorkOrderDTO dTO)
+        private string GetWorkOrderNumber(WorkOrderDTO dTO)
         {
+            DateTime CurrentDate = DateTime.Now;
+
+            string Day = CurrentDate.Day.ToString("00");
+            string Month = CurrentDate.Month.ToString("00");
+            string Year = CurrentDate.Year.ToString();
+            string ProjectNumber = string.Format("{0}{1}{2}", Day, Month, Year);
+
             var PmOTCount = _context.WorkOrder.Where(P => P.ProjectNo == dTO.ProjectNo).Count() + 1;
-            string ProjectNumber = string.Format("{0}{1}{2}", dTO.ProjectNo,"OT", PmOTCount.ToString("00"));
-            return ProjectNumber;
+            
+            string workOrderNo = string.Format("{0}{1}{2}", ProjectNumber, "OT", PmOTCount.ToString("00"));
+            return workOrderNo;
         }
 
        

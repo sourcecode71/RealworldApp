@@ -21,7 +21,7 @@
                 <div class="form-row">
                     <div class="com-md-6 col-sm-12 col-lg-6">
                         <label for="addProjectClient">Client </label>
-                        <select v-model="client" class="form-control">
+                        <select id="wrkProject" v-model="client" class="form-control">
                             <option :value="0"> Please select a client </option>
                             <option v-for="client in clients" :value="client">
                                 {{ client.name }}

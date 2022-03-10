@@ -4,90 +4,105 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
+
     <link rel="stylesheet" href="~/css/projects.css" />
-
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
-        <div class="main-card mb-3 card">
-            <div class="card-body"><h5 class="card-title">Hours log </h5>
-                <form class="p-2" action="#" onsubmit="SubmitHourLogs();return false" >
+    <div class="row">
+        
+        <div class="col-12 main-card mb-3 card">
+            <div class="card-body ">
+                 <div class="col-md-6 col-lg-6"> 
+                    <h5 class="card-title">Hours log </h5>
+                    <form class="p-2" action="#" onsubmit="SubmitHourLogs();return false" >
                 
-                    <select  class="mb-2 form-control" id="project">
-                            <option>Select the project</option>
-                    </select>
+                        <select  class="mb-2 form-control" id="project">
+                                <option>Select the project</option>
+                        </select>
 
-                     <div id="projectError" class="alert alert-danger  ml-1 hide">
-                     </div>
+                         <div id="projectError" class="alert alert-danger  ml-1 hide">
+                         </div>
 
-                    <div id="divPmDescription" class="position-relative form-group hide">
-                         <div class="row pmg-text">
-                            <div class="col-md-6 col-sm-12"> Project No : <span id="prjNo" > </span> </div>
-                            <div class="col-md-6 col-sm-12"> Project Name : <span id="prjName" > </span> </div>
-                            <div class="col-md-6 col-sm-12"> Project Client : <span id="pjClient" > </span> </div>
+                        <div id="divPmDescription" class="position-relative form-group hide">
+                             <div class="row pmg-text">
+                                <div class="col-md-6 col-sm-12"> Project No : <span id="prjNo" > </span> </div>
+                                <div class="col-md-6 col-sm-12"> Project Name : <span id="prjName" > </span> </div>
+                                <div class="col-md-6 col-sm-12"> Project Client : <span id="pjClient" > </span> </div>
 
-                            <div class="col-md-6 col-sm-12"> Budgeted Hours: <span id="pjBudgetHours" > </span> </div>
-                             <input type="hidden" id="wrkId" >
-                             <impu typeof="hidden" id="wrkNo"> 
-                             <impu typeof="hidden" id="projectId"> 
-                        </div>
-                    </div>
-
-                    <div id="divBudget" class="position-relative form-group">
-                        <div class="row">
-                            <div class =" col-md-6 col-sm-6 col-lg-6">
-                                <label for="spentHour" class="">  Spent Hour(s) :  </label>
-                                <input type="number" name="spentHour" id="spentHours" placeholder="Spent Hours" class="form-control">
-                                <div id="spentHoursError" class="alert alert-danger  ml-1 hide">
-                                </div>
+                                <div class="col-md-6 col-sm-12"> Budgeted Hours: <span id="pjBudgetHours" > </span> </div>
+                                 <input type="hidden" id="wrkId" >
+                                 <impu typeof="hidden" id="wrkNo"> 
+                                 <impu typeof="hidden" id="projectId"> 
                             </div>
-
-                             <div class ="col-md-6 col-sm-6 col-lg-6">
-                                <label  for="hourLog" class=""> Hour(s) log Date:  </label>
-                                <input name="hourLog" type="date" id="hourLogDate" placeholder="Hour(s) log Date" class="form-control moneyFormat">
-                                <div id="hourLogDateError" class="alert alert-danger  ml-1 hide">
-                                </div>
-                            
-                            </div>
-
                         </div>
-                        
-                    </div>
-                 
-                    <div class=" mt-1 position-relative form-group">
-                        <label for="exampleText" class=""> <span id ="spComment"> Remarks : </span>  </label>
-                        <textarea name="text" id="remark" class="form-control"></textarea>
-                    </div>
-                   
-                    <button id="btnHourLog" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> </button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3"></div>
-     <div class="col-md-1"></div>
-       <div class="hide col-lg-10">
-                                <div class="main-card mb-3 card">
-                                    <div class="card-body"><h5 class="card-title">Work Order List </h5>
-                                        <table class="mb-0 table table-striped">
-                                            <thead>
-                                            <tr style="font-size:14px">
-                                                <th> # </th>
-                                                <th>Project Name </th>
-                                                <th> OT No</th>
-                                                <th style="width:290px" >Work Order</th>
-                                                <th> Budget </th>
-                                                <th> Approved Date </th>
-                                                <th> Actions </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="budgetApprovalAct">
-                                           
-                                            </tbody>
-                                        </table>
+
+                        <div id="divBudget" class="position-relative form-group">
+                            <div class="row">
+                                <div class =" col-md-6 col-sm-6 col-lg-6">
+                                    <label for="spentHour" class="">  Spent Hour(s) :  </label>
+                                    <input type="number" name="spentHour" id="spentHours" placeholder="Spent Hours" class="form-control">
+                                    <div id="spentHoursError" class="alert alert-danger  ml-1 hide">
                                     </div>
                                 </div>
+
+                                 <div class ="col-md-6 col-sm-6 col-lg-6">
+                                    <label  for="hourLog" class=""> Hour(s) log Date:  </label>
+                                    <input name="hourLog" type="date" id="hourLogDate" placeholder="Hour(s) log Date" class="form-control moneyFormat">
+                                    <div id="hourLogDateError" class="alert alert-danger  ml-1 hide">
+                                    </div>
+                            
+                                </div>
+
                             </div>
+                        
+                        </div>
+                 
+                        <div class=" mt-1 position-relative form-group">
+                            <label for="exampleText" class=""> <span id ="spComment"> Remarks : </span>  </label>
+                            <textarea name="text" id="remark" class="form-control"></textarea>
+                        </div>
+                   
+                        <button id="btnHourLog" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> </button>
+                    </form>
+                </div>
+
+                <div id="hourLog" class="col-md-12 col-sm-12 col-lg-12" >
+
+         <div class="modal-body" style="width:100%">
+            <table id="empHourLog" class="table table-striped table-bordered" style="width:100%">
+                <thead style="width:100%">
+                    <tr>
+                        <th>SL</th>
+                         <th>Name </th>
+                        <th>Project No</th>
+                        <th> Project </th>
+                        <th> Spent Date </th>
+                        <th> Spent Hour </th>
+               
+                    </tr>
+                </thead>
+            <tbody>
+              <tr v-for="(log,index) in logs" :key="log.id">
+                    <td>{{index+1}}</td>
+                    <td>{{log.empName}}</td>
+                    <td>{{log.projectNo}}</td>
+                    <td>{{log.project}}</td>
+                    <td>{{log.spentDateStr}}</td>
+                    <td>{{log.spentHour}}</td>
+                </tr>
+        
+             </tbody>
+            </table>
+            
+              </div>
+
+                </div>
+
+            </div>
+       
+    </div>
+    </div>
+   
+    
+     <script src="~/views/hourlogs.js"></script>
 
       <div class="col-md-1"></div>
 
@@ -101,6 +116,6 @@
             });
         </script>
     }
-  </div>
+
 
 
