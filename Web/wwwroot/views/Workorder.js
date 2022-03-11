@@ -28,6 +28,17 @@ const app = new Vue({
     },
     methods: {
 
+        showHide: function () {
+
+            this.seen = !this.seen;
+
+            if (this.seen) {
+                setTimeout(() => {
+                    $("#wrkCompany").select2();
+                    $("#wrkProject").select2();
+                }, 150);
+            }
+        },
         SubmitWorkOrder: function (e) {
 
             console.log($("#wrkCompany").select2("val"), " eee ---- ", $("#wrkProject").select2('val'));
@@ -135,12 +146,6 @@ const app = new Vue({
 
             axios.get(clientURL, config).then(result => {
                 this.projects = result.data;
-                setTimeout(() => {
-                    console.log(" work order setup");
-                    $("#wrkProject").select2();
-
-                }, 500);
-
             }, error => {
                 console.error(error);
             });
@@ -154,10 +159,7 @@ const app = new Vue({
 
             axios.get(clientURL, config).then(result => {
                 this.companies = result.data;
-                setTimeout(() => {
-                    $("#wrkCompany").select2();
-                }, 100);
-
+               
             }, error => {
                 console.error(error);
             });

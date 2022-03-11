@@ -2,6 +2,7 @@
   const app = new Vue({
       el: '#addCompany',
       beforeMount() {
+
           this.loadAllClients();
           this.loadAllCompany();
           
@@ -20,7 +21,17 @@
 
         },
       methods: {
-       
+
+        addNewVisibility() {
+            this.seen = !this.seen;
+
+            if (this.seen)
+            setTimeout(() => {
+                $("#wrkProject").select2();
+
+            }, 200);
+        },
+
       submitForm: function (e) {
 
          this.errors = [];
@@ -152,6 +163,9 @@
 
               axios.get(clientURL, config).then(result => {
                   this.companies = result.data;
+               
+
+
                   setTimeout(() => {
                       $('#allCompanies').DataTable({
                           "scrollY": "500px",
@@ -193,5 +207,4 @@
   })
 
 
-   
-                    
+           

@@ -32,7 +32,7 @@ namespace PMG.Data.Repository.Projects
 
         public IQueryable<Client> GetAllClient()
         {
-            return _context.Clients.Where(p => p.IsActive);
+            return _context.Clients.Where(p => p.IsActive).OrderBy(p=>p.Name);
         }
 
         public async Task<List<CompanyDTO>> GetAllCompany()

@@ -48,6 +48,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\assets\images\avatars\" />
+    <Folder Include="wwwroot\lib\select2\" />
     <Folder Include="wwwroot\op\" />
   </ItemGroup>
 

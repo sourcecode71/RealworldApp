@@ -113,9 +113,8 @@
 
                 axios.get(clientURL, config).then(result => {
 
-                    console.log(result.data);
                     this.clients = result.data;
-
+                    this.loadAllClients();
                     setTimeout(() => {
                         $('#allClients').DataTable({
                             "scrollY": "500px",

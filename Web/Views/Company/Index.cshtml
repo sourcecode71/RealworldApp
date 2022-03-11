@@ -3,9 +3,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .select2-container 
+    .select2-selection--single{
+        height:35px !important;
+    }
+</style>
 
 <link rel="stylesheet" href="~/css/projects.css" />
-
 <div class="main-card mb-3 card">
     <div class="card-body">
         <div id="addCompany">
@@ -21,12 +26,13 @@
                 <div class="form-row">
                     <div class="com-md-6 col-sm-12 col-lg-6">
                         <label for="addProjectClient">Client </label>
-                        <select id="wrkProject" v-model="client" class="form-control">
+                        <select style="width:100%" id="wrkProject" v-model="client" class="form-control">
                             <option :value="0"> Please select a client </option>
                             <option v-for="client in clients" :value="client">
                                 {{ client.name }}
                             </option>
                         </select>
+
                     </div>
                 </div>
 
@@ -83,7 +89,7 @@
             </form>
 
               <div class="col-md-3">
-                    <button v-on:click="seen = !seen" type="button" class="btn btn-outline-warning mt-4">
+                    <button v-on:click="addNewVisibility()" type="button" class="btn btn-outline-warning mt-4">
                         <i v-if="!seen" class="pe-7s-plus"> </i> 
                         <i v-if="seen" class="pe-7s-less"> </i>
                         <strong> Company   </strong> 
