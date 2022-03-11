@@ -42,6 +42,7 @@ namespace PMG.Data.Repository.Projects
                 var company = await (from cm in _context.Company
                                      join cl in _context.Clients on cm.ClientId equals cl.Id
                                      where (cm.IsActive && cl.IsActive)
+                                     orderby cm.Name 
                                      select new CompanyDTO
                                      {
                                          Id = cm.Id,

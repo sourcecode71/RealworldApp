@@ -74,9 +74,6 @@ function SubmitCompany() {
         contentType: 'application/json; charset=utf-8',
     }).then(
         function fulfillHandler(data) {
-
-            console.log("  data ", data);
-
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',

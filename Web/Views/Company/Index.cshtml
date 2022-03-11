@@ -28,7 +28,7 @@
                         <label for="addProjectClient">Client </label>
                         <select style="width:100%" id="wrkProject" v-model="client" class="form-control">
                             <option :value="0"> Please select a client </option>
-                            <option v-for="client in clients" :value="client">
+                            <option v-for="client in clients" :value="client.id">
                                 {{ client.name }}
                             </option>
                         </select>
@@ -108,7 +108,7 @@
                         <th>Contact Person</th>
                         <th>Phone</th>
                         <th>Email</th>
-                        <th> Acction</th>
+                        <th > Acction</th>
                
                     </tr>
                     </thead>
@@ -120,8 +120,8 @@
                         <td>{{comp.contactName}}</td>
                         <td>{{comp.phone}}</td>
                         <td>{{comp.email}}</td>
-                        <td> 
-                            <button type="button" v-on:click="showCompanyByClient(client)" class="btn btn-outline-info btn-sm">
+                        <td > 
+                            <button style="width:95px" type="button" v-on:click="showCompanyByClient(client)" class="btn btn-outline-info btn-sm">
                                 <i class="metismenu-icon pe-7s-door-lock"></i> Company
                             </button>  </td>
                     </tr>

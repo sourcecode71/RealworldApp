@@ -2,7 +2,7 @@
 const app = new Vue({
     el: '#workOrder',
     mounted() {
-        $("#wrkProject").select2();
+
     },
     beforeMount() {
         this.loadAllProject();
@@ -34,17 +34,29 @@ const app = new Vue({
 
             if (this.seen) {
                 setTimeout(() => {
-                    $("#wrkCompany").select2();
-                    $("#wrkProject").select2();
+
+                    $("#wrkCompany").select2().on('change', function (e) {
+                        var id = $("#wrkCompany option:selected").val();
+                        comapnyId = id;
+                        console.log(" selected data ", comapnyId)
+                    });
+
+                    $("#wrkProject").select2().on('change', function (e) {
+                        var id = $("#wrkProject option:selected").val();
+                        projectId = id;
+                        console.log(" comapnyId data ", projectId)
+                    });
+
                 }, 150);
             }
         },
         SubmitWorkOrder: function (e) {
 
-            console.log($("#wrkCompany").select2("val"), " eee ---- ", $("#wrkProject").select2('val'));
 
-            this.project = $("#wrkProject").select2("val");
-            this.comapny = $("#wrkCompany").select2("val");
+           
+
+            console.log(projectId, " eee ---- comapnyId", comapnyId);
+
 
             if (this.isValidFrom()) {
 
@@ -59,8 +71,8 @@ const app = new Vue({
                     originalBudget: (this.budget.substring(1)).replace(",",""),
                     startDate: this.startDate,
                     endDate: this.endDate,
-                    projectId: this.project ,
-                    companyId: this.comapny,
+                    projectId: projectId ,
+                    companyId: comapnyId,
                     oTDescription: this.description
                 };
 
@@ -89,17 +101,19 @@ const app = new Vue({
         isValidFrom: function () {
             this.errors = [];
 
-            if ($("#wrkProject").select2("val") == "0") {
+            console.log(projectId, " eee ---- comapnyId", comapnyId);
+
+            if (projectId == "0") {
                 this.errors.push("Project is required.");
             }
 
-            if ($("#wrkCompany").select2("val") =="0") {
+            if (comapnyId =="0") {
                 this.errors.push("Company is required.");
             }
            
 
             if (!this.consecutiveWork) {
-                this.errors.push("Contact name is required.");
+                this.errors.push("Work order name is required.");
             }
 
             if (!this.budget) {
@@ -171,7 +185,11 @@ const app = new Vue({
             const clientURL = base_url + "/api/WorkOrder/load-approved-orders";
 
             axios.get(clientURL, config).then(result => {
+
+                $("#allWorkOrder").dataTable().fnDestroy();
+
                 this.workOrders = result.data;
+
                 
                 setTimeout(() => {
                     $('#allWorkOrder').DataTable({

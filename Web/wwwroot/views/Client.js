@@ -19,7 +19,7 @@
         },
       methods: {
        
-        submitForm: function (e) {
+     submitForm: function (e) {
            
        if(this.isValidFrom())
        {
@@ -47,6 +47,8 @@
                         timer: 1500
                     })
                     this.clearAll();
+                    this.loadAllClients();
+
                 }).catch(errors => {
                     Swal.fire({
                         position: 'top-end',
@@ -85,26 +87,7 @@
             }
      },
         
-        handleUserInput: function (e)
-        {
-            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-            this.phone = '(' + x[1] + ') ' + x[2] + '-' + x[3];
-        },
-        clearAll: function ()
-        {
-            this.name = "";
-            this.email = "";
-            this.phone ="";
-            this.address ="";
-            this.contactName ="";
-        },
-        validateEmail(email) {
-            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
-                return true;
-            } else {
-                return false;
-            }
-          },
+     
         loadAllClients: function () {
 
                 const config = { headers: { 'Content-Type': 'application/json' } };
@@ -112,19 +95,20 @@
                 const clientURL = base_url + "/api/company/all-clients";
 
                 axios.get(clientURL, config).then(result => {
+                    $("#allClients").dataTable().fnDestroy();
 
-                    this.clients = result.data;
-                    this.loadAllClients();
+                    setTimeout(() => {
+                        this.clients = result.data;
+                    }, 100);
+                    
                     setTimeout(() => {
                         $('#allClients').DataTable({
                             "scrollY": "500px",
                             "scrollCollapse": true,
                             "paging": false
                         });
-                    }, 100);
+                    }, 500);
 
-               
-                
                 }, error => {
                     console.error(error);
                 });
@@ -139,8 +123,6 @@
             $("#allCompany").modal("show");
 
             axios.get(clientURL, config).then(result => {
-
-                console.log(result.data);
                 this.companies = result.data;
             }, error => {
                 Swal.fire({
@@ -152,11 +134,28 @@
                 })
             });
 
+          },
+     
+      handleUserInput: function (e) {
+          var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+          this.phone = '(' + x[1] + ') ' + x[2] + '-' + x[3];
+      },
+      clearAll: function () {
+          this.name = "";
+          this.email = "";
+          this.phone = "";
+          this.address = "";
+          this.contactName = "";
+      },
+      validateEmail(email) {
+          if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
+              return true;
+          } else {
+              return false;
           }
-
+          }
       }
   })
 
 
-   
                     

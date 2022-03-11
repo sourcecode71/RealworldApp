@@ -2,10 +2,8 @@
   const app = new Vue({
       el: '#addCompany',
       beforeMount() {
-
           this.loadAllClients();
           this.loadAllCompany();
-          
     },
     data: {
             errors: [],
@@ -27,16 +25,20 @@
 
             if (this.seen)
             setTimeout(() => {
-                $("#wrkProject").select2();
+                $("#wrkProject").select2({
+
+                }).on('change', function (e) {
+                    var id = $("#wrkProject option:selected").val();
+                    slectedId = id;
+                    console.log(" selected data ", slectedId)
+                });
 
             }, 200);
         },
 
-      submitForm: function (e) {
+   submitForm: function (e) {
 
-         this.errors = [];
-
-           
+       this.errors = [];
        if(this.isValidFrom())
        {
 
@@ -47,12 +49,12 @@
 
            const clientData =
            {
-            clientId: this.client.id,
-            name : this.name,
-            address : this.address,
-            contactName:this.contactName,
-            email : this.email,
-            phone : this.phone
+                clientId: slectedId,
+                name : this.name,
+                address : this.address,
+                contactName:this.contactName,
+                email : this.email,
+                phone : this.phone
            };
 
          axios.post(clientURL, clientData, config)
@@ -65,6 +67,8 @@
                         timer: 1500
                     })
                     this.clearAll();
+                    this.loadAllCompany();
+
                 }).catch(errors => {
                     Swal.fire({
                         position: 'top-end',
@@ -79,8 +83,10 @@
         isValidFrom: function () {
             this.errors = [];
 
-        if (!this.client || this.client==0) {
-            this.errors.push("Name is required.");
+            
+
+        if (slectedId == 0 || !slectedId) {
+            this.errors.push("Client name is required.");
         }
 
         if (!this.name) {
@@ -161,10 +167,15 @@
               var base_url = window.location.origin;
               const clientURL = base_url + "/api/company/all-companies";
 
-              axios.get(clientURL, config).then(result => {
-                  this.companies = result.data;
-               
+              //$('#allCompanies').dataTable().fnClearTable();
+             
 
+              axios.get(clientURL, config).then(result => {
+                  $("#allCompanies").dataTable().fnDestroy();
+
+                  setTimeout(() => {
+                      this.companies = result.data;
+                  }, 10);
 
                   setTimeout(() => {
                       $('#allCompanies').DataTable({
@@ -172,7 +183,7 @@
                           "scrollCollapse": true,
                           "paging": false
                       });
-                  }, 100); 
+                  }, 500); 
 
               }, error => {
                   console.error(error);
@@ -206,5 +217,20 @@
       }
   })
 
+$(function () {
+   
+    $('#wrkProject').on('change', function () {
+        var data = $(".select2 option:selected").text();
+
+        console.log("data--- ", data);
+    })
+
+    $('.select2').select2({
+        placeholder: "Select a state"
+    }).on('change', function (e) {
+        var data = $(".select2 option:selected").text();
+        $("#test").val(data);
+    });
+});
 
            

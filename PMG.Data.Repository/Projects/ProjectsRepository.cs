@@ -264,8 +264,6 @@ namespace PMG.Data.Repository.Projects
                                      }).Distinct().ToListAsync();
 
                 return projects;
-
-
             }
             catch (Exception ex)
             {
