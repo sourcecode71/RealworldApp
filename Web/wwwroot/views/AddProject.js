@@ -22,7 +22,8 @@
         drwErrors: [],
         allEmp: [],
         allEng: [],
-        allDrw: []
+        allDrw: [],
+        hideNow: true
 
     },
     methods: {
@@ -65,7 +66,7 @@
             if (existEng == 0 && this.engErrors.length==0) {
                 let engD = {
                     id: eng.id,
-                    name: eng.contactName,
+                    name: eng.name,
                     email: eng.email,
                     hour: this.peHours
                 }
@@ -94,6 +95,8 @@
             this.drwErrors = [];
             let drw = this.drawing;
 
+            console.log(" drw ", drw);
+
             let existdrw = this.drawings.filter(v => v.id == drw.id).length;
 
             this.validateDrawingHours();
@@ -101,7 +104,7 @@
             if (existdrw == 0 && this.drwErrors.length == 0) {
                 let drwMan = {
                     id: drw.id,
-                    name: drw.contactName,
+                    name: drw.name,
                     email: drw.email,
                     hour: this.drawhours
                 }
@@ -123,9 +126,10 @@
         RemoveDrwaing: function (id) {
             this.drawings = this.drawings.filter(function (el) { return el.id != id; });
         },
+
         SubmitProject: function () {
 
-            this.drwErrors = [];
+            this.errors = [];
             
             let clId = this.client.id;
 
@@ -142,7 +146,7 @@
                 let project = {
                     name: this.name,
                     client: clId,
-                    budegt: this.budget,
+                    budget: (this.budget.substring(1)).replace(",",''),
                     week: this.pweek,
                     engineers: this.engineers,
                     drawings: this.drawings,
@@ -193,20 +197,20 @@
         },
         validateEngineerHours: function () {
 
-            if (!this.engineer || this.engineers.id=="00") {
+         /*   if (!this.engineer || this.engineers.id=="00") {
                 this.engErrors.push("Please select the engineer");
             }
             if (!this.peHours) {
                 this.engErrors.push("Please add the budgeted hours");
-            }
+            } */
         },
         validateDrawingHours: function () {
-            if (!this.drawing || this.drawing.id == "01") {
+          /*  if (!this.drawing || this.drawing.id == "01") {
                 this.drwErrors.push("Please select the drawing man");
             }
             if (!this.drawhours) {
                 this.drwErrors.push("Please add the budgeted hours");
-            }
+            } */
         },
         validateProject: function () {
             if (!this.name) {
@@ -226,13 +230,13 @@
                 this.errors.push("Project budgeted time is required");
             }
 
-            if (this.engineers.length ==0) {
+            /*if (this.engineers.length ==0) {
                 this.errors.push("Project engineer is required");
             }
 
             if (this.drawings.length == 0) {
                 this.errors.push("Project drwaing man required");
-            }
+            } */
         },
         clearAll: function () {
             this.errors = [];

@@ -4,22 +4,55 @@
 }
 
 <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
-<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>   
+<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
 
 <style>
-    .select2-container 
-    .select2-selection--single{
-        height:35px;
+    .select2-container .select2-selection--single {
+        height: 35px;
     }
+
+    .card {
+    box-shadow: 0 0.16875rem 1.1875rem rgba(4, 9, 20, 0),0 0.9375rem 1.40625rem rgba(4, 9, 20, 0),0 0.25rem 0.53125rem rgba(4, 9, 20, 0),0 0.125rem 0.1875rem rgba(4, 9, 20, 0)
+}
+
+.card-body {
+    padding: .75rem;
+}
+
+.address-border {
+    border: 1px dotted #646566;
+    padding-left: 20px;
+    padding-bottom: 10px;
+}
+
+.div-legent {
+    background: #fff;
+    margin-top: -12px;
+    margin-left: 10px;
+    padding: 0 10px;
+    width: 180px;
+    color: rgba(0, 0, 0, 0.54)
+}
+
+.per-div-legent {
+    background: #fff;
+    margin-top: -5px;
+    margin-left: 10px;
+    padding: 0 10px;
+    width: 182px;
+    color: rgba(0, 0, 0, 0.54)
+}
+
+
 </style>
 
-    <link rel="stylesheet" href="~/css/projects.css" />
-        <div class="main-card mb-3 card">
-         <div class="card-body">
-             <h5 class="card-title">Work Order </h5>
-            <div id="workOrder"> 
-            <div> 
-                <form v-if="seen" class="p-2"  v-on:submit.prevent="SubmitWorkOrder();return false" >
+<link rel="stylesheet" href="~/css/projects.css" />
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <h5 class="card-title">Work Order </h5>
+        <div id="workOrder">
+            <div>
+                <form v-if="seen" class="p-4" v-on:submit.prevent="SubmitWorkOrder();return false">
                     <p v-if="errors.length">
                         <b class="text-danger">Please correct the following error(s):</b>
                     <ul>
@@ -28,133 +61,251 @@
                     </p>
 
                     <div class="position-relative form-group">
-                         <div class="form-row">
-                        <div class="col-md-6 col-lg-6">
-                            <label for="exampleEmail" class=""> Project </label>
-                            <select id="wrkProject" v-model="project" class="form-control">
-                                <option :value="0" > Please select a project </option>
-                                <option v-for="prjt in projects" :value="prjt.id">
-                                    {{ prjt.name }}
-                                </option>
-                           </select>
-                      </div>
-                           <div class="col-md-6 col-lg-6">
-                            <label for="wrkCompany" class=""> Company </label>
-                            <select id="wrkCompany"  v-model="comapny"  class="form-control ">
-                                <option :value="0"> Please select a project </option>
-                                <option v-for="cmp in companies" :value="cmp.id">
-                                    {{ cmp.name }}
-                                </option>
-                           </select>
-
-                      </div>
-                      </div>
-
-                <table id="allProject"  style="display:none">
-                </table>
-              </div>
-
-                    <div class="position-relative form-group">
-                           <div class="form-row mt-3">
-                                 <div v-if="isName" class =" col-md-6 col-sm-6 col-lg-6">
-                                    <label  for="workorder" class=""> Work order name  </label>
-                                    <input name="workorder" placeholder="Work order name" class="form-control" v-model="name" >
-                                </div>
-
-
-                                <div class =" col-md-6 col-sm-12 col-lg-6">
-                                    <label for="consecutiveWork" class=""> Consecutive  Work  </label>
-                                    <input name="consecutiveWork"  placeholder="Consecutive  Work" class="form-control" v-model="consecutiveWork" >
-                                </div>
-
-                                 <div class =" col-md-6 col-sm-6 col-lg-6">
-                                    <label  for="budget" class=""> Original Budget  </label>
-                                    <input name="budget" placeholder="$ 0" class="form-control" v-model="budget" v-on:keypress="isNumber($event)"  v-on:blur="formatNumber" >
-                                </div>
+                        <div class="form-row">
+                            <div class="col-md-6 col-lg-6">
+                                <label for="exampleEmail" class=""> Project </label>
+                                <select id="wrkProject" v-model="project" class="form-control">
+                                    <option :value="0"> Please select a project </option>
+                                    <option v-for="prjt in projects" :value="prjt.id">
+                                        {{ prjt.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <label for="wrkCompany" class=""> Company </label>
+                                <select id="wrkCompany" v-model="comapny" class="form-control ">
+                                    <option :value="0"> Please select a project </option>
+                                    <option v-for="cmp in companies" :value="cmp.id">
+                                        {{ cmp.name }}
+                                    </option>
+                                </select>
 
                             </div>
+                        </div>
 
-                          <div class="form-row mt-3">
-                               
-                                 <div class =" col-md-6 col-sm-6 col-lg-6">
-                                    <label  for="startDate" class=""> Start Date  </label>
-                                    <input name="startDate" type="date"  placeholder="" v-model="startDate" class="form-control">
-                                </div>
-
-                                 <div class =" col-md-6 col-sm-6 col-lg-6">
-                                    <label  for="endDate" class=""> End Date  </label>
-                                    <input name="endDate" type="date"  placeholder="" v-model="endDate" class="form-control">
-                                </div>
-                         </div>
-
-                         <div class="form-row mt-2">
-                               <label for="exampleText" class="">  Description    </label>
-                               <textarea name="text"  class="form-control" v-model="description" > </textarea>
-                         </div>
                     </div>
-                    <button type="submit" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> </button>
+
+                    <div class="position-relative form-group">
+                        <div class="form-row mt-3">
+                            <div v-if="isName" class=" col-md-6 col-sm-6 col-lg-6">
+                                <label for="workorder" class=""> Work order name </label>
+                                <input name="workorder" placeholder="Work order name" class="form-control"
+                                    v-model="name">
+                            </div>
+
+
+                            <div class=" col-md-6 col-sm-12 col-lg-6">
+                                <label for="consecutiveWork" class=""> Consecutive Work </label>
+                                <input name="consecutiveWork" placeholder="Consecutive  Work" class="form-control"
+                                    v-model="consecutiveWork">
+                            </div>
+
+                            <div class=" col-md-6 col-sm-6 col-lg-6">
+                                <label for="budget" class=""> Work Order Budget </label>
+                                <input name="budget" placeholder="Budget" class="form-control" v-model="budget"
+                                    v-on:keypress="isNumber($event)" v-on:blur="formatNumber">
+                            </div>
+
+                        </div>
+
+                        <div class="form-row mt-3">
+
+                            <div class=" col-md-6 col-sm-6 col-lg-6">
+                                <label for="startDate" class=""> Start Date </label>
+                                <input name="startDate" type="date" placeholder="" v-model="startDate"
+                                    class="form-control">
+                            </div>
+
+                            <div class=" col-md-6 col-sm-6 col-lg-6">
+                                <label for="endDate" class=""> End Date </label>
+                                <input name="endDate" type="date" placeholder="" v-model="endDate" class="form-control">
+                            </div>
+                        </div>
+
+                     <div class="form-row mt-4">
+
+                        <div class="col-md-6 project-man  mt-2">
+                            <div class="address-border">
+                                <h5 class="div-legent"> Engineer </h5>
+                                <ul v-show="engErrors.length>0">
+                                    <li v-for="error in engErrors" class="text-danger">{{ error }}</li>
+                                </ul>
+                                <div class="row">
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6">
+                                        <label for="engineer">Select engineer </label>
+                                        <select v-model="engineer" class="form-control">
+                                            <option :value="0"> Please select an engineer </option>
+                                            <option v-for="emp in allEng" :value="emp">
+                                                {{ emp.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-4">
+                                        <label for="enghour">Hours</label>
+                                        <input type="text" v-model="peHours" v-on:keypress="isNumber($event)"
+                                            class="form-control" />
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-2 mt-4">
+                                        <button style="margin-top:5px" type="button"
+                                            class="btn btn-outline-info  btn-sm " v-on:click="AddEnginer()">Add</button>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-s-12">
+                                    </div>
+                                    <div v-show="engineers.length>0" style="box-shadow:0 !important;width:97%"
+                                        class="main-card mb-3 card mt-2 ">
+                                        <div class="card-body">
+                                            <table style="box-shadow:0;width:98%" class="mb-0 table table-borderless">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Name</th>
+                                                        <th>Hours</th>
+                                                        <th>Remove</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(eng,index) in engineers " :key="eng.id">
+                                                        <th scope="row">{{index+1}}</th>
+                                                        <td>{{eng.name}}</td>
+                                                        <td>{{eng.hour}}</td>
+                                                        <td> <button type="button" v-on:click="RemoverEngineer(eng.id)"
+                                                                class="btn btn-sm btn-outline-warning"> <i
+                                                                    class="pe-7s-less"> </i> </button> </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div  class="col-md-6 project-man  mt-2">
+                            <div class="address-border">
+                                <h5 class="div-legent"> Drawing </h5>
+                                <ul v-show="drwErrors.length>0">
+                                    <li v-for="error in drwErrors" class="text-danger">{{ error }}</li>
+                                </ul>
+                                <div class="row">
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6">
+                                        <label for="engineer">Select Drawing </label>
+                                        <select v-model="drawing" class="form-control">
+                                            <option :value="0"> Please select a drawing man </option>
+                                            <option v-for="emp in allDrw" :value="emp">
+                                                {{ emp.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-4">
+                                        <label for="drwhour">Hours</label>
+                                        <input type="text" v-model="drawhours" v-on:keypress="isNumber($event)"
+                                            class="form-control" />
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-2 mt-4">
+                                        <button style="margin-top:5px" type="button"
+                                            class="btn btn-outline-info  btn-sm " v-on:click="AddDrawing()">Add</button>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-s-12">
+                                    </div>
+                                    <div v-show="drawings.length>0" style="box-shadow:0 !important;width:97%"
+                                        class="main-card mb-3 card mt-2 ">
+                                        <div class="card-body">
+                                            <table style="box-shadow:0" class="mb-0 table table-borderless">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Name</th>
+                                                        <th>Hours</th>
+                                                        <th>Remove</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(drw,index) in drawings " :key="drw.id">
+                                                        <th scope="row">{{index+1}}</th>
+                                                        <td>{{drw.name}}</td>
+                                                        <td>{{drw.hour}}</td>
+                                                        <td> <button type="button" v-on:click="RemoveDrwaing(drw.id)"
+                                                                class="btn btn-sm btn-outline-warning"> <i
+                                                                    class="pe-7s-less"> </i> </button> </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                        <div class="form-row mt-3">
+                            <label for="exampleText" class=""> Work Order Description </label>
+                            <textarea name="text" class="form-control" v-model="description"> </textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span
+                                id="spSaveUpdate"> Submit </span> </strong> </button>
                 </form>
 
-                  <div class="col-md-3">
+                <div class="col-md-3">
                     <button v-on:click="showHide()" type="button" class="btn btn-outline-warning mt-4">
-                        <i v-if="!seen" class="pe-7s-plus"> </i> 
+                        <i v-if="!seen" class="pe-7s-plus"> </i>
                         <i v-if="seen" class="pe-7s-less"> </i>
-                          Work Order  
+                        Work Order
                     </button>
                 </div>
 
             </div>
 
-      <div class="mb-3">
-      <div class="card-body">
-                <h5 class="card-title">Work order list </h5>
-                <table id="allWorkOrder" class="table table-striped table-bordered" style="width:100%">
-                <thead>
-                <tr>
-                    <th>SL</th>
-                    <th>Project Name</th>
-                    <th>Work Order No</th>
-                    <th> Work Order</th>
-                    <th> Start Date</th>
-                    <th> End Date</th>
-                    <th>O. Budget</th>
-                    <th>A. Budget</th>
-                    <th> Acction</th>
-               
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(wrk,index) in workOrders" :key="wrk.id">
-                    <td>{{index+1}}</td>
-                    <td>{{wrk.projectName}}</td>
-                    <td>{{wrk.workOrderNo}}</td>
-                    <td>{{wrk.consecutiveWork}}</td>
-                    <td>{{wrk.startDateStr}}</td>
-                    <td>{{wrk.endDateStr}}</td>
-                    <td>{{wrk.originalBudget}}</td>
-                    <td>{{wrk.approvedBudget}}</td>
-                    <td> 
-                        <button type="button" v-on:click="showCompanyByClient(client)" class="btn btn-outline-info btn-sm">
-                            <i class="metismenu-icon pe-7s-door-lock"></i> Details
-                        </button>  </td>
-                </tr>
-        
-                </tbody>
+            <div class="mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Work order list </h5>
+                    <table id="allWorkOrder" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>SL</th>
+                                <th>Project Name</th>
+                                <th>Work Order No</th>
+                                <th> Work Order</th>
+                                <th> Start Date</th>
+                                <th> End Date</th>
+                                <th>O. Budget</th>
+                                <th>A. Budget</th>
+                                <th> Acction</th>
 
-           
-              </table>
-          </div>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(wrk,index) in workOrders" :key="wrk.id">
+                                <td>{{index+1}}</td>
+                                <td>{{wrk.projectName}}</td>
+                                <td>{{wrk.workOrderNo}}</td>
+                                <td>{{wrk.consecutiveWork}}</td>
+                                <td>{{wrk.startDateStr}}</td>
+                                <td>{{wrk.endDateStr}}</td>
+                                <td>{{wrk.originalBudget}}</td>
+                                <td>{{wrk.approvedBudget}}</td>
+                                <td>
+                                    <button type="button" v-on:click="showCompanyByClient(client)"
+                                        class="btn btn-outline-info btn-sm">
+                                        <i class="metismenu-icon pe-7s-door-lock"></i> Details
+                                    </button>
+                                </td>
+                            </tr>
 
-     </div>
-   </div>
+                        </tbody>
 
-         </div>
-            <script src="~/views/Workorder.js"></script>
+
+                    </table>
+                </div>
+
+            </div>
         </div>
- 
 
-  
-
-
-  
-
+    </div>
+    <script src="~/views/Workorder.js"></script>
+</div>

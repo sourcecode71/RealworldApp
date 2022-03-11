@@ -38,6 +38,8 @@ namespace Application.DTOs
         public string Approval { get; set; }
         public string BudgetApprovalStr { get; set; }
         public string EmployeesNames { get; set; }
+        public string SetUser { get; set; }
+        public DateTime SetDate { get; set; }
         public string Remarks { get; set; }
         public ProjectStatusDTO ProejctStatus { get; set; }
         public ICollection<ProjectEmployee> ProjectEmployees { get; set; }

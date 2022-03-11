@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Application.DTOs
 {
@@ -33,6 +34,9 @@ namespace Application.DTOs
         public string ClinetName { get; set; }
         public double ProjectBudget { get; set; }
         public string WorkOrderNo { get; set; }
+        public string SetUser { get; set; }
+        public List<ProjectEmp> Engineers { get; set; }
+        public List<ProjectEmp> Drawings { get; set; }
 
     }
 }

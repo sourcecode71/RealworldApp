@@ -1,258 +1,353 @@
-﻿
-const app = new Vue({
-    el: '#workOrder',
-    mounted() {
+﻿const app = new Vue({
+  el: "#workOrder",
+  mounted() {},
+  beforeMount() {
+    comapnyId = "0";
+    projectId = "0";
+    this.loadAllProject();
+    this.loadAllcompany();
+    this.loadAllWorkOrder();
+    this.LoadEmployee();
+  },
+  data: {
+    errors: [],
+    name: null,
+    consecutiveWork: null,
+    budget: "",
+    startDate: "",
+    endDate: "",
+    project: "0",
+    description: null,
+    comapny: "0",
+    seen: false,
+    isName: false,
+    projects: [],
+    workOrders: [],
+    companies: [],
+    engineers: [],
+    engErrors: [],
+    peHours: "",
+    drawing: "0",
+    engineer: "0",
+    drawings: [],
+    drawhours: "",
+    drwErrors: [],
+    allEmp: [],
+    allEng: [],
+    allDrw: [],
+  },
+  methods: {
 
+      SubmitWorkOrder: function (e) {
+      this.errors = [];
+      if (this.isValidFrom()) {
+        const config = { headers: { "Content-Type": "application/json" } };
+        var base_url = window.location.origin;
+        const clientURL = base_url + "/api/workOrder/store-work-order";
+
+        const wrkData = {
+          name: this.name,
+          consecutiveWork: this.consecutiveWork,
+          originalBudget: this.budget.substring(1).replace(",", ""),
+          startDate: this.startDate,
+          endDate: this.endDate,
+          projectId: projectId,
+          companyId: comapnyId,
+          week: this.pweek,
+          engineers: this.engineers,
+          drawings: this.drawings,
+          oTDescription: this.description,
+        };
+
+        axios
+          .post(clientURL, wrkData, config)
+          .then((response) => {
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Record has been added successfully!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            this.clearAll();
+            this.loadAllWorkOrder();
+          })
+          .catch((errors) => {
+            Swal.fire({
+              position: "top-end",
+              title: "Error!",
+              text: "Something went wrong." + errorThrown.errorMessage,
+              icon: "error",
+              confirmButtonText: "Ok",
+            });
+          });
+      }
     },
-    beforeMount() {
-        this.loadAllProject();
-        this.loadAllcompany();
-        this.loadAllWorkOrder();
+    loadAllProject: function () {
+      const config = { headers: { "Content-Type": "application/json" } };
+      var base_url = window.location.origin;
+      const clientURL = base_url + "/api/project/load-active-projects";
+
+      axios.get(clientURL, config).then(
+        (result) => {
+          this.projects = result.data;
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
     },
-    data: {
-        errors: [],
-        name :null,
-        consecutiveWork: null,
-        budget:'',
-        startDate: '',
-        endDate:'',
-        project:'0',
-        description: null,
-        comapny:'0',
-        seen: false,
-        isName: false,
-        projects: [],
-        workOrders: [],
-        companies: []
+    loadAllcompany: function () {
+      const config = { headers: { "Content-Type": "application/json" } };
+      var base_url = window.location.origin;
+      const clientURL = base_url + "/api/company/all-companies";
 
+      axios.get(clientURL, config).then(
+        (result) => {
+          this.companies = result.data;
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
     },
-    methods: {
+    loadAllWorkOrder: function () {
+      const config = { headers: { "Content-Type": "application/json" } };
+      var base_url = window.location.origin;
+      const clientURL = base_url + "/api/WorkOrder/load-approved-orders";
 
-        showHide: function () {
+      axios.get(clientURL, config).then(
+        (result) => {
+          $("#allWorkOrder").dataTable().fnDestroy();
 
-            this.seen = !this.seen;
+          this.workOrders = result.data;
 
-            if (this.seen) {
-                setTimeout(() => {
-
-                    $("#wrkCompany").select2().on('change', function (e) {
-                        var id = $("#wrkCompany option:selected").val();
-                        comapnyId = id;
-                        console.log(" selected data ", comapnyId)
-                    });
-
-                    $("#wrkProject").select2().on('change', function (e) {
-                        var id = $("#wrkProject option:selected").val();
-                        projectId = id;
-                        console.log(" comapnyId data ", projectId)
-                    });
-
-                }, 150);
-            }
-        },
-        SubmitWorkOrder: function (e) {
-
-
-           
-
-            console.log(projectId, " eee ---- comapnyId", comapnyId);
-
-
-            if (this.isValidFrom()) {
-
-                const config = { headers: { 'Content-Type': 'application/json' } };
-                var base_url = window.location.origin;
-                const clientURL = base_url + "/api/workOrder/store-work-order";
-
-                const wrkData =
-                {
-                    name: this.name,
-                    consecutiveWork: this.consecutiveWork,
-                    originalBudget: (this.budget.substring(1)).replace(",",""),
-                    startDate: this.startDate,
-                    endDate: this.endDate,
-                    projectId: projectId ,
-                    companyId: comapnyId,
-                    oTDescription: this.description
-                };
-
-                axios.post(clientURL, wrkData, config)
-                    .then(response => {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Record has been added successfully!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        this.clearAll();
-                        this.loadAllWorkOrder();
-                    }).catch(errors => {
-                        Swal.fire({
-                            position: 'top-end',
-                            title: 'Error!',
-                            text: 'Something went wrong.' + errorThrown.errorMessage,
-                            icon: 'error',
-                            confirmButtonText: 'Ok',
-                        })
-                    });
-            }
-        },
-        isValidFrom: function () {
-            this.errors = [];
-
-            console.log(projectId, " eee ---- comapnyId", comapnyId);
-
-            if (projectId == "0") {
-                this.errors.push("Project is required.");
-            }
-
-            if (comapnyId =="0") {
-                this.errors.push("Company is required.");
-            }
-           
-
-            if (!this.consecutiveWork) {
-                this.errors.push("Work order name is required.");
-            }
-
-            if (!this.budget) {
-                this.errors.push("Budget is required.");
-            }
-
-            if (!this.startDate) {
-                this.errors.push('Start date is required.');
-            }
-
-            if (!this.endDate) {
-                this.errors.push('End date is required.');
-            }
-
-            if (!this.errors.length) {
-                return true;
-            }
-        },
-
-        handleUserInput: function (e) {
-            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-            this.phone = '(' + x[1] + ') ' + x[2] + '-' + x[3];
-        },
-        clearAll: function () {
-            this.project = "0";
-            this.comapny = "0";
-            this.startDate = "";
-            this.consecutiveWork = "";
-            this.description = "";
-            this.budget =""
-        },
-        validateEmail(email) {
-            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-        loadAllProject: function () {
-
-            const config = { headers: { 'Content-Type': 'application/json' } };
-            var base_url = window.location.origin;
-            const clientURL = base_url + "/api/project/load-active-projects";
-
-            axios.get(clientURL, config).then(result => {
-                this.projects = result.data;
-            }, error => {
-                console.error(error);
+          setTimeout(() => {
+            $("#allWorkOrder").DataTable({
+              scrollY: "500px",
+              scrollCollapse: true,
+              paging: false,
             });
-
+          }, 100);
         },
-        loadAllcompany: function () {
+        (error) => {
+          console.error(error);
+        }
+      );
+    },
+    LoadEmployee: function () {
+      const config = { headers: { "Content-Type": "application/json" } };
+      var base_url = window.location.origin;
+      const clientURL = base_url + "/api/Employee/all-active-employee";
 
-            const config = { headers: { 'Content-Type': 'application/json' } };
-            var base_url = window.location.origin;
-            const clientURL = base_url + "/api/company/all-companies";
-
-            axios.get(clientURL, config).then(result => {
-                this.companies = result.data;
-               
-            }, error => {
-                console.error(error);
-            });
-
+      axios.get(clientURL, config).then(
+        (result) => {
+          this.allEmp = result.data;
+          this.allEng = result.data.filter((p) => p.role == "Engineering");
+          this.allDrw = result.data.filter((p) => p.role == "Drawing");
         },
-        loadAllWorkOrder: function () {
-            const config = { headers: { 'Content-Type': 'application/json' } };
-            var base_url = window.location.origin;
-            const clientURL = base_url + "/api/WorkOrder/load-approved-orders";
+        (error) => {
+          console.error(error);
+        }
+      );
+    },
 
-            axios.get(clientURL, config).then(result => {
+    AddEnginer: function () {
+      this.engErrors = [];
+      let eng = this.engineer;
 
-                $("#allWorkOrder").dataTable().fnDestroy();
+      let existEng = this.engineers.filter((v) => v.id == eng.id).length;
 
-                this.workOrders = result.data;
+      this.validateEngineerHours();
 
-                
-                setTimeout(() => {
-                    $('#allWorkOrder').DataTable({
-                        "scrollY": "500px",
-                        "scrollCollapse": true,
-                        "paging": false
-                    });
-                }, 100);
+      if (existEng == 0 && this.engErrors.length == 0) {
+        let engD = {
+          id: eng.id,
+          name: eng.name,
+          email: eng.email,
+          hour: this.peHours,
+        };
 
-             
+        this.engineers.push(engD);
+        this.peHours = "";
+        this.engineer = "00";
+      } else if (existEng > 0) {
+        Swal.fire({
+          position: "top-end",
+          title: "Error!",
+          text: "Already added the engineer!.",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      }
+    },
+    RemoverEngineer: function (id) {
+      this.engineers = this.engineers.filter(function (el) {
+        return el.id != id;
+      });
+    },
 
-            }, error => {
-                console.error(error);
-            });
-        },
-        isNumber: function (evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-                evt.preventDefault();;
-            } else {
-                return true;
-            }
-        },
-        formatNumber: function (e) {
-            let dollarUS = Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            });
+    AddDrawing: function () {
+      this.drwErrors = [];
+      let drw = this.drawing;
 
-            this.budget = dollarUS.format(this.budget);
-        },
-        showCompanyByClient: function (client) {
+      let existdrw = this.drawings.filter((v) => v.id == drw.id).length;
 
-            const config = { headers: { 'Content-Type': 'application/json' } };
-            var base_url = window.location.origin;
-            const clientURL = base_url + "/api/company/all-companies-client?guid=" + client.id;
+      this.validateDrawingHours();
 
-            $("#allCompany").modal("show");
+      if (existdrw == 0 && this.drwErrors.length == 0) {
+        let drwMan = {
+          id: drw.id,
+          name: drw.name,
+          email: drw.email,
+          hour: this.drawhours,
+        };
 
-            axios.get(clientURL, config).then(result => {
+        this.drawings.push(drwMan);
+        this.drawhours = "";
+        this.drawing = "00";
+      } else if (existdrw > 0) {
+        Swal.fire({
+          position: "top-end",
+          title: "Error!",
+          text: "Already added the drawing man!.",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      }
+    },
+    RemoveDrwaing: function (id) {
+      this.drawings = this.drawings.filter(function (el) {
+        return el.id != id;
+      });
+    },
 
-                console.log(result.data);
-                this.companies = result.data;
-            }, error => {
-                Swal.fire({
-                    position: 'top-end',
-                    title: 'Error!',
-                    text: 'Something went wrong.' + error,
-                    icon: 'error',
-                    confirmButtonText: 'Ok',
-                })
-            });
+    validateEngineerHours: function () {
+      if (!this.engineer || this.engineers.id == "00") {
+        this.engErrors.push("Please select the engineer");
+      }
+      if (!this.peHours) {
+        this.engErrors.push("Please add the budgeted hours");
+      }
+    },
+    validateDrawingHours: function () {
+      if (!this.drawing || this.drawing.id == "01") {
+        this.drwErrors.push("Please select the drawing man");
+      }
+      if (!this.drawhours) {
+        this.drwErrors.push("Please add the budgeted hours");
+      }
+    },
+    isValidFrom: function () {
+      this.errors = [];
 
+      if (!projectId || projectId == "0") {
+        this.errors.push("Project is required.");
+      }
 
-           
+      if (!comapnyId || comapnyId == "0") {
+        this.errors.push("Company is required.");
+      }
 
+      if (!this.consecutiveWork) {
+        this.errors.push("Work order name is required.");
+      }
+
+      if (!this.budget) {
+        this.errors.push("Budget is required.");
+      }
+
+      if (!this.startDate) {
+        this.errors.push("Start date is required.");
+      }
+
+      if (!this.endDate) {
+        this.errors.push("End date is required.");
         }
 
-    }
-})
+        if (this.engineers.length == 0 && this.peHours) {
+              this.errors.push("Project add engineer's hour");
+          }
 
+        if (this.drawings.length == 0 && this.drawhours) {
+              this.errors.push("Project add drwaing's hour");
+          } 
 
+      if (!this.errors.length) {
+        return true;
+      }
+    },
 
+    handleUserInput: function (e) {
+      var x = e.target.value
+        .replace(/\D/g, "")
+        .match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+      this.phone = "(" + x[1] + ") " + x[2] + "-" + x[3];
+    },
+    clearAll: function () {
+      this.project = "0";
+      this.comapny = "0";
+      this.startDate = "";
+      this.endDate = "";
+      this.consecutiveWork = "";
+      this.description = "";
+        this.budget = "";
+        this.engineers = [],
+        this.engineer = '0';
+        this.peHours = '';
+        this.drawing = '0';
+        this.drawings = []
+    },
+    validateEmail(email) {
+      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
 
+    isNumber: function (evt) {
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+    formatNumber: function (e) {
+      let dollarUS = Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      });
 
+      this.budget = dollarUS.format(this.budget);
+    },
+
+      showHide: function () {
+      this.seen = !this.seen;
+
+      if (this.seen) {
+        setTimeout(() => {
+          $("#wrkCompany")
+            .select2()
+            .on("change", function (e) {
+              var id = $("#wrkCompany option:selected").val();
+              comapnyId = id;
+            });
+
+          $("#wrkProject")
+            .select2()
+            .on("change", function (e) {
+              var id = $("#wrkProject option:selected").val();
+              projectId = id;
+            });
+        }, 150);
+      }
+    },
+  },
+});

@@ -107,7 +107,7 @@
                             </div>
 
 
-                              <div style="width:100%" class="p-2 project-man  mt-2">
+                              <div v-if="hideNow" style="width:100%" class="p-2 project-man  mt-2">
                                  <div class="address-border">
                                    <h5 class="div-legent"> Engineer </h5>
                                      <ul v-show="engErrors.length>0">
@@ -136,7 +136,6 @@
                                   </div>
                                     <div v-show="engineers.length>0" style="box-shadow:0 !important;width:97%" class="main-card mb-3 card mt-2 ">
                                        <div class="card-body">
-                                        <h5 class="card-title">Engineer </h5>
                                         <table style="box-shadow:0;width:98%" class="mb-0 table table-borderless">
                                             <thead>
                                             <tr>
@@ -164,7 +163,7 @@
                              </div>
 
                              
-                              <div style="width:100%" class="p-3 project-man  mt-2">
+                              <div v-if="hideNow" style="width:100%" class="p-3 project-man  mt-2">
                                  <div class="address-border">
                                    <h5 class="div-legent"> Drawing </h5>
                                      <ul v-show="drwErrors.length>0">
@@ -193,7 +192,6 @@
                                   </div>
                                     <div v-show="drawings.length>0" style="box-shadow:0 !important;width:97%" class="main-card mb-3 card mt-2 ">
                                           <div class="card-body">
-                                        <h5 class="card-title">Drwaing </h5>
                                         <table style="box-shadow:0" class="mb-0 table table-borderless">
                                             <thead>
                                             <tr>
@@ -221,7 +219,7 @@
                              </div>
 
                             <div class="com-md-12 col-sm-12 col-lg-12 ">
-                                 <label for="workOrder"> Work Order description  </label>
+                                 <label for="workOrder"> Project description  </label>
                                  <textarea v-model="workorderDesc" class="form-control" > </textarea>
                             </div>
                         </div>

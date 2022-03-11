@@ -55,14 +55,7 @@ namespace PMG.Data.Repository.Projects
             return projects;
         }
 
-        public string GetPmBudgetNumber(ProjectApprovalDto projectDto)
-        {
-            DateTime CurrentDate = DateTime.Now;
-            var TodayPmCount = _context.ProjectBudgetActivities.Where(P => P.BudgetNo == projectDto.ProjectNo).Count() + 1;
-            string PmBudgetNo = string.Format("{0}{1}", projectDto.ProjectNo,TodayPmCount.ToString("00"));
-
-            return PmBudgetNo;
-        }
+       
 
         public async Task<bool> SubmitBudget(ProjectApprovalDto dto)
         {
@@ -336,49 +329,98 @@ namespace PMG.Data.Repository.Projects
 
                     _context.Projects.Add(projectDomain);
 
-                    foreach(ProjectEmp emp in dto.Engineers)
-                    {
-                        string pId= (Guid.NewGuid()).ToString();
-                        ProjectEmployee empP = new ProjectEmployee
-                        {
-                            ProjectId = cnPid,
-                            EmployeeId = emp.Id,
-                            BudgetHours=emp.hour,
-                            EmployeeType = EmployeeType.Engineering
-                        };
-
-                        _context.ProjectEmployees.Add(empP);
-                    }
-
-                    foreach (ProjectEmp emp in dto.Drawings)
-                    {
-                        string pId = (Guid.NewGuid()).ToString();
-                        ProjectEmployee empP = new ProjectEmployee
-                        {
-                            ProjectId = cnPid,
-                            EmployeeId = emp.Id,
-                            BudgetHours = emp.hour,
-                            EmployeeType = EmployeeType.Drawing
-                        };
-
-                        _context.ProjectEmployees.Add(empP);
-                    }
+                    this.AssignProjectEmploye(dto,cnPid);
+                    
+                    bool bStatus= await this.CreateProjectBudget(dto, cnPid, ProjectNo);
 
                     int State = await _context.SaveChangesAsync();
+                   
+                    await transaction.CommitAsync();
+                    
 
-                    transaction.Commit();
-
-                    return State == 1;
-
-
-
+                    return State == 1 ;
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
+                    await transaction.RollbackAsync();
                     throw ex;
                 } 
             }
         }
+
+        private async Task<bool> CreateProjectBudget(ProjectDto dto, string cnPid, string projectNo)
+        {
+            try
+            {
+                ProjectApprovalDto dto1 = new ProjectApprovalDto
+                {
+                    ProjectNo = projectNo
+                };
+                string PmBudgetNo = GetPmBudgetNumber(dto1);
+
+                var pmApproval = new ProjectBudgetActivities
+                {
+                    Id = Guid.NewGuid(),
+                    BudgetNo = PmBudgetNo,
+                    ProjectId = cnPid,
+                    ProjectNo = dto.ProjectNo,
+                    Budget = dto.Budget,
+                    BudgetSubmitDate = DateTime.Now,
+                    ApprovalSetUser = dto.SetUser
+                };
+
+                _context.ProjectBudgetActivities.Add(pmApproval);
+
+                var Status = await _context.SaveChangesAsync();
+
+                return Status >0;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void AssignProjectEmploye(ProjectDto dto,string cnPid)
+        {
+            foreach (ProjectEmp emp in dto.Engineers)
+            {
+                string pId = (Guid.NewGuid()).ToString();
+                ProjectEmployee empP = new ProjectEmployee
+                {
+                    ProjectId = cnPid,
+                    EmployeeId = emp.Id,
+                    BudgetHours = emp.hour,
+                    EmployeeType = EmployeeType.Engineering
+                };
+
+                _context.ProjectEmployees.Add(empP);
+            }
+
+            foreach (ProjectEmp emp in dto.Drawings)
+            {
+                string pId = (Guid.NewGuid()).ToString();
+                ProjectEmployee empP = new ProjectEmployee
+                {
+                    ProjectId = cnPid,
+                    EmployeeId = emp.Id,
+                    BudgetHours = emp.hour,
+                    EmployeeType = EmployeeType.Drawing
+                };
+
+                _context.ProjectEmployees.Add(empP);
+            }
+        }
+
+        public string GetPmBudgetNumber(ProjectApprovalDto projectDto)
+        {
+            DateTime CurrentDate = DateTime.Now;
+            var TodayPmCount = _context.ProjectBudgetActivities.Where(P => P.BudgetNo == projectDto.ProjectNo).Count() + 1;
+            string PmBudgetNo = string.Format("{0}{1}", projectDto.ProjectNo, TodayPmCount.ToString("00"));
+
+            return PmBudgetNo;
+        }
+
+
     }
 }

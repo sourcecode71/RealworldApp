@@ -18,7 +18,7 @@ namespace Web.ApiContollers
         }
 
         [HttpPost("store-work-order")]
-        public async Task<ActionResult> SaveProjectApproval(WorkOrderDTO dTO)
+        public async Task<ActionResult> SaveWorkOrder(WorkOrderDTO dTO)
         {
             bool isSuccess = await _woRepository.SaveWorkOrder(dTO);
             return Ok(isSuccess);

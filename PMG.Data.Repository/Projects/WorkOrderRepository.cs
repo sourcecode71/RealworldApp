@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Domain.Enums;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
@@ -62,33 +63,43 @@ namespace PMG.Data.Repository.Projects
 
         public async Task<bool> SaveWorkOrder(WorkOrderDTO dTO)
         {
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                string OTNo = GetWorkOrderNumber(dTO);
-
-                var pmWorkOrder = new WorkOrder
+                try
                 {
-                    Id = Guid.NewGuid(),
-                    WorkOrderNo = OTNo,
-                    ConsWork = dTO.ConsecutiveWork,
-                    ProjectId = dTO.ProjectId,
-                    CompanyId = new Guid(dTO.CompanyId),
-                    OriginalBudget = dTO.OriginalBudget,
-                    StartDate = dTO.StartDate,
-                    EndDate = dTO.EndDate,
-                    OTDescription = dTO.OTDescription
-                };
+                    string OTNo = GetWorkOrderNumber(dTO);
+                    Guid guid = Guid.NewGuid();
 
-                _context.Add(pmWorkOrder);
+                    var pmWorkOrder = new WorkOrder
+                    {
+                        Id = guid,
+                        WorkOrderNo = OTNo,
+                        ConsWork = dTO.ConsecutiveWork,
+                        ProjectId = dTO.ProjectId,
+                        CompanyId = new Guid(dTO.CompanyId),
+                        OriginalBudget = dTO.OriginalBudget,
+                        StartDate = dTO.StartDate,
+                        EndDate = dTO.EndDate,
+                        OTDescription = dTO.OTDescription
+                    };
 
-                var Status = await _context.SaveChangesAsync();
+                    _context.WorkOrder.Add(pmWorkOrder);
 
-                return Status == 1;
-            }
-            catch (Exception ex)
-            {
+                   this.AssignWorkOrderEmploye(dTO, guid.ToString());
 
-                throw ex;
+                   bool State= await this.CreateWorkOrderBudget(dTO, guid, OTNo);
+
+                    var Status = await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+
+                    return Status == 1;
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                } 
             }
 
         }
@@ -230,6 +241,67 @@ namespace PMG.Data.Repository.Projects
 
         }
 
+       private async Task<bool> CreateWorkOrderBudget(WorkOrderDTO dto, Guid wrkId, string wrkNo)
+        {
+            try
+            {
+               
+                string wrkBudgetNo = GetWrkNumber(wrkNo);
+
+                var wrkApproval = new WorkOrderActivities
+                {
+                    Id = Guid.NewGuid(),
+                    BudgetNo = wrkBudgetNo,
+                    WorkOrderId = wrkId,
+                    WorkOrderNo = wrkNo,
+                    Budget = dto.OriginalBudget,
+                    BudgetSubmitDate = DateTime.Now,
+                    ApprovalSetUser = dto.SetUser
+                };
+
+                _context.WorkOrderActivities.Add(wrkApproval);
+
+                var Status = await _context.SaveChangesAsync();
+
+                return Status > 0;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+       private void AssignWorkOrderEmploye(WorkOrderDTO dto, string wrkId)
+        {
+            foreach (ProjectEmp emp in dto.Engineers)
+            {
+                string pId = (Guid.NewGuid()).ToString();
+                WorkOrderEmployee empW = new WorkOrderEmployee
+                {
+                    WorkOrderId =new Guid(wrkId),
+                    EmployeeId = emp.Id,
+                    BudgetHours = emp.hour,
+                    EmployeeType = EmployeeType.Engineering
+                };
+
+                _context.WorkOrderEmployee.Add(empW);
+            }
+
+            foreach (ProjectEmp emp in dto.Drawings)
+            {
+                string pId = (Guid.NewGuid()).ToString();
+                WorkOrderEmployee empWD = new WorkOrderEmployee
+                {
+                    WorkOrderId = new Guid(wrkId),
+                    EmployeeId = emp.Id,
+                    BudgetHours = emp.hour,
+                    EmployeeType = EmployeeType.Drawing
+                };
+
+                _context.WorkOrderEmployee.Add(empWD);
+            }
+        }
+
         private string GetWorkOrderNumber(WorkOrderDTO dTO)
         {
             DateTime CurrentDate = DateTime.Now;
@@ -245,7 +317,16 @@ namespace PMG.Data.Repository.Projects
             return workOrderNo;
         }
 
-       
+        public string GetWrkNumber(string wrkNo)
+        {
+            DateTime CurrentDate = DateTime.Now;
+            var TodayWrkCount = _context.WorkOrderActivities.Where(P => P.WorkOrderNo == wrkNo).Count() + 1;
+            string wrkBudgetNo = string.Format("{0}{1}", wrkNo, TodayWrkCount.ToString("00"));
+
+            return wrkBudgetNo;
+        }
+
+
     }
 
 
