@@ -17,7 +17,9 @@ namespace Application.DTOs
         public string Client { get; set; }
         public string ClientName { get; set; }
         public DateTime StartDate { get; set; }
+        public string StartDateStr { get; set; }
         public DateTime DeliveryDate { get; set; }
+        public string DeliveryDateStr { get; set; }
         public int Schedule { get; set; }
         public double Progress { get; set; }
         public double Budget { get; set; }
@@ -69,6 +71,13 @@ namespace Application.DTOs
         public double? ApprovedBudget { get; set; }
         public double Balance { get; set; }
         public string Comments { get; set; }
+        public string WorkerOrderNo { get; set; }
+        public Guid WorkOrderId { get; set; }
+        public string WorkOrderBudgetNo { get; set; }
+        public string WorkOrderStatus { get; set; }
+        public string ConsecutiveWork { get; set; }
+        public int Year { get; set; }
+        public double SceduleWeek { get; set; }
     }
 
     public class ProjectEmp

@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Domain.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,15 +23,18 @@ namespace Domain.Projects
         public string ProjectNo { get; set; }
         public double OriginalBudget { get; set; }
         public double ApprovedBudget { get; set; }
+        public int BudgetStatus { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public DateTime ApprovalDate { get; set; }
+        public DateTime BudgetUpdateDate { get; set; }
         [MaxLength(250)]
         public string OTDescription { get; set; }
         [MaxLength(250)]
         public string Comments { get; set; }
         [MaxLength(200)]
         public string UpdateUser { get; set; }
+        public ProjectStatus Status { get; set; } = ProjectStatus.Budgeted;
         public DateTime? UpdateDate { get; set; }
     }
 
@@ -55,6 +59,9 @@ namespace Domain.Projects
         [MaxLength(200)]
         public string UpdateUser { get; set; }
         public DateTime? UpdateDate { get; set; }
+        public ProjectStatus Status { get; set; }
+
+        public int ChangeFor { get; set; } = 1; // 1= Normal , 2=Budget, 3=Progress change
 
     }
 

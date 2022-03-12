@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Context;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220312175442_wrk5")]
+    partial class wrk5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -451,9 +453,6 @@ namespace Persistance.Migrations
                     b.Property<double>("ApprovedBudget")
                         .HasColumnType("float");
 
-                    b.Property<int>("ChangeFor")
-                        .HasColumnType("int");
-
                     b.Property<string>("Comments")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
@@ -478,9 +477,6 @@ namespace Persistance.Migrations
 
                     b.Property<string>("SetUser")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");

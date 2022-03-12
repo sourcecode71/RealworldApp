@@ -31,6 +31,13 @@ namespace Web.ApiContollers
             return Ok(isSuccess);
         }
 
+        [HttpPut("status-change")]
+        public async Task<ActionResult> UpdateWorkOrderStatus(WorkOrderDTO dTO)
+        {
+            bool isSuccess = await _woRepository.UpdateWorkOrderStatus(dTO);
+            return Ok(isSuccess);
+        }
+
         [HttpGet("load-approved-orders")]
         public ActionResult GetAllApprovedOrders()
         {

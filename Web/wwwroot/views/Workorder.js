@@ -118,9 +118,12 @@
 
       axios.get(clientURL, config).then(
         (result) => {
-          $("#allWorkOrder").dataTable().fnDestroy();
 
-          this.workOrders = result.data;
+              $("#allWorkOrder").dataTable().fnDestroy();
+
+              setTimeout(() => {
+                  this.workOrders = result.data;
+              }, 100);
 
           setTimeout(() => {
             $("#allWorkOrder").DataTable({
@@ -128,7 +131,8 @@
               scrollCollapse: true,
               paging: false,
             });
-          }, 100);
+          }, 500); 
+
         },
         (error) => {
           console.error(error);
@@ -325,7 +329,9 @@
         currency: "USD",
       });
 
-      this.budget = dollarUS.format(this.budget);
+
+        var dblBudget = this.budget.replace(",", "");
+        this.budget = this.budget.charAt(0) == "$" ? dollarUS.format(dblBudget.substring(1)) : dollarUS.format(dblBudget);
     },
 
       showHide: function () {

@@ -1,8 +1,10 @@
 ﻿const app = new Vue({
     el: '#addProject',
     beforeMount() {
+        sClientId = "0";
         this.loadAllClients();
         this.LoadEmployee();
+        this.LoadAllActiveProjects();
     },
     data: {
         errors: [],
@@ -23,38 +25,14 @@
         allEmp: [],
         allEng: [],
         allDrw: [],
-        hideNow: true
+        allProjects :[],
+        hideNow: false,
+        seen: false
 
     },
     methods: {
       
-        loadAllClients: function () {
-
-            const config = { headers: { 'Content-Type': 'application/json' } };
-            var base_url = window.location.origin;
-            const clientURL = base_url + "/api/company/all-clients";
-
-            axios.get(clientURL, config).then(result => {
-                this.clients = result.data;
-            }, error => {
-                console.error(error);
-            });
-
-        },
-        LoadEmployee: function () {
-            const config = { headers: { 'Content-Type': 'application/json' } };
-            var base_url = window.location.origin;
-            const clientURL = base_url + "/api/Employee/all-active-employee";
-
-            axios.get(clientURL, config).then(result => {
-                this.allEmp = result.data;
-                this.allEng = result.data.filter(p => p.role == "Engineering");
-                this.allDrw = result.data.filter(p => p.role == "Drawing");
-            }, error => {
-                console.error(error);
-            });
-
-        },
+    
         AddEnginer: function () {
             this.engErrors = [];
             let eng = this.engineer;
@@ -131,8 +109,6 @@
 
             this.errors = [];
             
-            let clId = this.client.id;
-
           
             this.validateProject();
 
@@ -145,7 +121,7 @@
 
                 let project = {
                     name: this.name,
-                    client: clId,
+                    client: sClientId,
                     budget: (this.budget.substring(1)).replace(",",''),
                     week: this.pweek,
                     engineers: this.engineers,
@@ -163,6 +139,7 @@
                             timer: 1500
                         })
                         this.clearAll();
+                        this.LoadAllActiveProjects();
                     }).catch(errors => {
                         Swal.fire({
                             position: 'top-end',
@@ -178,6 +155,66 @@
 
 
         },
+
+       /************ Loading Work ****************/
+
+        loadAllClients: function () {
+
+            const config = { headers: { 'Content-Type': 'application/json' } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/company/all-clients";
+
+            axios.get(clientURL, config).then(result => {
+                this.clients = result.data;
+            }, error => {
+                console.error(error);
+            });
+
+        },
+        LoadEmployee: function () {
+            const config = { headers: { 'Content-Type': 'application/json' } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/Employee/all-active-employee";
+
+            axios.get(clientURL, config).then(result => {
+                this.allProjects = result.data;
+                this.allEng = result.data.filter(p => p.role == "Engineering");
+                this.allDrw = result.data.filter(p => p.role == "Drawing");
+            }, error => {
+                console.error(error);
+            });
+
+        },
+
+        LoadAllActiveProjects: function () {
+            const config = { headers: { 'Content-Type': 'application/json' } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/project/load-active-projects";
+
+            axios.get(clientURL, config).then(result => {
+
+                $("#allProject").dataTable().fnDestroy();
+
+                setTimeout(() => {
+                    this.allProjects = result.data;
+
+                }, 100);
+
+                setTimeout(() => {
+                    $("#allProject").DataTable({
+                        scrollY: "500px",
+                        scrollCollapse: true,
+                        paging: false,
+                    });
+                }, 100);
+              
+            }, error => {
+                console.error(error);
+            });
+        },
+
+        /************ clerical  Work ****************/
+
         isNumber: function (evt) {
             evt = (evt) ? evt : window.event;
             var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -193,7 +230,9 @@
                 currency: "USD",
             });
 
-            this.budget = dollarUS.format(this.budget);
+
+            var dblBudget = this.budget.replace(",", "");
+            this.budget = this.budget.charAt(0) == "$" ? dollarUS.format(dblBudget.substring(1)) : dollarUS.format(dblBudget);
         },
         validateEngineerHours: function () {
 
@@ -217,7 +256,7 @@
                 this.errors.push("Project name is required");
             }
 
-            if (!this.client) {
+            if (sClientId == "0") {
                 this.errors.push("Client name is required");
             }
 
@@ -250,7 +289,22 @@
             this.peHours= '';
             this.drawing = '0';
             this.drawings=[]
-        }
+        },
+        addNewDivVisibility() {
+            this.seen = !this.seen;
+
+            if (this.seen)
+                setTimeout(() => {
+                    $("#pClient").select2({
+
+                    }).on('change', function (e) {
+                        var id = $("#pClient option:selected").val();
+                        sClientId = id;
+                        console.log(" selected client id ", sClientId)
+                    });
+
+                }, 200);
+        },
     },
 
    

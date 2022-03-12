@@ -104,34 +104,77 @@ namespace PMG.Data.Repository.Projects
             }
         }
 
+        //public async Task<bool> ApprovalBudget(ProjectApprovalDto dto)
+        //{
+        //    using (var transaction = _context.Database.BeginTransaction())
+        //    {
+        //        try
+        //        {
+        //            string PmBudgetNo = GetPmBudgetNumber(dto);
+
+        //            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == dto.Id);
+
+        //            if (project != null)
+        //            {
+        //                project.BudgetApprovedStatus = dto.Status;
+        //                project.BudgetApprovedDate = DateTime.Now;
+        //                project.ApprovedBudget = dto.ApprovedBudget;
+        //            }
+
+        //            var pba = await _context.ProjectBudgetActivities.FirstOrDefaultAsync(p => p.BudgetNo == dto.BudegtNo);
+        //            if(pba != null)
+        //            {
+        //                pba.Status = dto.Status;
+        //                pba.ApprovedDate = DateTime.Now;
+        //                pba.BudgetSubmitDate = pba.BudgetSubmitDate;
+        //                pba.ApprovedBudget= dto.ApprovedBudget;
+        //                pba.Comments    = dto.Comments;
+        //                pba.ApprovalSetUser = dto.ApprovalSetUser;
+        //            }
+
+        //            var Status = await _context.SaveChangesAsync();
+        //            await transaction.CommitAsync();
+
+        //            return Status == 1;
+
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            await transaction.RollbackAsync();
+        //            throw ex;
+        //        }
+        //    }
+        //}
+
         public async Task<bool> ApprovalBudget(ProjectApprovalDto dto)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    string PmBudgetNo = GetPmBudgetNumber(dto);
 
-                    var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == dto.Id);
+                    var wrk = await _context.WorkOrder.FirstOrDefaultAsync(p => p.Id == dto.WorkOrderId);
 
-                    if (project != null)
+                    if (wrk != null)
                     {
-                        project.BudgetApprovedStatus = dto.Status;
-                        project.BudgetApprovedDate = DateTime.Now;
-                        project.ApprovedBudget = dto.ApprovedBudget;
+                        double appBudget = (double)(dto.ApprovedBudget == null ? 0 : dto.ApprovedBudget);
+
+                        wrk.BudgetStatus = dto.Status;
+                        wrk.ApprovalDate = DateTime.Now;
+                        wrk.ApprovedBudget = appBudget;
                     }
-                   
-                    var pba = await _context.ProjectBudgetActivities.FirstOrDefaultAsync(p => p.BudgetNo == dto.BudegtNo);
-                    if(pba != null)
+
+                    var pba = await _context.WorkOrderActivities.FirstOrDefaultAsync(p => p.WorkOrderId == dto.WorkOrderId);
+                 
+                    if (pba != null)
                     {
                         pba.Status = dto.Status;
                         pba.ApprovedDate = DateTime.Now;
-                        pba.BudgetSubmitDate = pba.BudgetSubmitDate;
-                        pba.ApprovedBudget= dto.ApprovedBudget;
-                        pba.Comments    = dto.Comments;
+                        pba.ApprovedBudget = dto.ApprovedBudget;
+                        pba.Comments = dto.Comments;
                         pba.ApprovalSetUser = dto.ApprovalSetUser;
                     }
-                    
+
                     var Status = await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
 
@@ -146,31 +189,90 @@ namespace PMG.Data.Repository.Projects
             }
         }
 
-        public async Task<List<ProjectApprovalDto>> LoadProjectBudgetAcitivies(string projectName)
+        public async Task<bool> BudgetChanges(ProjectApprovalDto dto)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var wrk = await _context.WorkOrder.FirstOrDefaultAsync(p => p.Id == dto.WorkOrderId);
+                    double appBudget = (double)(dto.ApprovedBudget == null ? 0 : dto.ApprovedBudget);
+
+                    if (wrk != null)
+                    {
+                        wrk.BudgetUpdateDate = DateTime.Now;
+                        wrk.OriginalBudget = appBudget;
+                        wrk.BudgetStatus = dto.Status;
+                    }
+
+                    var pba = await _context.WorkOrderActivities.FirstOrDefaultAsync(p => p.WorkOrderId == dto.WorkOrderId);
+
+                    HisBudgetActivities his = new HisBudgetActivities
+                    {
+                        Id = new Guid(),
+                        BudgetFor = 1,
+                        BudgetNo = pba.BudgetNo,
+                        WorkOrderId = dto.WorkOrderId,
+                        ChangedBudget = appBudget,
+                        OriginalBudget = pba.Budget,
+                        OriginalSetDate = pba.SetDate,
+                        OriginalSetUser = pba.SetUser,
+                        SetUser = pba.SetUser,
+                        SetDate = DateTime.Now,
+                        Status = pba.Status,
+                        Comments = pba.Comments
+                    };
+                    _context.HisBudgetActivities.Add(his);
+
+
+
+                    pba.Budget = (double)(dto.ApprovedBudget == null ? 0 : dto.ApprovedBudget);
+                    pba.Status = dto.Status;  // 0= waiting , 1= Approved , 2=Not approved , 3= Changed 
+                    pba.Comments = dto.Comments;
+
+
+                    int State = await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    return State > 0;
+                
+
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+            }
+        }
+
+       public async Task<List<ProjectApprovalDto>> LoadWorkOrdeerBudgetAcitivies(string projectName)
         {
             try
             {
-                var prjoect = (from pa in _context.ProjectBudgetActivities
-                               join pj in _context.Projects on pa.ProjectId equals pj.Id
+                var prjoect = (from pa in _context.WorkOrderActivities
+                               join wr in _context.WorkOrder on pa.WorkOrderId equals wr.Id
+                               join pr in _context.Projects on wr.ProjectId equals pr.Id
                                orderby pa.BudgetSubmitDate descending
                                select new ProjectApprovalDto
                                {
                                    Id = pa.Id.ToString(),
-                                   ProjectNo = pj.ProjectNo,
+                                   ConsecutiveWork =wr.ConsWork,
+                                   WorkerOrderNo = wr.WorkOrderNo,
                                    BudegtNo = pa.BudgetNo,
+                                   WorkOrderId = wr.Id,
                                    Budget = pa.Budget,
-                                   ClientName = pj.Client,
                                    ApprovalStatus = pa.Status,
-                                   ApprovedBudget = pj.ApprovedBudget,
+                                   ApprovedBudget = pa.ApprovedBudget,
                                    BudgetSubmitDateStr = pa.BudgetSubmitDate.ToString("dd/MM/yyyy"),
-                                   ProjectName = pj.Name,
-                                   Balance = pj.Balance,
-                                   ProjectId = new Guid(pj.Id),
-                                   ApprovalStatusStr = pa.Status ==0 ? "Waiting" : pa.Status == 1 ? "Approved" : "Not Approved",
-                                   ApprovalDateStr = pa.ApprovedDate.ToString("dd/MM/yyyy")
+                                   ProjectNo = pr.ProjectNo,
+                                   SceduleWeek = Convert.ToDouble(((wr.EndDate -wr.StartDate).TotalDays/7).ToString("F")),
+                                   Year = pr.Year,
+                                   ApprovalDateStr = pa.ApprovedDate.ToString("dd/MM/yyyyy"),
+                                   ApprovalStatusStr = pa.Status ==0 ? "Waiting" : pa.Status == 1 ? "Approved" : pa.Status == 2 ? "Not Approved" : "Changed",
+                                   WorkOrderStatus = EnumConverter.ProjectStatusString(wr.Status),
 
-
-                               }).Take(50).ToListAsync();
+                               }).Take(250).ToListAsync();
 
                 return await prjoect;
             }
@@ -236,7 +338,6 @@ namespace PMG.Data.Repository.Projects
             try
             {
                 var projects = await (from prj in _context.Projects
-                                     join emw in _context.ProjectEmployees on prj.Id equals emw.ProjectId
                                      join cli in _context.Clients on prj.ClientId equals cli.Id into cliList
                                      from cts in cliList.DefaultIfEmpty()
                                      join pa in _context.ProjectBudgetActivities on prj.Id equals pa.ProjectId into paActs
@@ -251,6 +352,9 @@ namespace PMG.Data.Repository.Projects
                                          Budget = prj.Budget,
                                          Description = prj.Description,
                                          ClientName = cts.Name,
+                                         Week = prj.Week,
+                                         StartDateStr = prj.StartDate.ToString("MM/dd/yyyy"),
+                                         DeliveryDateStr = prj.DeliveryDate.ToString("MM/dd/yyyy"),
                                          BudgetApprovalStr = paAct.Status == 0 ? "Waiting" : paAct.Status == 1 ? "Approved" : "Not Approved",
                                          Status = EnumConverter.ProjectStatusString(prj.Status)
 

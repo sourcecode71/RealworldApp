@@ -326,7 +326,50 @@ namespace PMG.Data.Repository.Projects
             return wrkBudgetNo;
         }
 
+        public async Task<bool> UpdateWorkOrderStatus(WorkOrderDTO dTO)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    WorkOrder workOrder = await _context.WorkOrder.FirstOrDefaultAsync(p => p.Id == new Guid(dTO.WorkOrderId));
 
+                    HisWorkOrder hisWork = new HisWorkOrder
+                    {
+                        Id = Guid.NewGuid(),
+                        ApprovalDate = workOrder.ApprovalDate,
+                        ApprovedBudget = workOrder.ApprovedBudget,
+                        Comments = dTO.Comments,
+                        IsDeleted = workOrder.IsDeleted,
+                        OTDescription = workOrder.OTDescription,
+                        ProjectId = workOrder.ProjectId,
+                        ProjectNo = workOrder.ProjectNo,
+                        SetDate = workOrder.SetDate,
+                        SetUser = workOrder.SetUser,
+                        WorkOrderId = workOrder.Id,
+                        WorkOrderNo = workOrder.WorkOrderNo,
+                        ChangeFor = 3,
+                    };
+
+                    _context.HisWorkOrder.Add(hisWork);
+
+                    workOrder.UpdateDate = DateTime.Now;
+                    workOrder.UpdateUser = "admin";
+                    workOrder.Status = (ProjectStatus)dTO.Status;
+
+                    int state = await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    return state == 1;
+
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+            }
+        }
     }
 
 

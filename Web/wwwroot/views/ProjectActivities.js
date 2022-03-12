@@ -7,7 +7,7 @@ const app = new Vue({
     },
     data: {
         errors: [],
-        appStatus: 0,
+        appStatus: 1,
         isApproved: true,
         appBudget: null,
         comment: null,
@@ -16,82 +16,69 @@ const app = new Vue({
         appComment:null,
         wrkBudgets: [],
         selectedWrk: null,
-        companies: []
+        companies: [],
+        wrkStatus: [],
+        wrkState:"0",
+        budgetNo: '',
+        wrkName: '',
+        submitDate: '',
+        wrkId: '',
+        wrkStatus: '',
+        wrkComments:''
 
     },
     methods: {
+        approvalSubmit: function () {
+            this.errors = [];
+            const config = { headers: { "Content-Type": "application/json" } };
+            var base_url = window.location.origin;
+            const approvalURL = base_url + "/api/project/budegt-approval/status";
 
-        submitForm: function (e) {
+            var wrkData = {
+                approvedBudget: this.appBudget.substring(1).replace(",", ""),
+                status: this.appStatus,
+                comments: this.appComment,
+                workOrderId: this.wrkId
+            }
 
-            
+            if (this.IsValidForm()) {
+                axios
+                    .post(approvalURL, wrkData, config)
+                    .then((response) => {
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: "Record has been added successfully!",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+
+                        this.clearAll();
+                        this.LoadActiveWrkBudget();
+                    })
+                    .catch((errors) => {
+                        Swal.fire({
+                            position: "top-end",
+                            title: "Error!",
+                            text: "Something went wrong." + errorThrown.errorMessage,
+                            icon: "error",
+                            confirmButtonText: "Ok",
+                        });
+                    });
+            }
         },
         
-        LoadActiveWrkBudget: function () {
-            var PmName = "NA";
-            const config = { headers: { 'Content-Type': 'application/json' } };
-            var base_url = window.location.origin;
-            const clientURL = base_url + "/api/project/project-activities/budget-load?PmName=" + PmName;
-
-            axios.get(clientURL, config).then(result => {
-
-                this.wrkBudgets = result.data;
-
-                console.log("  this.wrkBudgets ", this.wrkBudgets);
-
-
-                setTimeout(() => {
-                    $('#allClients').DataTable({
-                        "scrollY": "500px",
-                        "scrollCollapse": true,
-                        "paging": false
-                    });
-                }, 100);
-
-
-
-            }, error => {
-                console.error(error);
-            });
-
-        },
-        isValidFrom: function () {
-            this.errors = [];
-
-            if (!this.errors.length) {
-                return true;
-            }
-        },
-
-        handleUserInput: function (e) {
-            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-            this.phone = '(' + x[1] + ') ' + x[2] + '-' + x[3];
-        },
-        clearAll: function () {
-            this.name = "";
-            this.email = "";
-            this.phone = "";
-            this.address = "";
-            this.contactName = "";
-        },
-        validateEmail(email) {
-            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-        loadAllClients: function () {
-
-         
-
-        },
         approvalPop: function (wrk) {
-            console.log(" work worder ", wrk);
+
             this.selectedWrk = wrk;
 
+            if (wrk.approvalStatus == 0 || wrk.approvalStatus == 3 ) {
+                this.appBudget = this.formatCurrenct(wrk.budget);
+                this.wrkName = wrk.consecutiveWork;
+                this.budgetNo = wrk.budegtNo;
+                this.submitDate = wrk.budgetSubmitDateStr;
+                this.wrkId = wrk.workOrderId;
 
-
-            if (wrk.approvalStatus == 0) {
                 $("#exampleModal").modal("show");
 
             } else {
@@ -107,6 +94,101 @@ const app = new Vue({
                 });
             }
         },
+
+        statusChangeSubmit: function () {
+            this.errors = [];
+            const config = { headers: { "Content-Type": "application/json" } };
+            var base_url = window.location.origin;
+            const approvalURL = base_url + "/api/workOrder/status-change";
+
+            var wrkStatus = {
+                workOrderId: this.workOrderId,
+                status: this.wrkState
+            }
+
+
+            if (this.isValidStatusFrom()) {
+                axios
+                    .put(approvalURL, wrkStatus, config)
+                    .then((response) => {
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: "Record has been added successfully!",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+
+                        this.clearAll();
+                        this.LoadActiveWrkBudget();
+                        $("#projectstatusModal").modal("hide");
+                    })
+                    .catch((errors) => {
+                        Swal.fire({
+                            position: "top-end",
+                            title: "Error!",
+                            text: "Something went wrong." + errorThrown.errorMessage,
+                            icon: "error",
+                            confirmButtonText: "Ok",
+                        });
+                    });
+            }
+
+
+
+        },
+        statusChangePop: function (wrk) {
+            this.errors = [];
+            const config = { headers: { 'Content-Type': 'application/json' } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/project/project-status";
+            this.workOrderId = wrk.workOrderId;
+
+            axios.get(clientURL, config).then(result => {
+              
+                $("#projectstatusModal").modal("show");
+
+                this.wrkStatus = result.data;
+
+             
+
+            }, error => {
+                console.error(error);
+            });
+
+        },
+
+        LoadActiveWrkBudget: function () {
+            var PmName = "NA";
+            const config = { headers: { 'Content-Type': 'application/json' } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/project/project-activities/budget-load?PmName=" + PmName;
+
+            axios.get(clientURL, config).then(result => {
+
+                $("#allwrkBudget").dataTable().fnDestroy();
+
+                this.wrkBudgets = result.data;
+
+                $("#exampleModal").modal("hide");
+
+
+                setTimeout(() => {
+                    $('#allwrkBudget').DataTable({
+                        "scrollY": "500px",
+                        "scrollCollapse": true,
+                        "paging": false
+                    });
+                }, 100);
+
+
+
+            }, error => {
+                console.error(error);
+            });
+
+        },
+
         onChangeStatus: function (status) {
             console.log(" status ", status);
             this.bLabel = status == 1 ? " Approved Budget" : "Change Budget";
@@ -117,12 +199,13 @@ const app = new Vue({
             }
             
         },
-        approvalSubmit: function () {
-
-            console.log(" value ", this.appStatus);
-
-           // console.log(" this budget ", this.selectedWrk);
-
+ 
+        clearAll: function () {
+            this.appStatus = "1";
+            this.appComment = "";
+            this.appBudget = "";
+            this.wrkStatus = "0";
+            this.wrkComments = "";
         },
         isNumber: function (evt) {
             evt = (evt) ? evt : window.event;
@@ -139,9 +222,49 @@ const app = new Vue({
                 currency: "USD",
             });
 
+            console.log(" char at ", this.appBudget.charAt(0))
 
-            this.appBudget = dollarUS.format(this.appBudget);
+            var dblBudget = this.appBudget.replace(",", "");
+            this.appBudget = this.appBudget.charAt(0) == "$" ? dollarUS.format(dblBudget.substring(1)) : dollarUS.format(dblBudget);
         },
+        formatCurrenct: function (crnMoney) {
+            let dollarUS = Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+            });
+            return dollarUS.format(crnMoney);
+        },
+        IsValidForm: function () {
+            this.errors = [];
+
+
+            if (!this.appBudget && (this.appStatus == 3 || this.appStatus == 1) ) {
+                this.errors("The approved budget is needed.");
+            }
+
+            console.log(" this.appBudget ", this.errors);
+
+            if (!this.errors.length) {
+                return true;
+            } else {
+                return false;
+            }
+
+        },
+        isValidStatusFrom: function () {
+            this.errors = [];
+
+            if (this.wrkState == "0") {
+                this.errors.push("Please select the work order status")
+            }
+
+            if (!this.errors.length) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
 
     }
 })

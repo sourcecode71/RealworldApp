@@ -20,6 +20,7 @@ namespace Application.DTOs
         public int ProjectYear { get; set; }
         public double ApprovedBudget { get; set; }
         public double OriginalBudget { get; set; }
+        public int Status { get; set; }
         public DateTime ApprovedDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

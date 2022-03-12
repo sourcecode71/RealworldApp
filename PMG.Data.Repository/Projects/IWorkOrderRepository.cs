@@ -13,6 +13,7 @@ namespace PMG.Data.Repository.Projects
 
         Task<bool> SaveInvoice(InvoiceDTO invDTO);
         IQueryable<InvoiceDTO> GetAllInvoices();
+        Task<bool> UpdateWorkOrderStatus(WorkOrderDTO orderDTO);
 
     }
 }

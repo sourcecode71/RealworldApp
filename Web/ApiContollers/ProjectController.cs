@@ -210,9 +210,9 @@ namespace Web.ApiControllers
         }
 
         [HttpPost("budegt-approval/status")]
-        public async Task<ActionResult> SaveProjectApproval(ProjectApprovalDto dto)
+        public async Task<ActionResult> SaveWorkOrderApproval(ProjectApprovalDto dto)
         {
-            bool isApproved = await _project.ApprovalBudget(dto);
+            bool isApproved = dto.Status == 3? await _project.BudgetChanges(dto) : await _project.ApprovalBudget(dto);
             return Ok(isApproved);
         }
 
@@ -220,7 +220,7 @@ namespace Web.ApiControllers
         [HttpGet("project-activities/budget-load")]
         public async Task<ActionResult> LoadProjectBudgetLoad(string PmName)
         {
-            var ProjectBudgetAct = await _project.LoadProjectBudgetAcitivies(PmName);
+            var ProjectBudgetAct = await _project.LoadWorkOrdeerBudgetAcitivies(PmName);
             return Ok(ProjectBudgetAct);
         }
 

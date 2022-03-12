@@ -27,6 +27,9 @@
 
 <div>
     <style>
+    .select2-container .select2-selection--single {
+        height: 35px;
+    }
         .card {
           box-shadow:0 0.16875rem 1.1875rem rgba(4, 9, 20, 0),0 0.9375rem 1.40625rem rgba(4, 9, 20, 0),0 0.25rem 0.53125rem rgba(4, 9, 20, 0),0 0.125rem 0.1875rem rgba(4, 9, 20, 0)
         }
@@ -68,7 +71,7 @@
                 <div class="col-md-1"></div>
                 <div class="col-md-9 col-lg-9">
 
-                    <form class="ml-5" method="post" novalidate="true">
+                    <form v-if="seen" class="ml-5" method="post" novalidate="true">
                         <p v-if="errors.length">
                             <b class="text-danger">Please correct the following error(s):</b>
                         <ul>
@@ -87,9 +90,9 @@
 
                             <div class="com-md-6 col-sm-12 col-lg-6">
                                 <label for="addProjectClient">Client </label>
-                                <select v-model="client" class="form-control">
+                                <select v-model="client" id="pClient" class="form-control">
                                     <option :value="0"> Please select a client </option>
-                                    <option v-for="client in clients" :value="client">
+                                    <option v-for="client in clients" :value="client.id">
                                         {{ client.name }}
                                     </option>
                                 </select>
@@ -228,9 +231,52 @@
                              <button type="button" style="width:140px"  v-on:click="SubmitProject()" class="btn btn-outline-primary" >  Submit  </button>
                         </div>
                     </form>
+               
                 </div>
-                <div class="col-md-2"></div>
             </div>
+                              <div class="mb-3">
+                      <div class="card-body">
+                <div class="mb-4">
+                    <button v-on:click="addNewDivVisibility()" type="button" class="btn btn-outline-warning mt-4">
+                        <i v-if="!seen" class="pe-7s-plus"> </i> 
+                        <i v-if="seen" class="pe-7s-less"> </i>
+                        <strong> Company   </strong> 
+                    </button>
+                </div>
+                                <h5 class="card-title">Project List </h5>
+                                <table id="allProject" class="table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Project No</th>
+                                    <th>Name</th>
+                                     <th>Client</th>
+                                    <th>End Date</th>
+                                    <th>S. Week</th>
+                                    <th> Actions </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(allP,index) in allProjects" :key="allP.id">
+                                    <td>{{index+1}}</td>
+                                    <td>{{allP.projectNo}}</td>
+                                    <td>{{allP.name }}</td>
+                                    <td>{{allP.clientName}}</td>
+                                    <td>{{allP.deliveryDateStr}}</td>
+                                    <td>{{allP.week}}</td>
+                                    <td> 
+                                        <button type="button" v-on:click="showCompanyByClient(allP)" class="btn btn-outline-info btn-sm">
+                                            <i class="metismenu-icon pe-7s-network"></i> Work Order
+                                        </button>  </td>
+                                </tr>
+        
+                                </tbody>
+
+           
+                              </table>
+                          </div>
+
+     </div>
         </div>
     </div>
 
