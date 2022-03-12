@@ -59,5 +59,12 @@ namespace Web.ApiContollers
             return Ok(invStatus);
         }
 
+        [HttpPost("save-invoic")]
+        public async Task<ActionResult> LoadEmpWiseWorkOrder(InvoiceDTO invDTO)
+        {
+            var invStatus = await _woRepository.SaveInvoice(invDTO);
+            return Ok(invStatus);
+        }
+
     }
 }

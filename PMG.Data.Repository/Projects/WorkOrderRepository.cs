@@ -370,6 +370,48 @@ namespace PMG.Data.Repository.Projects
                 }
             }
         }
+
+        public IQueryable<WorkOrderDTO> LoadAllWorkOrdersByEmp(string EmpId)
+        {
+            try
+            {
+                IQueryable<WorkOrderDTO> wrkList = (from w in _context.WorkOrder
+                                                    join p in _context.Projects on w.ProjectId equals p.Id
+                                                    join cm in _context.Company on w.CompanyId equals cm.Id
+                                                    join cl in _context.Clients on p.ClientId equals cl.Id into gj
+                                                    join ew in _context.WorkOrderEmployee on w.Id  equals ew.WorkOrderId 
+                                                    from xx in gj.DefaultIfEmpty()
+                                                    where ew.EmployeeId == EmpId
+                                                    orderby w.SetDate descending
+                                                    select new WorkOrderDTO
+                                                    {
+                                                        Id = w.Id,
+                                                        ProjectId = w.ProjectId,
+                                                        ClinetName = xx.Name,
+                                                        ProjectName = p.Name,
+                                                        OriginalBudget = w.OriginalBudget,
+                                                        ApprovedBudget = w.ApprovedBudget,
+                                                        ConsecutiveWork = w.ConsWork,
+                                                        Comments = w.Comments,
+                                                        OTDescription = w.OTDescription,
+                                                        ProjectNo = w.ProjectNo,
+                                                        ProjectYear = p.Year,
+                                                        WorkOrderNo = w.WorkOrderNo,
+                                                        ProjectBudget = p.Budget,
+                                                        StartDateStr = w.StartDate.ToString("MM/dd/yyyy"),
+                                                        EndDateStr = w.EndDate.ToString("MM/dd/yyyy"),
+                                                        ApprovedDateStr = w.ApprovalDate.ToString("MM/dd/yyyy")
+
+                                                    }).Take(50);
+
+                return wrkList;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 
 

@@ -20,6 +20,7 @@ namespace PMG.Data.Repository.Projects
         Task<List<CompanyDTO>> GetAllCompany(Guid guid);
         Task<bool> SaveEmployeHourLog(HourlogsDTO dTO);
         Task<List<HourlogsDTO>> GetAllHourLogs(string empId,string empType);
+  
 
     }
     public class CompanyRepository : ICompanyRepository
@@ -64,7 +65,6 @@ namespace PMG.Data.Repository.Projects
             }
         }
 
-
         public async Task<List<CompanyDTO>> GetAllCompany(Guid guid)
         {
             try
@@ -88,8 +88,6 @@ namespace PMG.Data.Repository.Projects
                 throw ex;
             }
         }
-
-     
 
         public async Task<bool> SaveCleint(ClientDTO dTO)
         {
@@ -144,7 +142,7 @@ namespace PMG.Data.Repository.Projects
             {
                 try
                 {
-                    var budgetProject = await _context.ProjectEmployees.FirstOrDefaultAsync(p => p.ProjectId == dTO.ProjectId.ToString() && p.EmployeeId == dTO.EmpId.ToString());
+                    var budgetProject = await _context.WorkOrderEmployee.FirstOrDefaultAsync(p => p.WorkOrderId == dTO.WorkOrderId && p.EmployeeId == dTO.EmpId.ToString());
                     if (budgetProject == null)
                     {
                         return false;
@@ -156,12 +154,13 @@ namespace PMG.Data.Repository.Projects
                     {
                         Id = new Guid(),
                         EmpId = dTO.EmpId,
-                        ProjectId = dTO.ProjectId,
+                        WorkOrderId = dTO.ProjectId,
                         SpentHour = dTO.SpentHour,
                         SpentDate = dTO.SpentDate,
                         BalanceHour = (budgetProject.BudgetHours - dTO.SpentHour),
                         Remarks = dTO.Remarks,
                         SetDate=dTO.SpentDate,
+                        HourLogFor =1,
                         SetUser = dTO.EmpId.ToString()
                     };
 

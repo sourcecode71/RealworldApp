@@ -2,29 +2,42 @@
 const app = new Vue({
     el: '#hourLog',
     beforeMount() {
+
+        wrkIdSelect = "0";
+
         this.LoadAllHourLogs();
+        this.LoadActiveWorkOrder();
+        this.Select2Setup();
     },
     data: {
         errors: [],
-        logs:[],
+        logs: [],
+        workOrders: [],
+        wrkId: '0',
+        spentHour: '',
+        comments: '',
+        hourLogDate:'',
         isSeenEmp: false
     },
     methods: {
 
-        submitForm: function (e) {
+        SubmitHourLogs: function () {
             this.errors = [];
 
             if (this.isValidFrom()) {
                 const config = { headers: { 'Content-Type': 'application/json' } };
                 var base_url = window.location.origin;
-                const clientURL = base_url + "/api/employee/register";
+                var hrsUrl = base_url + "/api/company/save-hour-log";
 
-                const clientData =
+                const hrsData =
                 {
-                
+                    workOrderId: wrkIdSelect,
+                    spentHour: this.spentHour,
+                    remarks: this.comments,
+                    spentDate: this.hourLogDate
                 };
 
-                axios.post(clientURL, clientData, config)
+                axios.post(hrsUrl, hrsData, config)
                     .then(response => {
                         Swal.fire({
                             position: 'top-end',
@@ -47,23 +60,24 @@ const app = new Vue({
                     });
             }
         },
-        isValidFrom: function () {
-            this.errors = [];
-        },
+     
 
-        handlePhoneInput: function (e) {
-            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-            this.phone = '(' + x[1] + ') ' + x[2] + '-' + x[3];
-        },
-        clearAll: function () {
-           
-        },
-        validateEmail() {
-            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
-                return true;
-            } else {
-                return false;
-            }
+        LoadActiveWorkOrder: function () {
+            const config = { headers: { "Content-Type": "application/json" } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/WorkOrder/load-approved-orders";
+
+            axios.get(clientURL, config).then(
+                (result) => {
+                    this.workOrders = result.data;
+                    console.log(" noto ", this.workOrders);
+                   
+
+                },
+                (error) => {
+                    console.error(error);
+                }
+            );
         },
        
         LoadAllHourLogs: function () {
@@ -87,7 +101,63 @@ const app = new Vue({
                 console.error(error);
             });
 
-        }
+        },
+
+        Select2Setup: function () {
+            setTimeout(() => {
+                $("#wrkOrderId").select2({}).on('change', function (e) {
+                    var id = $("#wrkOrderId option:selected").val();
+                    wrkIdSelect = id;
+                    console.log(" selected data ", wrkIdSelect)
+                });;
+
+            }, 100);
+        },
+        isValidFrom: function () {
+            this.errors = [];
+
+            if (wrkIdSelect == "0") {
+                this.errors.push(" Please select the work order ");
+            }
+
+            if (!this.spentHour) {
+                this.errors.push(" Please enter spent hours");
+            }
+
+            if (!this.hourLogDate) {
+                this.errors.push(" Please select spent Date");
+            }
+
+            if (this.errors.length > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+
+        isNumber: function (evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                evt.preventDefault();;
+            } else {
+                return true;
+            }
+        },
+        clearAll: function () {
+            this.workOrderId = '',
+            this.spentHour = '';
+            this.spentDate = '';
+            this.comments = '';
+
+        },
+        validateEmail() {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
+                return true;
+            } else {
+                return false;
+            }
+        },
 
        
 

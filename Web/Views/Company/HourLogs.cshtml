@@ -6,49 +6,40 @@
 
 
     <link rel="stylesheet" href="~/css/projects.css" />
-    <div class="row">
+    <div id="hourLog" class="row">
         
         <div class="col-12 main-card mb-3 card">
-            <div class="card-body ">
+            <div class="card-body "> 
+                
                  <div class="col-md-6 col-lg-6"> 
                     <h5 class="card-title">Hours log </h5>
-                    <form class="p-2" action="#" onsubmit="SubmitHourLogs();return false" >
+
+                           <p v-if="errors.length">
+                    <b class="text-danger">Please correct the following error(s):</b>
+                    <ul>
+                      <li v-for="error in errors" class="text-danger">{{ error }}</li>
+                    </ul>
+                  </p>
+                    <form class="p-2" >
+                   
                 
-                        <select  class="mb-2 form-control" id="project">
-                                <option>Select the project</option>
+                        <select style="width:100%" id="wrkOrderId"  v-model="wrkId" class="form-control">
+                              <option :value="0"> Please select a work order </option>
+                            <option v-for="wrkS in workOrders" :value="wrkS.id">
+                                {{ wrkS.consecutiveWork }}
+                            </option>
                         </select>
-
-                         <div id="projectError" class="alert alert-danger  ml-1 hide">
-                         </div>
-
-                        <div id="divPmDescription" class="position-relative form-group hide">
-                             <div class="row pmg-text">
-                                <div class="col-md-6 col-sm-12"> Project No : <span id="prjNo" > </span> </div>
-                                <div class="col-md-6 col-sm-12"> Project Name : <span id="prjName" > </span> </div>
-                                <div class="col-md-6 col-sm-12"> Project Client : <span id="pjClient" > </span> </div>
-
-                                <div class="col-md-6 col-sm-12"> Budgeted Hours: <span id="pjBudgetHours" > </span> </div>
-                                 <input type="hidden" id="wrkId" >
-                                 <impu typeof="hidden" id="wrkNo"> 
-                                 <impu typeof="hidden" id="projectId"> 
-                            </div>
-                        </div>
 
                         <div id="divBudget" class="position-relative form-group">
                             <div class="row">
                                 <div class =" col-md-6 col-sm-6 col-lg-6">
                                     <label for="spentHour" class="">  Spent Hour(s) :  </label>
-                                    <input type="number" name="spentHour" id="spentHours" placeholder="Spent Hours" class="form-control">
-                                    <div id="spentHoursError" class="alert alert-danger  ml-1 hide">
-                                    </div>
+                                    <input  v-model="spentHour" name="spentHour"  placeholder="Spent Hours"  v-on:keypress="isNumber($event)"  class="form-control">
                                 </div>
 
                                  <div class ="col-md-6 col-sm-6 col-lg-6">
                                     <label  for="hourLog" class=""> Hour(s) log Date:  </label>
-                                    <input name="hourLog" type="date" id="hourLogDate" placeholder="Hour(s) log Date" class="form-control moneyFormat">
-                                    <div id="hourLogDateError" class="alert alert-danger  ml-1 hide">
-                                    </div>
-                            
+                                    <input name="hourLog" type="date" v-model="hourLogDate" placeholder="Hour(s) log Date" class="form-control moneyFormat">
                                 </div>
 
                             </div>
@@ -57,17 +48,17 @@
                  
                         <div class=" mt-1 position-relative form-group">
                             <label for="exampleText" class=""> <span id ="spComment"> Remarks : </span>  </label>
-                            <textarea name="text" id="remark" class="form-control"></textarea>
+                            <textarea name="text"  v-model="comments" class="form-control"></textarea>
                         </div>
                    
-                        <button id="btnHourLog" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> </button>
+                        <button type="button"  v-on:click ="SubmitHourLogs()" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> </button>
                     </form>
                 </div>
 
                 <div id="hourLog" class="col-md-12 col-sm-12 col-lg-12" >
 
          <div class="modal-body" style="width:100%">
-            <table id="empHourLog" class="table table-striped table-bordered" style="width:100%">
+            <table  class="table table-striped table-bordered" style="width:100%">
                 <thead style="width:100%">
                     <tr>
                         <th>SL</th>
@@ -107,15 +98,5 @@
       <div class="col-md-1"></div>
 
   
-    @section Scripts {
-        <script src="~/js/invoive.js"></script>
-
-        <script>
-           $(function () {
-                Invoice.initHourLog();
-            });
-        </script>
-    }
-
 
 

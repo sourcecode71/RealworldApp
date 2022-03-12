@@ -221,8 +221,6 @@ $(function () {
    
     $('#wrkProject').on('change', function () {
         var data = $(".select2 option:selected").text();
-
-        console.log("data--- ", data);
     })
 
     $('.select2').select2({
