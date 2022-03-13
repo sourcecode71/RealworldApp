@@ -58,7 +58,7 @@ namespace Web.ApiContollers
         [HttpPost("save-hour-log")]
         public async Task<IActionResult> SaveEmployeeHourlog(HourlogsDTO dTO)
         {
-            dTO.EmpId = new System.Guid("EF47EF4D-C20C-4BBA-A28F-08DA03A94D41");
+            dTO.EmpId = new System.Guid("752cbd18-f618-478c-972e-65f33414dbb5");
 
             bool savingStatus = await _cmRepository.SaveEmployeHourLog(dTO);
             return Ok(savingStatus);
@@ -67,7 +67,7 @@ namespace Web.ApiContollers
         [HttpGet("load-hour-log")]
         public async Task<List<HourlogsDTO>> LoadAllHourLog()
         {
-            string empId = "EF47EF4D-C20C-4BBA-A28F-08DA03A94D41";
+            var empId = "752cbd18-f618-478c-972e-65f33414dbb5";
             string type = "04";
             var logs = await _cmRepository.GetAllHourLogs(empId,type);
             return logs;

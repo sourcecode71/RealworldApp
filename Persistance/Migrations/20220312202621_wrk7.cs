@@ -26,13 +26,7 @@ namespace Persistance.Migrations
                 table: "Hourlogs",
                 column: "WorkOrderId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Hourlogs_WorkOrder_WorkOrderId",
-                table: "Hourlogs",
-                column: "WorkOrderId",
-                principalTable: "WorkOrder",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+       
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

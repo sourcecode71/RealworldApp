@@ -10,6 +10,8 @@ namespace Application.DTOs
         public virtual Project Projects { get; set; }
         public Guid EmpId { get; set; }
         public Guid WorkOrderId { get; set; }
+        public string WorkOrderNo { get; set; }
+        public string WorkOrderName { get; set; }
         public string ProjectNo { get; set; }
         public string Project { get; set; }
         public string EmpName { get; set; }

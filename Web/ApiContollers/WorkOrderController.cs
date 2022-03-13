@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using PMG.Data.Repository.Projects;
+using System;
 using System.Threading.Tasks;
 
 namespace Web.ApiContollers
@@ -39,10 +40,20 @@ namespace Web.ApiContollers
         }
 
         [HttpGet("load-approved-orders")]
-        public ActionResult GetAllApprovedOrders()
+        public async Task<IActionResult> GetAllApprovedOrders()
         {
-            var wrkList = _woRepository.LoadAllWorkOrders();
-            return Ok(wrkList);
+            try
+            {
+                var empId = "752cbd18-f618-478c-972e-65f33414dbb5";
+
+                var wrkList = await _woRepository.LoadAllWorkOrdersByEmp(empId);
+                return Ok(wrkList);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         [HttpGet("work-order-search")]

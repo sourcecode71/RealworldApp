@@ -142,22 +142,16 @@ namespace PMG.Data.Repository.Projects
             {
                 try
                 {
-                    var budgetProject = await _context.WorkOrderEmployee.FirstOrDefaultAsync(p => p.WorkOrderId == dTO.WorkOrderId && p.EmployeeId == dTO.EmpId.ToString());
-                    if (budgetProject == null)
-                    {
-                        return false;
-                    }
-
-                    budgetProject.TotalHourLog = budgetProject.TotalHourLog + dTO.SpentHour;
+                    var prevHour = _context.Hourlogs.Where(p=>p.WorkOrderId == dTO.WorkOrderId && p.EmpId==dTO.EmpId).Sum(ep=>ep.SpentHour);
 
                     Hourlogs hourlogs = new Hourlogs
                     {
                         Id = new Guid(),
                         EmpId = dTO.EmpId,
-                        WorkOrderId = dTO.ProjectId,
+                        WorkOrderId = dTO.WorkOrderId,
                         SpentHour = dTO.SpentHour,
                         SpentDate = dTO.SpentDate,
-                        BalanceHour = (budgetProject.BudgetHours - dTO.SpentHour),
+                        BalanceHour = (prevHour + dTO.SpentHour),
                         Remarks = dTO.Remarks,
                         SetDate=dTO.SpentDate,
                         HourLogFor =1,
@@ -184,16 +178,24 @@ namespace PMG.Data.Repository.Projects
             try
             {
                 var hrLogs = await (from hr in _context.Hourlogs
-                                    join p in _context.Projects on hr.ProjectId.ToString() equals p.Id
+                                    join p in _context.Projects on hr.ProjectId.ToString() equals p.Id into pp
+                                    from px in pp.DefaultIfEmpty() 
+                                    join wrk in _context.WorkOrder on hr.WorkOrderId equals wrk.Id into ww
+                                    from wx in ww.DefaultIfEmpty()
                                     join e in _context.Employees on hr.EmpId.ToString() equals e.Id
-                                    where (p.Status != ProjectStatus.Completed)
+                                    where(hr.EmpId.Equals(empId))
+
                                     select new HourlogsDTO
                                     {
                                         EmpName = e.Name,
                                         SpentHour = hr.SpentHour,
                                         SpentDate = hr.SpentDate,
-                                        Project = p.Name,
-                                        ProjectNo = p.ProjectNo,
+                                        Project = px.Name,
+                                        ProjectNo = px.ProjectNo,
+                                        BalanceHour = hr.BalanceHour,
+                                        WorkOrderId = hr.WorkOrderId,
+                                        WorkOrderNo=wx.WorkOrderNo,
+                                        WorkOrderName =wx.ConsWork,
                                         SpentDateStr = hr.SetDate.ToString("MM/dd/yyyy"),
                                         Remarks = hr.Remarks
                                     }).ToListAsync();
