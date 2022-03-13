@@ -1,7 +1,10 @@
 ﻿using Application.DTOs;
+using Domain.Enums;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PMG.Data.Repository.Projects;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Web.ApiContollers
@@ -39,15 +42,24 @@ namespace Web.ApiContollers
             return Ok(isSuccess);
         }
 
-        [HttpGet("load-approved-orders")]
-        public async Task<IActionResult> GetAllApprovedOrders()
+        [HttpGet("load-approved-orders/emp-wise")]
+        public async Task<IActionResult> GetAllApprovedOrdersByEmp()
         {
             try
             {
-                var empId = "752cbd18-f618-478c-972e-65f33414dbb5";
+                string currentEmail = HttpContext.Session.GetString("current_user_email");
 
-                var wrkList = await _woRepository.LoadAllWorkOrdersByEmp(empId);
-                return Ok(wrkList);
+                if (!string.IsNullOrEmpty(currentEmail))
+                {
+                    var empId = HttpContext.Session.GetString("current_user_id");
+                    var wrkList = await _woRepository.LoadAllWorkOrdersByEmp(empId);
+                    return Ok(wrkList);
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+                
             }
             catch (Exception ex)
             {
@@ -63,19 +75,31 @@ namespace Web.ApiContollers
             return Ok(wrkList);
         }
 
-        [HttpPost("save-invoic")]
-        public async Task<ActionResult> SaveInvoice(InvoiceDTO invDTO)
+
+        [HttpGet("load-approved-orders")]
+        public ActionResult GetAllWorkOrder()
         {
-            var invStatus = await _woRepository.SaveInvoice(invDTO);
-            return Ok(invStatus);
+            var wrkList = _woRepository.LoadAllWorkOrders();
+            return Ok(wrkList);
         }
 
-        [HttpPost("save-invoic")]
-        public async Task<ActionResult> LoadEmpWiseWorkOrder(InvoiceDTO invDTO)
+
+        [HttpGet("load-work-orders/archived")]
+        public ActionResult GetAllArchivedWorkOrder()
         {
-            var invStatus = await _woRepository.SaveInvoice(invDTO);
-            return Ok(invStatus);
+            var wrkList = _woRepository.LoadAllWorkOrders();
+            var filterWrk = wrkList.Where(w=>w.WrkStatus == ProjectStatus.Archived || w.WrkStatus == ProjectStatus.Completed);
+            return Ok(wrkList);
         }
+
+        [HttpGet("load-work-orders/active")]
+        public ActionResult GetAllActiveWorkOrder()
+        {
+            var wrkList = _woRepository.LoadAllWorkOrders();
+            var filterWrk = wrkList.Where(w => w.WrkStatus != ProjectStatus.Archived || w.WrkStatus != ProjectStatus.Completed);
+            return Ok(wrkList);
+        }
+
 
     }
 }

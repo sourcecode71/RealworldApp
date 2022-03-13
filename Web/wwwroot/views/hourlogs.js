@@ -65,7 +65,7 @@ const app = new Vue({
         LoadActiveWorkOrder: function () {
             const config = { headers: { "Content-Type": "application/json" } };
             var base_url = window.location.origin;
-            const clientURL = base_url + "/api/WorkOrder/load-approved-orders";
+            const clientURL = base_url + "/api/WorkOrder/load-approved-orders/emp-wise";
 
             axios.get(clientURL, config).then(
                 (result) => {

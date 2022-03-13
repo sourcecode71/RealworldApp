@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Enums
+﻿namespace Domain.Enums
 {
     public enum EmployeeType
     {
@@ -12,6 +6,8 @@ namespace Domain.Enums
         Engineering = 1, 
         Drawing = 2,
         Approval = 3,
-        Other = 4
+        Other = 4,
+        Management= 5,
+        Accounting= 6,
     }
 }

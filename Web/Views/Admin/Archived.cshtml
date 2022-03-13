@@ -23,64 +23,64 @@
     }
 }
 
+<div id="archiveDiv">
+    <div style="min-height:500px" class="main-card mb-3 card">
+            <div class="card-body"><h5 class="card-title"> Completed and Archived Project </h5>
+                     <div class="card-body"><h5 class="card-title"> Projects </h5>
+                                        <table id="wrkArchived" class="mb-0 table table-striped">
+                                            <thead>
+                                            <tr style="font-size:14px">
+                                                <th> # </th>
+                                                <th> Year </th>
+                                                <th> Project No</th>
+                                                <th> Budget No</th>
+                                                <th> Work  No </th>
+                                                <th> Name  </th>
+                                                <th> Budget </th>
+                                                <th> Paid Amount </th>
+                                                <th style="width:270px" > Action </th>
+                                            </tr>
+                                            </thead>
+                                               <tbody>
+                                                  <tr v-for="(wrk,index) in workOrders" :key="wrk.id">
+                                                        <td>{{index+1}}</td>
+                                                        <td>{{wrk.projectYear}}</td>
+                                                        <td>{{wrk.projectNo }}</td>
+                                                        <td>{{wrk.wrkBudgetNo }}</td>
+                                                        <td>{{wrk.workOrderNo }}</td>
+                                                        <td>{{wrk.consecutiveWork }}</td>
+                                                        <td>{{wrk.approvedBudget }}</td>
+                                                        <td>{{wrk.approvedBudget - wrk.balance  }}</td>
+                                                        <td> 
+                                                            <div class="row">
+                                                                <div class="col-md-6 col-lg-6 col-sm-6">      
+                                                                    <button style="text-align:left" type="button" v-on:click="ShowAllInvoice(wrk.id)"
+                                                                      class="btn btn-sm btn-outline-warning">  INV
+                                                                     </button>   
+                                                                </div>
+                                                                <div class="col-md-6 col-lg-6 col-sm-6">
+                                                                          <button style="text-align:right" type="button" v-on:click="ShowAllHRS(wrk.id)"
+                                                                            class="btn btn-sm btn-outline-warning">  HRS 
+                                                                         </button> 
 
-
-
-    <main style="margin-left: 2%; margin-right: 2%">
-        <div class="row" style="margin-top: 80px">
-            <div class="col-md-12">
-                <h3>Completed, Invoiced and Archived Projects</h3>
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table table-sm  table-bordered" style="margin-top: 20px; margin-bottom: 50px">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col">FOLIO</th>
-                                    <th scope="col">PROYECTO</th>
-                                    <th scope="col">CLIENTE</th>
-                                    <th scope="col">INGENIERÍA</th>
-                                    <th scope="col">DIBUJO</th>
-                                    <th scope="col">VISTO BUENO</th>
-                                    <th scope="col">FECHA DE ENTREGA</th>
-                                    <th scope="col">PROGRAMA</th>
-                                    <th scope="col">SEMANA DE TRABAJO</th>
-                                    <th scope="col">PRESUPUESTO</th>
-                                    <th scope="col">PAGADO</th>
-                                    <th scope="col">POR PAGAR</th>
-                                    <th scope="col">FACTOR</th>
-                                    <th scope="col">ESTATUS</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="projectTableBody">
-                                @foreach (var project in Model.Projects)
-                                {
-                                    <tr class="@(project.Status != "Delayed" ? project.Status == "Modified" ? "table-success" : "" : "table-danger")">
-                                        <td>@project.SelfProjectId</td>
-                                        <td>@project.Name</td>
-                                        <td>@project.Client</td>
-                                        <td>@project.Engineering</td>
-                                        <td>@project.Drawing</td>
-                                        <td>@project.Approval</td>
-                                        <td>@project.DeliveryDate</td>
-                                        <td>@project.Schedule</td>
-                                        <td>@project.Progress</td>
-                                        <td class="price-value">$@project.BudgetFormat</td>
-                                        <td class="price-value">$@project.PaidFormat</td>
-                                        <td class="price-value">$@project.BalanceFormat</td>
-                                        <td class="price-value">$@project.FactorFormat</td>
-                                        <td>@project.Status</td>
-                                        <td><a href="/Project?id=@project.SelfProjectId"><button class="btn btn-sm btn-success">Detalles</button></a></td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                                                                </div>
+                                                            </div>
+                                                     
+                                                                     
+                                                        
+                                                        
+                                                        </td>
+                                                    </tr>
+                                                 </tbody>
+                                          
+                                        </table>
+                                    </div>
         </div>
-          <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/adminPanel.js" asp-append-version="true"></script>
-    <script src="~/js/employeeDashboard.js" asp-append-version="true"></script>
-    </main>
->
+    </div>
+    @section Scripts {
+        <script src="~/views/Archived.js"></script>
+    }
+  </div>
+
+
+

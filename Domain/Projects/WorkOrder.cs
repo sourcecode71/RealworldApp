@@ -23,6 +23,7 @@ namespace Domain.Projects
         public string ProjectNo { get; set; }
         public double OriginalBudget { get; set; }
         public double ApprovedBudget { get; set; }
+        public double Balance { get; set; }
         public int BudgetStatus { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -36,6 +37,7 @@ namespace Domain.Projects
         public string UpdateUser { get; set; }
         public ProjectStatus Status { get; set; } = ProjectStatus.Budgeted;
         public DateTime? UpdateDate { get; set; }
+        public bool IsInvoiced { get; set; }
     }
 
     public class HisWorkOrder : BasedModel

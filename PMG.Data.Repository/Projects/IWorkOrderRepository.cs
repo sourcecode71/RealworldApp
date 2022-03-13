@@ -11,12 +11,7 @@ namespace PMG.Data.Repository.Projects
         IQueryable<WorkOrderDTO> LoadAllWorkOrders();
         Task<bool> UpdateWorkOrder(WorkOrderDTO orderDTO);
         IQueryable<WorkOrderDTO> GetFilteredWorkOrder(string strOT);
-
-        Task<bool> SaveInvoice(InvoiceDTO invDTO);
-        IQueryable<InvoiceDTO> GetAllInvoices();
         Task<bool> UpdateWorkOrderStatus(WorkOrderDTO orderDTO);
         Task<List<WorkOrderDTO>> LoadAllWorkOrdersByEmp(string EmpId);
-
-
     }
 }

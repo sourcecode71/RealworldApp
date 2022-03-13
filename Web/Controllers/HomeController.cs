@@ -70,6 +70,7 @@ namespace Web.Controllers
                 SetSessionString("current_user_email", loggedInUser.Email);
                 SetSessionString("current_user_role", loggedInUser.Role);
                 SetSessionString("current_user_name", loggedInUser.Name);
+                SetSessionString("current_user_id", loggedInUser.Id);
             }
 
             return result;

@@ -62,9 +62,9 @@
                 <thead style="width:100%">
                     <tr>
                         <th>SL</th>
-                         <th>Name </th>
-                        <th>Project No</th>
-                        <th> Project </th>
+                        <th>Name </th>
+                        <th>Work No</th>
+                        <th>Work Order</th>
                         <th> Spent Date </th>
                         <th> Spent Hour </th>
                
@@ -74,8 +74,8 @@
               <tr v-for="(log,index) in logs" :key="log.id">
                     <td>{{index+1}}</td>
                     <td>{{log.empName}}</td>
-                    <td>{{log.projectNo}}</td>
-                    <td>{{log.project}}</td>
+                    <td>{{log.workOrderNo}}</td>
+                    <td>{{log.workOrderName}}</td>
                     <td>{{log.spentDateStr}}</td>
                     <td>{{log.spentHour}}</td>
                 </tr>

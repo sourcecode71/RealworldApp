@@ -25,130 +25,66 @@
 
 
 
-    <main style="margin-left: 2%; margin-right: 2%">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <h2>Admin Control Panel</h2>
-            </div>
-        </div>
-        <div style="display:none" class="row" style="margin-top: 80px">
-            <div class="col-md-12">
-                <h3>Ongoing Projects</h3>
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table table-sm  table-bordered" style="margin-top: 20px; margin-bottom: 50px">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col">FOLIO</th>
-                                    <th scope="col">PROYECTO</th>
-                                    <th scope="col">CLIENTE</th>
-                                    <th scope="col">INGENIERÍA</th>
-                                    <th scope="col">DIBUJO</th>
-                                    <th scope="col">VISTO BUENO</th>
-                                    <th scope="col">FECHA DE ENTREGA</th>
-                                    <th scope="col">PROGRAMA</th>
-                                    <th scope="col">SEMANA DE TRABAJO</th>
-                                    <th scope="col">PRESUPUESTO</th>
-                                    <th scope="col">PAGADO</th>
-                                    <th scope="col">POR PAGAR</th>
-                                    <th scope="col">FACTOR</th>
-                                    <th scope="col">ESTATUS</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="projectTableBody">
-                                @foreach (var project in Model.Projects)
-                                {
-                                    <tr class="@(project.Status != "Delayed" ? project.Status == "Modified" ? "table-success" : "" : "table-danger")">
-                                        <td>@project.SelfProjectId</td>
-                                        <td>@project.Name</td>
-                                        <td>@project.Client</td>
-                                        <td>@project.Engineering</td>
-                                        <td>@project.Drawing</td>
-                                        <td>@project.Approval</td>
-                                        <td>@project.DeliveryDate</td>
-                                        <td>@project.Schedule</td>
-                                        <td>@project.Progress</td>
-                                        <td class="price-value" >$@project.BudgetFormat</td>
-                                        <td class="price-value">$@project.PaidFormat</td>
-                                        <td class="price-value">$@project.BalanceFormat</td>
-                                        <td class="price-value">$@project.FactorFormat</td>
-                                        <td>@project.Status</td>
-                                        <td><a href="/Project?id=@project.SelfProjectId"><button class="btn btn-sm btn-success">Detalles</button></a></td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div style="display:none" class="row">
-            <div class="col-md-12">
-                <h3>Generate Excel Reports: </h3>
-            </div>
-            <div class="col-md-2" style="margin-top: 20px">
-                <label for="reportType">Please select a type of projects: </label>
-                <select class="form-control" id="reportType">
-                    <option value="0">All Projects</option>
-                    <option value="1">Pending Projects</option>
-                    <option value="2">Delayed Projects</option>
-                    <option value="3">Modified Projects</option>
-                    <option value="5">Completed Projects</option>
-                    <option value="6">Invoiced Projects</option>
-                    <option value="4">Archived Projects</option>
-                </select>
-            </div>
-            <div class="col-md-12">
-                <a id="generateReportHref" href="http://ec2-3-144-165-25.us-east-2.compute.amazonaws.com/api/Project/get-excel-report?projectStatus=0"> <button class="btn btn-sm btn-success" style="margin-top: 20px; margin-bottom: 50px">Generate Report</button></a>
-            </div>
-        </div>
-         <div style="display:none" class="row" style="margin-top: 80px">
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-8">
-                        <h3>Active Employees</h3>
-                        <table class="table table-sm  table-bordered" style="margin-top: 20px; margin-bottom: 50px">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">List of Projects</th>
-                                </tr>
-                            </thead>
-                            <tbody id="employeeTableBody">
-                                @foreach (var employee in Model.Employees)
-                                {
-                                    <tr>
-                                        <td>@employee.Name</td>
-                                        <td>@employee.Email</td>
-                                        <td>
-                                            @foreach (var project in employee.ProjectsNames)
-                                            {
-                                                @project
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-2"></div>
-                </div>
-            </div>
-        </div>
+   
+<div id="archiveDiv">
+    <div style="min-height:500px" class="main-card mb-3 card">
+            <div class="card-body"><h5 class="card-title"> Active Proejcts </h5>
+                     <div class="card-body"><h5 class="card-title"> Projects </h5>
+                                        <table id="wrkAdminPanel" class="mb-0 table table-striped">
+                                            <thead>
+                                            <tr style="font-size:14px">
+                                                <th> # </th>
+                                                <th> Year </th>
+                                                <th> Project No</th>
+                                                <th> Budget No</th>
+                                                <th> Work  No </th>
+                                                <th> Name  </th>
+                                                <th> Budget </th>
+                                                <th> Paid Amount </th>
+                                                <th style="width:270px" > Action </th>
+                                            </tr>
+                                            </thead>
+                                               <tbody>
+                                                  <tr v-for="(wrk,index) in workOrders" :key="wrk.id">
+                                                        <td>{{index+1}}</td>
+                                                        <td>{{wrk.projectYear}}</td>
+                                                        <td>{{wrk.projectNo }}</td>
+                                                        <td>{{wrk.wrkBudgetNo }}</td>
+                                                        <td>{{wrk.workOrderNo }}</td>
+                                                        <td>{{wrk.consecutiveWork }}</td>
+                                                        <td>{{wrk.approvedBudget }}</td>
+                                                        <td>{{wrk.approvedBudget - wrk.balance  }}</td>
+                                                        <td> 
+                                                            <div class="row">
+                                                                <div class="col-md-6 col-lg-6 col-sm-6">      
+                                                                    <button style="text-align:left" type="button" v-on:click="ShowAllInvoice(wrk.id)"
+                                                                      class="btn btn-sm btn-outline-warning">  INV
+                                                                     </button>   
+                                                                </div>
+                                                                <div class="col-md-6 col-lg-6 col-sm-6">
+                                                                          <button style="text-align:right" type="button" v-on:click="ShowAllHRS(wrk.id)"
+                                                                            class="btn btn-sm btn-outline-warning">  HRS 
+                                                                         </button> 
 
-            <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/adminPanel.js" asp-append-version="true"></script>
-    <script src="~/js/employeeDashboard.js" asp-append-version="true"></script>
+                                                                </div>
+                                                            </div>
+                                                     
+                                                                     
+                                                        
+                                                        
+                                                        </td>
+                                                    </tr>
+                                                 </tbody>
+                                          
+                                        </table>
+                                    </div>
+        </div>
+    </div>
+    @section Scripts {
+        <script src="~/views/AdminPanel.js"></script>
+    }
+  </div>
 
-      <script>
-     $(document).ready(function(){
-        $('.dropdown-toggle').dropdown()
-    });
-</script>
 
-    </main>
- 
+
 

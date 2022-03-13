@@ -1,5 +1,7 @@
 ﻿using Application.DTOs;
 using Domain.Common;
+using Domain.Enums;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PMG.Data.Repository.Projects;
 using System;
@@ -58,19 +60,62 @@ namespace Web.ApiContollers
         [HttpPost("save-hour-log")]
         public async Task<IActionResult> SaveEmployeeHourlog(HourlogsDTO dTO)
         {
-            dTO.EmpId = new System.Guid("752cbd18-f618-478c-972e-65f33414dbb5");
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
 
-            bool savingStatus = await _cmRepository.SaveEmployeHourLog(dTO);
-            return Ok(savingStatus);
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                dTO.EmpId = new Guid(HttpContext.Session.GetString("current_user_id"));
+                bool savingStatus = await _cmRepository.SaveEmployeHourLog(dTO);
+                return Ok(savingStatus);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Home");
+            }
         }
 
         [HttpGet("load-hour-log")]
-        public async Task<List<HourlogsDTO>> LoadAllHourLog()
+        public async Task<IActionResult> LoadAllHourLog()
         {
-            var empId = "752cbd18-f618-478c-972e-65f33414dbb5";
-            string type = "04";
-            var logs = await _cmRepository.GetAllHourLogs(empId,type);
-            return logs;
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                var empId = HttpContext.Session.GetString("current_user_id");
+
+
+                if (currentRole == "Admin")
+                {
+                    var logs = await _cmRepository.GetAllHourLogs(empId, EmployeeType.Admin);
+                    return Ok(logs);
+                }
+                else if(currentRole == "Engineering")
+                {
+                    var logs = await _cmRepository.GetAllHourLogs(empId, EmployeeType.Engineering);
+                    return Ok(logs);
+                }
+                else if (currentRole == "Drawing")
+                {
+                    var logs = await _cmRepository.GetAllHourLogs(empId, EmployeeType.Drawing);
+                    return Ok(logs);
+                }
+                else
+                {
+                    return Ok(null);
+                }
+            }
+            else
+            {
+                return Ok(null);
+            }
+                    
 
         }
 

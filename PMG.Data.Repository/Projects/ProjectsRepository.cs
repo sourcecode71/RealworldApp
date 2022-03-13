@@ -162,6 +162,7 @@ namespace PMG.Data.Repository.Projects
                         wrk.BudgetStatus = dto.Status;
                         wrk.ApprovalDate = DateTime.Now;
                         wrk.ApprovedBudget = appBudget;
+                        wrk.BudgetStatus = 1;
                     }
 
                     var pba = await _context.WorkOrderActivities.FirstOrDefaultAsync(p => p.WorkOrderId == dto.WorkOrderId);

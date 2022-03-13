@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+ <div id="invPay">
+    <link rel="stylesheet" href="~/css/projects.css" />
+   
+
+    <div style="min-height:500px" class="main-card mb-3 card">
+            <div class="card-body"><h5 class="card-title"> Payment </h5>
+                     <div class="card-body"><h5 class="card-title"> Payment </h5>
+                                        <table id="invAllLogs" class="mb-0 table table-striped">
+                                            <thead>
+                                            <tr style="font-size:14px">
+                                                <th> # </th>
+                                                <th> Work No</th>
+                                                <th> Work Order </th>
+                                                <th> Date  </th>
+                                                <th> Invoice Bill </th>
+                                                <th> Balance </th>
+                                                <th> Action </th>
+                                            </tr>
+                                            </thead>
+                                               <tbody>
+                                                  <tr v-for="(inv,index) in allInv" :key="inv.id">
+                                                        <td>{{index+1}}</td>
+                                                        <td>{{inv.workNo}}</td>
+                                                        <td>{{inv.workOrderName}}</td>
+                                                        <td>{{inv.invoiceDateStr}}</td>
+                                                        <td>{{inv.invoiceNumber}}</td>
+                                                        <td>{{inv.balance}}</td>
+                                                        <td> </td>
+                                                    </tr>
+                                                 </tbody>
+                                          
+                                        </table>
+                                    </div>
+        </div>
+    </div>
+    @section Scripts {
+        <script src="~/views/InvoicePay.js"></script>
+    }
+  </div>
+
+

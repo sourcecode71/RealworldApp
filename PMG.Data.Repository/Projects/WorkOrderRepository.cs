@@ -18,8 +18,6 @@ namespace PMG.Data.Repository.Projects
             _context = dataContext;
         }
 
-       
-
         public IQueryable<WorkOrderDTO> LoadAllWorkOrders()
         {
             try
@@ -29,7 +27,8 @@ namespace PMG.Data.Repository.Projects
                                             join cm in _context.Company on w.CompanyId equals cm.Id
                                             join cl in _context.Clients on p.ClientId equals cl.Id into gj
                                             from xx in gj.DefaultIfEmpty()
-                                            where p.BudgetApprovedStatus != 2
+                                            join bw in _context.WorkOrderActivities on w.Id equals bw.WorkOrderId into brw
+                                            from b in brw.DefaultIfEmpty()
                                             orderby w.SetDate descending
                                             select new WorkOrderDTO
                                             {
@@ -39,18 +38,21 @@ namespace PMG.Data.Repository.Projects
                                                 ProjectName = p.Name,
                                                 OriginalBudget = w.OriginalBudget,
                                                 ApprovedBudget = w.ApprovedBudget,
+                                                Balance = w.Balance,
                                                 ConsecutiveWork = w.ConsWork,
                                                 Comments = w.Comments,
                                                 OTDescription = w.OTDescription,
-                                                ProjectNo = w.ProjectNo,
+                                                ProjectNo = p.ProjectNo,
                                                 ProjectYear = p.Year,
                                                 WorkOrderNo = w.WorkOrderNo,
+                                                WrkBudgetNo = b.BudgetNo,
                                                 ProjectBudget = p.Budget,
+                                                WrkStatus = w.Status,
                                                 StartDateStr = w.StartDate.ToString("MM/dd/yyyy"),
                                                 EndDateStr = w.EndDate.ToString("MM/dd/yyyy"),
                                                 ApprovedDateStr = w.ApprovalDate.ToString("MM/dd/yyyy")
 
-                                            }).Take(50);
+                                            }).Take(250);
 
                 return wrkList;
             }
@@ -78,9 +80,11 @@ namespace PMG.Data.Repository.Projects
                         ProjectId = dTO.ProjectId,
                         CompanyId = new Guid(dTO.CompanyId),
                         OriginalBudget = dTO.OriginalBudget,
+                        Balance = dTO.OriginalBudget,
                         StartDate = dTO.StartDate,
                         EndDate = dTO.EndDate,
-                        OTDescription = dTO.OTDescription
+                        OTDescription = dTO.OTDescription,
+                        BudgetStatus = 0
                     };
 
                     _context.WorkOrder.Add(pmWorkOrder);
@@ -135,6 +139,7 @@ namespace PMG.Data.Repository.Projects
                         workOrder.UpdateUser = "admin";
                         workOrder.Comments = dTO.Comments;
                         workOrder.ApprovedBudget = dTO.ApprovedBudget;
+                        workOrder.Balance = dTO.ApprovedBudget;
                         workOrder.ProjectId = dTO.ProjectId;
                         workOrder.ProjectNo = dTO.ProjectNo;
 
@@ -185,61 +190,6 @@ namespace PMG.Data.Repository.Projects
         }
 
 
-        public async Task<bool> SaveInvoice(InvoiceDTO invDTO)
-        {
-            try
-            {
-                var invData = new Invoice
-                {
-                    Id = Guid.NewGuid(),
-                    WorkOrderId = new Guid(invDTO.WorkOrderId),
-                    WorkOrderNo = invDTO.WorkNo,
-                    ProjectId = new Guid(invDTO.ProjectId),
-                    PartialBill = invDTO.PartialBill,
-                    InvoiceBill = invDTO.InvoiceBill,
-                    InvoiceDate = invDTO.InvoiceDate,
-                    InvoiceNumber = invDTO.InvoiceNumber,
-                    Remarks = invDTO.Remarks,
-                    SetUser = invDTO.SetUser,
-                    SetDate = DateTime.Now
-                };
-
-                _context.Invoice.Add(invData);
-
-                var State = await _context.SaveChangesAsync();
-
-                return State==1;
-
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
-        public IQueryable<InvoiceDTO> GetAllInvoices()
-        {
-            var invDTO = from inv in _context.Invoice
-                         join wrk in _context.WorkOrder on inv.WorkOrderId equals wrk.Id
-                         join prj in _context.Projects on wrk.ProjectId equals prj.Id
-                         orderby inv.Id descending
-                         select new InvoiceDTO
-                         {
-                             Id = inv.Id.ToString(),
-                             WorkOrderId = inv.WorkOrderId.ToString(),
-                             WorkNo = inv.WorkOrderNo,
-                             OTName = wrk.OTDescription,
-                             ProjectName = prj.Name,
-                             PartialBill = inv.PartialBill,
-                             InvoiceBill = inv.InvoiceBill,
-                             InvoiceNumber = inv.InvoiceNumber,
-                             InvoiceDate = inv.InvoiceDate,
-                             Remarks = inv.Remarks
-                         };
-            return invDTO;
-
-        }
 
        private async Task<bool> CreateWorkOrderBudget(WorkOrderDTO dto, Guid wrkId, string wrkNo)
         {
@@ -409,6 +359,8 @@ namespace PMG.Data.Repository.Projects
                 throw ex;
             }
         }
+
+      
     }
 
 
