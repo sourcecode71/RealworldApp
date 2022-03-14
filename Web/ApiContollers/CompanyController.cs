@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Domain.Common;
 using Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PMG.Data.Repository.Projects;
@@ -74,6 +75,7 @@ namespace Web.ApiContollers
             }
         }
 
+        [Authorize]
         [HttpGet("load-hour-log")]
         public async Task<IActionResult> LoadAllHourLog()
         {

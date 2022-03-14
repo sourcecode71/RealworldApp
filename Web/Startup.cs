@@ -95,6 +95,7 @@ namespace Web
                 options.Cookie.IsEssential = true;
                 options.IdleTimeout = TimeSpan.FromDays(7);
             });
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/home/login");
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
