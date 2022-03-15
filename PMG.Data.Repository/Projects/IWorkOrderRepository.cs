@@ -8,7 +8,7 @@ namespace PMG.Data.Repository.Projects
     public interface IWorkOrderRepository
     {
         Task<bool> SaveWorkOrder(WorkOrderDTO orderDTO);
-        IQueryable<WorkOrderDTO> LoadAllWorkOrders();
+        List<WorkOrderDTO> LoadAllWorkOrders();
         Task<bool> UpdateWorkOrder(WorkOrderDTO orderDTO);
         IQueryable<WorkOrderDTO> GetFilteredWorkOrder(string strOT);
         Task<bool> UpdateWorkOrderStatus(WorkOrderDTO orderDTO);

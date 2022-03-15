@@ -95,9 +95,17 @@ namespace Web.ApiContollers
         [HttpGet("load-work-orders/active")]
         public ActionResult GetAllActiveWorkOrder()
         {
-            var wrkList = _woRepository.LoadAllWorkOrders();
-            var filterWrk = wrkList.Where(w => w.WrkStatus != ProjectStatus.Archived || w.WrkStatus != ProjectStatus.Completed);
-            return Ok(wrkList);
+            try
+            {
+                var wrkList = _woRepository.LoadAllWorkOrders();
+                var filterWrk = wrkList.Where(w => w.WrkStatus != ProjectStatus.Archived || w.WrkStatus != ProjectStatus.Completed);
+                return Ok(wrkList);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
 

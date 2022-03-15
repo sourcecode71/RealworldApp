@@ -24,6 +24,7 @@ namespace Application.DTOs
         public double Balance { get; set; }
         public int Status { get; set; }
         public ProjectStatus WrkStatus { get; set; }
+        public string WrkStatusStr { get; set; }
         public DateTime ApprovedDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -32,6 +33,8 @@ namespace Application.DTOs
         public string EndDateStr { get; set; }
         public string ApprovedDateStr { get; set; }
         public string Comments { get; set; }
+        public string CompanyName { get; set; }
+        public string ClientName { get; set; }
         public string OTDescription { get; set; }
 
         public string ProjectName { get; set; }
@@ -40,6 +43,8 @@ namespace Application.DTOs
         public string WorkOrderNo { get; set; }
         public string WrkBudgetNo { get; set; }
         public string SetUser { get; set; }
+        public double SpentHour { get; set; }
+        public double BudgetHour { get; set; }
         public List<ProjectEmp> Engineers { get; set; }
         public List<ProjectEmp> Drawings { get; set; }
 

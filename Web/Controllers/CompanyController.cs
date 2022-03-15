@@ -10,21 +10,25 @@ namespace Web.Controllers
             return View();
         }
 
+        [Authorize(AuthenticationSchemes = "Cookies")]
         public IActionResult Client()
         {
             return View();
         }
 
+        [Authorize(AuthenticationSchemes = "Cookies")]
         public IActionResult Invoice()
         {
             return View();
         }
 
+        [Authorize(AuthenticationSchemes = "Cookies")]
         public IActionResult Payment()
         {
             return View();
         }
 
+        [Authorize(AuthenticationSchemes = "Cookies")]
         public IActionResult HourLogs()
         {
             return View();

@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,41 +20,50 @@ namespace PMG.Data.Repository.Projects
             _context = dataContext;
         }
 
-        public IQueryable<WorkOrderDTO> LoadAllWorkOrders()
+        public List<WorkOrderDTO> LoadAllWorkOrders()
         {
             try
             {
-                IQueryable<WorkOrderDTO> wrkList = (from w in _context.WorkOrder
-                                            join p in _context.Projects on w.ProjectId equals p.Id
-                                            join cm in _context.Company on w.CompanyId equals cm.Id
-                                            join cl in _context.Clients on p.ClientId equals cl.Id into gj
-                                            from xx in gj.DefaultIfEmpty()
-                                            join bw in _context.WorkOrderActivities on w.Id equals bw.WorkOrderId into brw
-                                            from b in brw.DefaultIfEmpty()
-                                            orderby w.SetDate descending
-                                            select new WorkOrderDTO
-                                            {
-                                                Id = w.Id,
-                                                ProjectId = w.ProjectId,
-                                                ClinetName = xx.Name,
-                                                ProjectName = p.Name,
-                                                OriginalBudget = w.OriginalBudget,
-                                                ApprovedBudget = w.ApprovedBudget,
-                                                Balance = w.Balance,
-                                                ConsecutiveWork = w.ConsWork,
-                                                Comments = w.Comments,
-                                                OTDescription = w.OTDescription,
-                                                ProjectNo = p.ProjectNo,
-                                                ProjectYear = p.Year,
-                                                WorkOrderNo = w.WorkOrderNo,
-                                                WrkBudgetNo = b.BudgetNo,
-                                                ProjectBudget = p.Budget,
-                                                WrkStatus = w.Status,
-                                                StartDateStr = w.StartDate.ToString("MM/dd/yyyy"),
-                                                EndDateStr = w.EndDate.ToString("MM/dd/yyyy"),
-                                                ApprovedDateStr = w.ApprovalDate.ToString("MM/dd/yyyy")
+                DbCommand cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandText = "dbo.Wrk_AllWorkOrder";
+                cmd.CommandType = CommandType.StoredProcedure;
 
-                                            }).Take(250);
+                List<WorkOrderDTO> wrkList = new List<WorkOrderDTO>();
+
+                _context.Database.OpenConnection();
+                using (DbDataReader rd = cmd.ExecuteReader())
+                {
+                    while (rd.Read())
+                    {
+                        WorkOrderDTO wOT = new WorkOrderDTO()
+                        {
+                            Id = new Guid(rd.GetValue("id").ToString()),
+                            ProjectId = rd.GetValue("ProjectId").ToString(),
+                            ClinetName = rd.GetValue("ClientName").ToString(),
+                            ProjectName = rd.GetValue("ProjectName").ToString(),
+                            OriginalBudget =Convert.ToDouble( rd.GetValue("OriginalBudget").ToString()),
+                            ApprovedBudget =Convert.ToDouble( rd.GetValue("ApprovedBudget").ToString()),
+                            Balance = Convert.ToDouble( rd.GetValue("Balance").ToString()),
+                            SpentHour = Convert.ToDouble( rd.GetValue("SpentHour").ToString()),
+                            ConsecutiveWork = rd.GetValue("ConsWork").ToString(),
+                            OTDescription = rd.GetValue("OTDescription").ToString(),
+                            CompanyName = rd.GetValue("CompanyName") != null? rd.GetValue("CompanyName").ToString() :"",
+                            ClientName = rd.GetValue("ClientName") != null ? rd.GetValue("ClientName").ToString() : "",
+                            ProjectNo = rd.GetValue("ProjectNo").ToString(),
+                            ProjectYear =Convert.ToInt16( rd.GetValue("pYear").ToString()),
+                            WorkOrderNo = rd.GetValue("WorkOrderNo").ToString(),
+                            WrkBudgetNo = rd.GetValue("BudgetNo").ToString(),
+                            WrkStatus =(ProjectStatus)(Convert.ToInt16 (rd.GetValue("WrkStatus").ToString())),
+                            StartDateStr = rd.GetValue("SubmitDate").ToString(),
+                            EndDateStr = rd.GetValue("EnDate").ToString(),
+                            ApprovedDateStr = rd.GetValue("ApprovalDate").ToString(),
+
+                        };
+
+                        wrkList.Add(wOT);
+
+                    }
+                }
 
                 return wrkList;
             }

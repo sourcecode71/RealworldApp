@@ -53,8 +53,17 @@ namespace Web.ApiContollers
         [HttpPost("save-company")]
         public async Task<IActionResult> SaveCompany(CompanyDTO dTO)
         {
-            bool savingStatus = await _cmRepository.SaveCompany(dTO);
-            return Ok(savingStatus);
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                dTO.SetUser = HttpContext.Session.GetString("current_user_id");
+                bool savingStatus = await _cmRepository.SaveCompany(dTO);
+                return Ok(savingStatus);
+            }
+            else
+            {
+                return Ok(false);
+            }
         }
 
 
@@ -75,7 +84,7 @@ namespace Web.ApiContollers
             }
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Cookies")]
         [HttpGet("load-hour-log")]
         public async Task<IActionResult> LoadAllHourLog()
         {

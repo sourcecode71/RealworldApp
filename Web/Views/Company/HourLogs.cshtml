@@ -4,6 +4,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@using Web.Models
+@model AdminPageDetails
+@{
+    string currentName = "";
+    string currentRole = "";
+    byte[] currentRoleByte;
+    byte[] currentNameByte;
+
+    if (Context.Session.Keys.Count() > 0)
+    {
+        Context.Session.TryGetValue("current_user_role", out currentRoleByte);
+        Context.Session.TryGetValue("current_user_name", out currentNameByte);
+
+        if (currentRoleByte != null && currentNameByte != null)
+        {
+            currentRole = System.Text.Encoding.Default.GetString(currentRoleByte);
+            currentName = System.Text.Encoding.Default.GetString(currentNameByte);
+        }
+    }
+}
 
     <link rel="stylesheet" href="~/css/projects.css" />
     <div id="hourLog" class="row">
@@ -20,11 +40,13 @@
                       <li v-for="error in errors" class="text-danger">{{ error }}</li>
                     </ul>
                   </p>
+                @if (currentRole == "Engineering" || currentRole == "Drawing")
+                {
                     <form class="p-2" >
-                   
-                
+
+
                         <select style="width:100%" id="wrkOrderId"  v-model="wrkId" class="form-control">
-                              <option :value="0"> Please select a work order </option>
+                            <option :value="0"> Please select a work order </option>
                             <option v-for="wrkS in workOrders" :value="wrkS.id">
                                 {{ wrkS.consecutiveWork }}
                             </option>
@@ -37,23 +59,25 @@
                                     <input  v-model="spentHour" name="spentHour"  placeholder="Spent Hours"  v-on:keypress="isNumber($event)"  class="form-control">
                                 </div>
 
-                                 <div class ="col-md-6 col-sm-6 col-lg-6">
+                                <div class ="col-md-6 col-sm-6 col-lg-6">
                                     <label  for="hourLog" class=""> Hour(s) log Date:  </label>
                                     <input name="hourLog" type="date" v-model="hourLogDate" placeholder="Hour(s) log Date" class="form-control moneyFormat">
                                 </div>
 
                             </div>
-                        
+
                         </div>
-                 
+
                         <div class=" mt-1 position-relative form-group">
                             <label for="exampleText" class=""> <span id ="spComment"> Remarks : </span>  </label>
                             <textarea name="text"  v-model="comments" class="form-control"></textarea>
                         </div>
-                   
+
                         <button type="button"  v-on:click ="SubmitHourLogs()" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> </button>
                     </form>
-                </div>
+                }
+            </div>
+
 
                 <div id="hourLog" class="col-md-12 col-sm-12 col-lg-12" >
 

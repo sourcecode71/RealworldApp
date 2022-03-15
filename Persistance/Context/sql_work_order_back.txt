@@ -1,0 +1,62 @@
+﻿
+                        IQueryable <WorkOrderDTO> wrkList = (from w in _context.WorkOrder
+                                            join p in _context.Projects on w.ProjectId equals p.Id
+                                            join cm in _context.Company on w.CompanyId equals cm.Id
+                                            join cl in _context.Clients on p.ClientId equals cl.Id into gj
+                                            from xx in gj.DefaultIfEmpty()
+                                            join bw in _context.WorkOrderActivities on w.Id equals bw.WorkOrderId into brw
+                                            from b in brw.DefaultIfEmpty()
+                                            join h in _context.Hourlogs on w.Id equals h.Id into hr
+                                            from hrs in hr.DefaultIfEmpty() 
+                                            orderby w.SetDate descending
+                                            select new 
+                                            {
+                                                w.Id,
+                                                w.ProjectId,
+                                                xx.Name,
+                                                 w.OriginalBudget,
+                                                 w.ApprovedBudget,
+                                                 w.Balance,
+                                                w.ConsWork,
+                                                w.Comments,
+                                                 w.OTDescription,
+                                                p.ProjectNo,
+                                                 p.Year,
+                                                 w.WorkOrderNo,
+                                                b.BudgetNo,
+                                                p.Budget,
+                                                 w.Status,
+                                               hrs.SpentHour,
+                                                 w.StartDate,
+                                                 w.EndDate,
+                                                w.ApprovalDate
+
+                                            }).GroupBy(w => new  {
+                                                w.Id ,
+                                                w.ProjectId ,
+                                                w.Name ,
+                                                w.OriginalBudget ,
+                                                w.ApprovedBudget ,
+                                                w.Balance ,
+                                                w.ConsWork ,
+                                                w.Comments ,
+                                                w.OTDescription ,
+                                                w.ProjectNo ,
+                                                w.Year ,
+                                                w.WorkOrderNo 
+                                            }).Select(g =>
+                                            new WorkOrderDTO
+                                            {
+                                                Id = g.Key.Id,
+                                                ProjectId = g.Key.ProjectId,
+                                                ProjectName = g.Key.Name,
+                                                OriginalBudget = g.Key.OriginalBudget,
+                                                ApprovedBudget = g.Key.ApprovedBudget,
+                                                Balance = g.Key.Balance,
+                                                Comments = g.Key.Comments,
+                                                OTDescription = g.Key.OTDescription,
+                                                ProjectNo = g.Key.ProjectNo,
+                                                WorkOrderNo = g.Key.WorkOrderNo,
+                                                SpentHour = g.Sum(x=>x.SpentHour) 
+                                            }).AsQueryable();
+                return wrkList;

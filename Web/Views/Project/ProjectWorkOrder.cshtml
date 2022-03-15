@@ -7,6 +7,11 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
 
 <style>
+
+    .app-main .app-main__inner{
+        padding:2px 0px !important;
+    }
+
     .select2-container .select2-selection--single {
         height: 35px;
     }
@@ -49,8 +54,9 @@
 <link rel="stylesheet" href="~/css/projects.css" />
 <div class="main-card mb-3 card">
     <div class="card-body">
-        <h5 class="card-title">Work Order </h5>
         <div id="workOrder">
+        <h5 class="card-title"> {{pageName}} </h5>
+          <div  v-if="!hrsDetails">
             <div>
                 <form v-if="seen" class="p-4" v-on:submit.prevent="SubmitWorkOrder();return false">
                     <p v-if="errors.length">
@@ -71,7 +77,7 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-md-6 col-lg-6">
+                          <div class="col-md-6 col-lg-6">
                                 <label for="wrkCompany" class=""> Company </label>
                                 <select id="wrkCompany" v-model="comapny" class="form-control ">
                                     <option :value="0"> Please select a project </option>
@@ -260,6 +266,39 @@
                 </div>
 
             </div>
+            <div v-if="showDetails" class="card-body "> 
+                <div class="row"> 
+                     <div class="col-md-4"> Project No : {{projectNo}} </div>
+                    <div class="col-md-3">  Project : {{consProject}} </div>
+                    <div class="col-md-3"> Year  :{{projectYear}} </div>
+                </div>
+                 <div class ="row mt-3">
+                            <div class="col-md-4"> Work Order No : {{wrkNo}} </div>
+                            <div class="col-md-3">  Work Order : {{wrkConsWork}} </div>
+                            <div class="col-md-3"> Start Date :{{wrkStartDate}} </div>
+                            <div style="width:20% !important" class="col-md-2">Due Date :{{wrkEndDate}} </div>
+           
+                 </div>
+
+                    <div class ="row mt-3">
+                            <div  class="col-md-4"> Submit Budget : {{sbudget}}  </div>
+                            <a href="#" v-on:click="showFullBudget(wrk)" class="col-md-4">  Approved Budget : {{abudget}} </a>
+                            <a href="" class="col-md-2"> Spent hour :{{ahours}} </a>
+           
+                 </div>
+
+                 <div class ="row mt-3">
+                            <div  class="col-md-12"> Client Name : {{clientName}}  </div>
+           
+                 </div>
+                 <div class="row mt-3">
+                      <div class="col-md-12">Company Name : {{companyName}} </div>
+                 </div>
+
+                  <div class ="row mt-3">
+                            <div  class="col-md-12"> Description : {{description}}  </div>
+                 </div>
+            </div>
 
             <div class="mb-3">
                 <div class="card-body">
@@ -288,7 +327,7 @@
                                 <td>{{wrk.endDateStr}}</td>
                                 <td>{{wrk.approvedBudget}}</td>
                                 <td>
-                                    <button type="button" v-on:click="showCompanyByClient(client)"
+                                    <button type="button" v-on:click="ShowWorkOrder(wrk)"
                                         class="btn btn-outline-info btn-sm">
                                         <i class="metismenu-icon pe-7s-door-lock"></i> Details
                                     </button>
@@ -302,8 +341,59 @@
                 </div>
 
             </div>
-        </div>
 
+        </div>
+        
+         <div class="p-3" v-if="hrsDetails">
+              
+               <div class="row"> 
+                     <div class="col-md-4"> Project No : {{projectNo}} </div>
+                    <div class="col-md-3">  Project : {{consProject}} </div>
+                    <div class="col-md-3"> Year  :{{projectYear}} </div>
+                </div>
+                 <div class ="row p-2 mt-3">
+                             <div> Work Order No :  <a href="#" v-on:click="ShowWorkOrderDetails()" class="col-md-4">  {{wrkNo}} </a> </div>
+                            <div class="col-md-3">  Work Order : {{wrkConsWork}} </div>
+                            <div class="col-md-3"> Start Date :{{wrkStartDate}} </div>
+                            <div style="width:20% !important" class="col-md-2">Due Date :{{wrkEndDate}} </div>
+                 </div>
+                  <div class="card-body">
+                    <h5 class="card-title">Invoice Details </h5>
+                    <table id="invDetailsOrder" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>SL</th>
+                                <th>Project Name</th>
+                                <th>Work Order No</th>
+                                <th>Work Order </th>
+                                <th> Invoice No</th>
+                                <th> Invoice bill </th>
+                                <th> Invoice  Date</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(inv,index) in invDetails" :key="inv.id">
+                                <td>{{index+1}}</td>
+                                <td>{{inv.projectName}}</td>
+                                <td>{{inv.workNo}}</td>
+                                <td>{{inv.workOrderName}}</td>
+                                <td>{{inv.invoiceNumber}}</td>
+                                <td>{{inv.partialBill}}</td>
+                                <td>{{inv.invoiceDateStr}}</td>
+                                <td>{{inv.balance}}</td>
+                            </tr>
+
+                        </tbody>
+
+
+                    </table>
+                </div>
+
+             </div>
+         </div >
     </div>
+
+
     <script src="~/views/Workorder.js"></script>
 </div>

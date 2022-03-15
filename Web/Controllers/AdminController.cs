@@ -30,8 +30,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                if (currentRole == "Admin")
-                {
+                
                     AdminPageDetails adminPage = new AdminPageDetails();
 
                     List<ProjectModel> projects = _apiService.CallGetProjects().Result;
@@ -44,11 +43,7 @@ namespace Web.Controllers
                     adminPage.Clients = clientModels;
 
                     return View(adminPage);
-                }
-                else
-                {
-                    return RedirectToAction("Login", "Home");
-                }
+                
             }
 
             return RedirectToAction("Login", "Home");

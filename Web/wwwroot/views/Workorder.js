@@ -1,7 +1,7 @@
 ﻿const app = new Vue({
   el: "#workOrder",
   mounted() {},
-  beforeMount() {
+    beforeMount() {
     comapnyId = "0";
     projectId = "0";
     this.loadAllProject();
@@ -10,7 +10,8 @@
     this.LoadEmployee();
   },
   data: {
-    errors: [],
+      errors: [],
+      wrk:'',
     name: null,
     consecutiveWork: null,
     budget: "",
@@ -21,6 +22,8 @@
     comapny: "0",
     seen: false,
     isName: false,
+    showDetails: false,
+    hrsDetails: false,
     projects: [],
     workOrders: [],
     companies: [],
@@ -35,6 +38,23 @@
     allEmp: [],
     allEng: [],
     allDrw: [],
+    projectYear: "",
+    projectNo: "",
+    consProject: "",
+      wrkNo: '',
+    wrkBudgetNo:'',
+    wrkStartDate: '',
+    wrkEndDate: '',
+    wrkConsWork: '',
+    bhours: '',
+    ahours: '',
+    sbudget: '',
+      abudget: '',
+      clientName: '',
+      companyName: '',
+      description: '',
+      pageName: 'Work Order',
+      invDetails:[]
   },
   methods: {
 
@@ -83,7 +103,8 @@
           });
       }
     },
-    loadAllProject: function () {
+
+      loadAllProject: function () {
       const config = { headers: { "Content-Type": "application/json" } };
       var base_url = window.location.origin;
       const clientURL = base_url + "/api/project/load-active-projects";
@@ -97,7 +118,8 @@
         }
       );
     },
-    loadAllcompany: function () {
+
+      loadAllcompany: function () {
       const config = { headers: { "Content-Type": "application/json" } };
       var base_url = window.location.origin;
       const clientURL = base_url + "/api/company/all-companies";
@@ -111,7 +133,8 @@
         }
       );
     },
-    loadAllWorkOrder: function () {
+      loadAllWorkOrder: function () {
+
       const config = { headers: { "Content-Type": "application/json" } };
       var base_url = window.location.origin;
       const clientURL = base_url + "/api/WorkOrder/load-approved-orders";
@@ -139,7 +162,7 @@
         }
       );
     },
-    LoadEmployee: function () {
+      LoadEmployee: function () {
       const config = { headers: { "Content-Type": "application/json" } };
       var base_url = window.location.origin;
       const clientURL = base_url + "/api/Employee/all-active-employee";
@@ -224,7 +247,86 @@
       this.drawings = this.drawings.filter(function (el) {
         return el.id != id;
       });
-    },
+      },
+
+     ShowWorkOrder: function (wrk) {
+
+         this.wrk = wrk;
+         console.log(wrk, " wrk --", wrk.spentHour);
+
+          this.projectYear = wrk.projectYear;
+          this.projectNo = wrk.projectNo;
+          this.consProject = wrk.projectName;
+
+         this.wrkNo = wrk.workOrderNo;
+         this.wrkStartDate = wrk.startDateStr;
+         this.wrkEndDate = wrk.endDateStr;
+         this.wrkBudgetNo = wrk.wrkBudgetNo;
+         this.wrkConsWork = wrk.consecutiveWork;
+         this.bhours = wrk.budgetHour;
+         this.ahours = wrk.spentHour;
+         this.sbudget = wrk.originalBudget;
+         this.abudget = wrk.approvedBudget;
+         this.clientName = wrk.clientName;
+         this.companyName = wrk.companyName;
+         this.description = wrk.otDescription;
+    
+
+          this.showDetails = true;
+          this.seen = false;
+
+      },
+
+      showFullBudget: function (wrk) {
+          $("#allWorkOrder").dataTable().fnDestroy();
+          this.hrsDetails = !this.hrsDetails;
+          this.pageName = this.hrsDetails ? "Invoice Details" : "Work Order";
+         
+
+          console.log(" budhet --- ", wrk);
+
+          const config = { headers: { "Content-Type": "application/json" } };
+          var base_url = window.location.origin;
+          const clientURL = base_url + "/api/invoice/work-order/load-invoices?wrkId=" + wrk.id;
+
+          axios.get(clientURL, config).then(
+              (result) => {
+
+                  console.log("Inv bill -- ", result);
+
+                  $("#invDetailsOrder").dataTable().fnDestroy();
+
+                  setTimeout(() => {
+                      this.invDetails = result.data;
+                  }, 100);
+
+                  setTimeout(() => {
+                      $("#invDetailsOrder").DataTable({
+                          scrollY: "500px",
+                          scrollCollapse: true,
+                          paging: false,
+                      });
+                  }, 500);
+
+              },
+              (error) => {
+                  console.error(error);
+              });
+
+
+      },
+
+      showFullHrs: function (wrk) {
+          $("#allWorkOrder").dataTable().fnDestroy();
+          this.hrsDetails = !this.hrsDetails;
+          this.pageName = this.hrsDetails ? "HRS Details" : "Work Order" ;
+      },
+
+      ShowWorkOrderDetails: function () {
+          this.hrsDetails = !this.hrsDetails;
+          this.loadAllWorkOrder();
+          this.pageName =  "Work Order";
+      },
 
     validateEngineerHours: function () {
       if (!this.engineer || this.engineers.id == "00") {
@@ -335,8 +437,8 @@
     },
 
       showHide: function () {
-      this.seen = !this.seen;
-
+          this.seen = !this.seen;
+          this.showDetails = false;
       if (this.seen) {
         setTimeout(() => {
           $("#wrkCompany")

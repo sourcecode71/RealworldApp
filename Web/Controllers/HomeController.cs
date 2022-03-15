@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Models;
 using Web.Services;
@@ -38,14 +41,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                if (currentRole == "Admin")
-                {
-                    return RedirectToAction("Index", "Admin");
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Employee");
-                }
+                return RedirectToAction("Index", "Admin");
             }
 
             return RedirectToAction("Login", "Home");
@@ -71,6 +67,24 @@ namespace Web.Controllers
                 SetSessionString("current_user_role", loggedInUser.Role);
                 SetSessionString("current_user_name", loggedInUser.Name);
                 SetSessionString("current_user_id", loggedInUser.Id);
+                
+                // TODO : Remove above code and use the following code
+
+                //var claims = new List<Claim>
+                //{
+                //    new Claim(ClaimTypes.NameIdentifier, loggedInUser.Id.ToString()),
+                //    new Claim(ClaimTypes.Name, loggedInUser.Name),
+                //    new Claim(ClaimTypes.Role, loggedInUser.Role),
+                //    new Claim("token", loggedInUser.Token),
+                //};
+
+                //var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                //var principal = new ClaimsPrincipal(identity);
+
+                // HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                //        principal,
+                //        new AuthenticationProperties { IsPersistent = true });
+
             }
 
             return result;

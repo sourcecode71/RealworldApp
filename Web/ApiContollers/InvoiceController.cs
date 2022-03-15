@@ -33,6 +33,13 @@ namespace Web.ApiContollers
             return Ok(invStatus);
         }
 
+        [HttpGet("work-order/load-invoices")]
+        public async Task<ActionResult> LoadInvoiceByWrk(string wrkId)
+        {
+            var invStatus = await _invRepository.GetAllInvoice();
+            return Ok(invStatus);
+        }
+
 
     }
 }

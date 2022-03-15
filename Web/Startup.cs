@@ -2,6 +2,7 @@ using Application.Core.Projects;
 using AspNetCore.SassCompiler;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -57,47 +58,56 @@ namespace Web
             .AddEntityFrameworkStores<DataContext>()
             .AddSignInManager<SignInManager<Employee>>();
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            services.AddAuthentication(auth =>
-            {
-                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-                    .AddJwtBearer(opt =>
-                    {
-                        opt.SaveToken = true;
-                        opt.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = key,
-                            ValidateIssuer = false,
-                            ValidateAudience = false,
-                            ValidateLifetime = false
-                        };
-                    });
+            //services.AddAuthentication(auth =>
+            //{
+            //    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            //})
+            //        .AddJwtBearer(opt =>
+            //        {
+            //            opt.SaveToken = true;
+            //            opt.TokenValidationParameters = new TokenValidationParameters
+            //            {
+            //                ValidateIssuerSigningKey = true,
+            //                IssuerSigningKey = key,
+            //                ValidateIssuer = false,
+            //                ValidateAudience = false,
+            //                ValidateLifetime = false
+            //            };
+            //        });
 
-            services.AddAuthorization();
+            //services.AddAuthorization();
 
-            services.AddCors(opt =>
-            {
-                opt.AddPolicy("AllowOrigin", policy =>
-                {
-                    policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build();
-                });
-            });
+            //services.AddCors(opt =>
+            //{
+            //    opt.AddPolicy("AllowOrigin", policy =>
+            //    {
+            //        policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build();
+            //    });
+            //});
 
-            services.AddSession(options =>
-            {
-                options.Cookie.Name = "Project.Session";
-                options.Cookie.IsEssential = true;
-                options.IdleTimeout = TimeSpan.FromDays(7);
-            });
-            services.ConfigureApplicationCookie(options => options.LoginPath = "/home/login");
+            //services.AddSession(options =>
+            //{
+            //    options.Cookie.Name = "Project.Session";
+            //    options.Cookie.IsEssential = true;
+            //    options.IdleTimeout = TimeSpan.FromDays(7);
+            //});
+            //services.ConfigureApplicationCookie(options => options.LoginPath = "/home/login");
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie("Cookies",options =>
+            {
+                options.LoginPath = "/Home/Login"; // using the AuthController instead
+            });
+
+            services.AddMvc().AddSessionStateTempDataProvider();
+            services.AddSession();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -118,9 +128,12 @@ namespace Web
             app.UseSession();
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.ConfigureExceptionHandler();
 
-            app.UseAuthorization();
+        
 
             app.UseEndpoints(endpoints =>
             {
