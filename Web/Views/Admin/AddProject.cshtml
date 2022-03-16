@@ -26,43 +26,8 @@
 
 
 <div>
-    <style>
-    .select2-container .select2-selection--single {
-        height: 35px;
-    }
-        .card {
-          box-shadow:0 0.16875rem 1.1875rem rgba(4, 9, 20, 0),0 0.9375rem 1.40625rem rgba(4, 9, 20, 0),0 0.25rem 0.53125rem rgba(4, 9, 20, 0),0 0.125rem 0.1875rem rgba(4, 9, 20, 0)
-        }
-       .card-body{
-           padding: .75rem;
-        }
-
-      .address-border{
-        border: 1px dotted #646566;
-        padding-left: 20px;
-        padding-bottom:10px;
-      }
-  
-      .div-legent{
-         background: #fff;
-         margin-top: -12px;
-         margin-left: 10px;
-         padding: 0 10px;
-         width: 180px;
-         color:rgba(0, 0, 0, 0.54)
-      }
-  
-      .per-div-legent{
-        background: #fff;
-        margin-top: -5px;
-        margin-left: 10px;
-        padding: 0 10px;
-        width: 182px;
-        color:rgba(0, 0, 0, 0.54)
-      }
-
-    </style>
- 
+    <link rel="stylesheet" href="~/css/aa-project.css" />
+    <link rel="stylesheet" href="~/css/data-table.css" />
 
     <div class="main-card mb-3 card">
         <div id="addProject" class="card-body">
@@ -234,8 +199,9 @@
                
                 </div>
             </div>
-                              <div class="mb-3">
-                      <div class="card-body">
+             
+            <div class="mb-3">
+                <div class="card-body">
                 <div class="mb-4">
                     <button v-on:click="addNewDivVisibility()" type="button" class="btn btn-outline-warning mt-4">
                         <i v-if="!seen" class="pe-7s-plus"> </i> 
@@ -265,7 +231,7 @@
                                     <td>{{allP.deliveryDateStr}}</td>
                                     <td>{{allP.week}}</td>
                                     <td> 
-                                        <button type="button" v-on:click="showCompanyByClient(allP)" class="btn btn-outline-info btn-sm">
+                                        <button type="button" v-on:click="showWorkOrderByProject(allP)" class="btn btn-outline-info btn-sm">
                                             <i class="metismenu-icon pe-7s-network"></i> Work Order
                                         </button>  </td>
                                 </tr>
@@ -276,10 +242,56 @@
                               </table>
                           </div>
 
-     </div>
+       <div class="modal fade bd-example-modal-lg ml-4 " id="allWorkOrder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Work Order  </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+          <div class="modal-body" style="width:100%">
+            <table  class="table table-striped table-bordered" style="width:100%">
+                <thead style="width:100%">
+                    <tr>
+                         <th>SL</th>
+                         <th>Project No </th>
+                         <th>Work Order No </th>
+                         <th> Work Order </th>
+                         <th> S. Budget </th>
+                         <th> A. Budget </th>
+                         <th> Due Date </th>
+                    </tr>
+                </thead>
+            <tbody>
+              <tr v-for="(wrk,index) in wrksBYP" :key="wrk.id">
+                    <td>{{index+1}}</td>
+                    <td>{{wrk.projectNo}}</td>
+                    <td>{{wrk.workOrderNo}}</td>
+                    <td>{{wrk.consecutiveWork}}</td>
+                    <td>{{wrk.originalBudget}}</td>
+                    <td>{{wrk.approvedBudget}}</td>
+                    <td>{{wrk.endDateStr}}</td>
+
+                </tr>
+        
+             </tbody>
+            </table>
+            
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
         </div>
     </div>
 
     <script src="~/views/AddProject.js"></script>
 
+</div>
 </div>

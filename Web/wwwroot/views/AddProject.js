@@ -25,7 +25,8 @@
         allEmp: [],
         allEng: [],
         allDrw: [],
-        allProjects :[],
+        allProjects: [],
+        wrksBYP : [],
         hideNow: false,
         seen: false
 
@@ -211,6 +212,25 @@
             }, error => {
                 console.error(error);
             });
+        },
+
+        showWorkOrderByProject: function (prj) {
+
+
+            const config = { headers: { 'Content-Type': 'application/json' } };
+            var base_url = window.location.origin;
+            const wrkURL = base_url + "/api/WorkOrder/work-orders/by-project?PrId=" + prj.id;
+
+            axios.get(wrkURL, config).then(result => {
+                this.wrksBYP = result.data;
+                $("#allWorkOrder").modal("show");
+
+            }, error => {
+                console.error(error);
+            });
+
+
+
         },
 
         /************ clerical  Work ****************/

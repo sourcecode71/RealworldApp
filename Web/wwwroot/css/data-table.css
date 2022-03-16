@@ -1,0 +1,38 @@
+﻿.app-main .app-main__inner {
+    padding: 8px 2px 0;
+    flex: 1;
+}
+
+.card-body {
+    padding: .75rem;
+}
+
+.app-m .app-main__inner {
+    padding: 2px 0px !important;
+}
+
+.table th, .table td {
+    padding: 0.25rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table th, .table td {
+    padding: 0.35rem;
+}
+
+table.dataTable td {
+    font-size: 13px;
+}
+
+th {
+    font-size: 13px;
+}
+
+table.dataTable {
+    width: 99% !important;
+}
+
+.card-div{
+    font-size:14px;
+}

@@ -231,5 +231,20 @@ namespace Web.ApiControllers
             var PempDto = await _empRepository.GetEmpProjects(EmpId);
             return PempDto;
         }
+
+
+        [HttpGet("workorder/emp-hour-summery")]
+        public async Task<ActionResult<List<HourslogDto>>> GethourLogSummery(string wrkId)
+        {
+            var empDto = await _empRepository.EmployeHourLogSummery(wrkId);
+            return empDto;
+        }
+
+        [HttpGet("workorder/emp-hour-details")]
+        public async Task<ActionResult<List<HourslogDto>>> GethourLogDetails(string wrkId)
+        {
+            var empDto = await _empRepository.EmployeHourLogDetails(wrkId);
+            return empDto;
+        }
     }
 }

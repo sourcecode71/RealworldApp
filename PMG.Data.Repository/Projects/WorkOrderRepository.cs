@@ -371,7 +371,35 @@ namespace PMG.Data.Repository.Projects
             }
         }
 
-      
+        public async Task<List<WorkOrderDTO>> WorkOrderByProjects(string PrId)
+        {
+            try
+            {
+                var wrkDT = await (from p in _context.Projects
+                             join w in _context.WorkOrder on p.Id equals w.ProjectId
+                             where p.Id == PrId
+                             select (new WorkOrderDTO
+                             {
+                                 Id = w.Id,
+                                 ProjectNo = p.ProjectNo,
+                                 ProjectName = p.Name,
+                                 ProjectYear = p.Year,
+                                 WorkOrderNo = w.WorkOrderNo,
+                                 ConsecutiveWork = w.ConsWork,
+                                 ApprovedBudget = w.ApprovedBudget,
+                                 StartDateStr = w.StartDate.ToString("MM/dd/yyyy"),
+                                 EndDateStr = w.EndDate.ToString("MM/dd/yyyy"),
+                                 OriginalBudget = w.OriginalBudget
+                             })).ToListAsync();
+                return wrkDT;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 
 

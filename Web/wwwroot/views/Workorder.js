@@ -8,6 +8,7 @@
     this.loadAllcompany();
     this.loadAllWorkOrder();
     this.LoadEmployee();
+    
   },
   data: {
       errors: [],
@@ -23,7 +24,8 @@
     seen: false,
     isName: false,
     showDetails: false,
-    hrsDetails: false,
+      hrsDetails: false,
+      IsInv: true,
     projects: [],
     workOrders: [],
     companies: [],
@@ -54,7 +56,9 @@
       companyName: '',
       description: '',
       pageName: 'Work Order',
-      invDetails:[]
+      invDetails: [],
+      assignEmp: [],
+      empHrsDetails :[]
   },
   methods: {
 
@@ -133,7 +137,8 @@
         }
       );
     },
-      loadAllWorkOrder: function () {
+
+   loadAllWorkOrder: function () {
 
       const config = { headers: { "Content-Type": "application/json" } };
       var base_url = window.location.origin;
@@ -161,7 +166,8 @@
           console.error(error);
         }
       );
-    },
+      },
+
       LoadEmployee: function () {
       const config = { headers: { "Content-Type": "application/json" } };
       var base_url = window.location.origin;
@@ -175,9 +181,8 @@
         },
         (error) => {
           console.error(error);
-        }
-      );
-    },
+        });
+      },
 
     AddEnginer: function () {
       this.engErrors = [];
@@ -249,14 +254,36 @@
       });
       },
 
-     ShowWorkOrder: function (wrk) {
 
-         this.wrk = wrk;
-         console.log(wrk, " wrk --", wrk.spentHour);
+      AssignInfo: function (wrk) {
+
+          this.wrk = wrk;
 
           this.projectYear = wrk.projectYear;
           this.projectNo = wrk.projectNo;
           this.consProject = wrk.projectName;
+
+          this.wrkNo = wrk.workOrderNo;
+          this.wrkStartDate = wrk.startDateStr;
+          this.wrkEndDate = wrk.endDateStr;
+          this.wrkBudgetNo = wrk.wrkBudgetNo;
+          this.wrkConsWork = wrk.consecutiveWork;
+          this.bhours = wrk.budgetHour;
+          this.ahours = wrk.spentHour;
+          this.sbudget = wrk.originalBudget;
+          this.abudget = wrk.approvedBudget;
+          this.clientName = wrk.clientName;
+          this.companyName = wrk.companyName;
+          this.description = wrk.otDescription;
+      },
+
+     ShowWorkOrder: function (wrk) {
+
+         this.wrk = wrk;
+
+        this.projectYear = wrk.projectYear;
+        this.projectNo = wrk.projectNo;
+        this.consProject = wrk.projectName;
 
          this.wrkNo = wrk.workOrderNo;
          this.wrkStartDate = wrk.startDateStr;
@@ -270,14 +297,25 @@
          this.clientName = wrk.clientName;
          this.companyName = wrk.companyName;
          this.description = wrk.otDescription;
-    
 
           this.showDetails = true;
           this.seen = false;
 
+
+
       },
 
-      showFullBudget: function (wrk) {
+      ShowWorkOrderDetails: function () {
+          this.hrsDetails = !this.hrsDetails;
+          this.loadAllWorkOrder();
+          this.pageName = "Work Order";
+          this.LoadHoursLogSummery(wrk.id);
+
+      },
+
+      showFullBudget: function (wrk, tp) {
+          this.IsInv = true;
+
           $("#allWorkOrder").dataTable().fnDestroy();
           this.hrsDetails = !this.hrsDetails;
           this.pageName = this.hrsDetails ? "Invoice Details" : "Work Order";
@@ -291,8 +329,6 @@
 
           axios.get(clientURL, config).then(
               (result) => {
-
-                  console.log("Inv bill -- ", result);
 
                   $("#invDetailsOrder").dataTable().fnDestroy();
 
@@ -316,16 +352,64 @@
 
       },
 
-      showFullHrs: function (wrk) {
+      showFullHrs: function (wrk, tp) {
+
+          this.IsInv = false;
+
           $("#allWorkOrder").dataTable().fnDestroy();
+          $("#invDetailsOrder").dataTable().fnDestroy();
           this.hrsDetails = !this.hrsDetails;
-          this.pageName = this.hrsDetails ? "HRS Details" : "Work Order" ;
+          this.pageName = this.hrsDetails ? "HRS Details" : "Work Order";
+          this.LoadHoursLogDetails(wrk.id);
+
       },
 
-      ShowWorkOrderDetails: function () {
-          this.hrsDetails = !this.hrsDetails;
-          this.loadAllWorkOrder();
-          this.pageName =  "Work Order";
+      LoadHoursLogSummery: function (wrkId) {
+          const config = { headers: { "Content-Type": "application/json" } };
+          var base_url = window.location.origin;
+          const wrkURL = base_url + "/api/Employee/workorder/emp-hour-summery?wrkId=" + wrkId;
+
+          axios.get(wrkURL, config).then(
+              (result) => {
+                  this.assignEmp = result.data;
+              },
+              (error) => {
+                  console.error(error);
+              });
+
+      },
+
+
+      LoadHoursLogDetails: function (wrkId) {
+          const config = { headers: { "Content-Type": "application/json" } };
+          var base_url = window.location.origin;
+          const wrkURL = base_url + "/api/Employee/workorder/emp-hour-details?wrkId=" + wrkId;
+
+          axios.get(wrkURL, config).then(
+              (result) => {
+
+                  $("#empHrsDetails").dataTable().fnDestroy();
+
+                  setTimeout(() => {
+                      this.empHrsDetails = result.data;
+                  }, 100);
+
+                  setTimeout(() => {
+                      $("#empHrsDetails").DataTable({
+                          scrollY: "500px",
+                          scrollCollapse: true,
+                          paging: false,
+                      });
+                  }, 500);
+
+
+
+                  //empHrsDetails
+              },
+              (error) => {
+                  console.error(error);
+              });
+
       },
 
     validateEngineerHours: function () {

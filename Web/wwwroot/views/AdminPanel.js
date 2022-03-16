@@ -6,7 +6,28 @@
     data: {
         errors: [],
         workOrders: [],
-        wrkS: '0'
+        wrkS: '0',
+        allInv: false,
+        allHrs: false,
+        projectNo: '',
+        consProject: '',
+        projectYear: '',
+        wrkNo: '',
+        wrkConsWork: '',
+        wrkBudgetNo:'',
+        wrkStartDate: '',
+        wrkEndDate: '',
+        sbudget: '',
+        abudget: '',
+        ahours: '',
+        companyName: '',
+        description: '',
+        bhours: '',
+        ahours: '',
+        sbudget: '',
+        abudget: '',
+        clientName: '',
+        assignEmp:[],
     },
     methods: {
 
@@ -31,7 +52,18 @@
                         $('#wrkAdminPanel').DataTable({
                             "scrollY": "500px",
                             "scrollCollapse": true,
-                            "paging": false
+                            "paging": false,
+                            "columns": [
+                                { "width": "2%" },
+                                { "width": "5%" },
+                                { "width": "11%" },
+                                { "width": "9%" },
+                                { "width": "9%" },
+                                { "width": "20%" },
+                                { "width": "10%" },
+                                { "width": "12%" },
+                                { "width": "12%" },
+                            ]
                         });
                     }, 100);
 
@@ -42,6 +74,90 @@
                     console.error(error);
                 }
             );
+
+        },
+
+        AssignInfo: function (wrk) {
+            this.wrk = wrk;
+            this.projectYear = wrk.projectYear;
+            this.projectNo = wrk.projectNo;
+            this.consProject = wrk.projectName;
+
+            this.wrkNo = wrk.workOrderNo;
+            this.wrkStartDate = wrk.startDateStr;
+            this.wrkEndDate = wrk.endDateStr;
+            this.wrkBudgetNo = wrk.wrkBudgetNo;
+            this.wrkConsWork = wrk.consecutiveWork;
+            this.bhours = wrk.budgetHour;
+            this.ahours = wrk.spentHour;
+            this.sbudget = wrk.originalBudget;
+            this.abudget = wrk.approvedBudget;
+            this.clientName = wrk.clientName;
+            this.companyName = wrk.companyName;
+            this.description = wrk.otDescription;
+        },
+
+        ShowAllInvoice: function (wrk) {
+            this.AssignInfo(wrk);
+            this.allInv = true;
+            this.allHrs = false;
+            this.LoadHoursLogSummery(wrk.id);
+
+        },
+
+        ShowAllHRS: function (wrk) {
+            this.AssignInfo(wrk);
+            this.allInv = false;
+            this.allHrs = true;
+
+        },
+
+
+
+        LoadHoursLogSummery: function (wrkId) {
+            const config = { headers: { "Content-Type": "application/json" } };
+            var base_url = window.location.origin;
+            const wrkURL = base_url + "/api/Employee/workorder/emp-hour-summery?wrkId=" + wrkId;
+
+            axios.get(wrkURL, config).then(
+                (result) => {
+                    this.assignEmp = result.data;
+                },
+                (error) => {
+                    console.error(error);
+                });
+
+        },
+
+        LoadHoursLogDetails: function (wrkId) {
+            const config = { headers: { "Content-Type": "application/json" } };
+            var base_url = window.location.origin;
+            const wrkURL = base_url + "/api/Employee/workorder/emp-hour-details?wrkId=" + wrkId;
+
+            axios.get(wrkURL, config).then(
+                (result) => {
+
+                    $("#empHrsDetails").dataTable().fnDestroy();
+
+                    setTimeout(() => {
+                        this.empHrsDetails = result.data;
+                    }, 100);
+
+                    setTimeout(() => {
+                        $("#empHrsDetails").DataTable({
+                            scrollY: "500px",
+                            scrollCollapse: true,
+                            paging: false,
+                        });
+                    }, 500);
+
+
+
+                    //empHrsDetails
+                },
+                (error) => {
+                    console.error(error);
+                });
 
         },
 

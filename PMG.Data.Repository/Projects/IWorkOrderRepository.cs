@@ -13,5 +13,7 @@ namespace PMG.Data.Repository.Projects
         IQueryable<WorkOrderDTO> GetFilteredWorkOrder(string strOT);
         Task<bool> UpdateWorkOrderStatus(WorkOrderDTO orderDTO);
         Task<List<WorkOrderDTO>> LoadAllWorkOrdersByEmp(string EmpId);
+        Task<List<WorkOrderDTO>> WorkOrderByProjects(string PrId);
+
     }
 }

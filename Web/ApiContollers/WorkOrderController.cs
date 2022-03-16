@@ -108,6 +108,13 @@ namespace Web.ApiContollers
             }
         }
 
+        [HttpGet("work-orders/by-project")]
+        public async Task<ActionResult> GetWorkOrderByProject(string PrId)
+        {
+            var wrkList = await _woRepository.WorkOrderByProjects(PrId);
+            return Ok(wrkList);
+        }
+
 
     }
 }
