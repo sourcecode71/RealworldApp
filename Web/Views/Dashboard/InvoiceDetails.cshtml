@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "Invoice Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Web.Models
+@model AdminPageDetails
+@{
+    string currentName = "";
+    string currentRole = "";
+    byte[] currentRoleByte;
+    byte[] currentNameByte;
+
+    if (Context.Session.Keys.Count() > 0)
+    {
+        Context.Session.TryGetValue("current_user_role", out currentRoleByte);
+        Context.Session.TryGetValue("current_user_name", out currentNameByte);
+
+        if (currentRoleByte != null && currentNameByte != null)
+        {
+        currentRole = System.Text.Encoding.Default.GetString(currentRoleByte);
+            currentName = System.Text.Encoding.Default.GetString(currentNameByte);
+        }
+    }
+}
+
+
+<link rel="stylesheet" href="~/css/data-table.css" />
+
+<div id="invoiceDiv">
+    <div style="min-height:500px" class="main-card mb-3 card">
+            <h5 class="card-title p-3"> Active Proejcts </h5>
+
+                <div class="col">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a href="/Admin/index" class="nav-link">
+                            <div class="ml-auto badge badge-success">BACK TO DASHBOARD</div>
+                        </a>
+		                </li>
+                    </ul>
+                </div>
+             
+             <div  style="font-size:14px" class="card-body card-div">
+                   <div class="row">
+                        <div class="col-md-4"> Project No : {{projectNo}} </div>
+                        <div class="col-md-3"> Project : {{consProject}} </div>
+                        <div class="col-md-3"> Year :{{projectYear}} </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4"> Work Order No : {{wrkNo}} </div>
+                        <div class="col-md-3"> Work Order : {{wrkConsWork}} </div>
+                        <div class="col-md-3"> Start Date :{{wrkStartDate}} </div>
+                        <div style="width:20% !important" class="col-md-2">Due Date :{{wrkEndDate}} </div>
+
+                    </div>
+
+                    <div class="row mt-3">
+                        <div  class="col-md-4">  Paid : {{formatCurrency(paidAmt)}}
+                        </div>
+                        <div class="col-md-3"> Approved Budget : {{formatCurrency(abudget)}} </div>
+
+                        <div class="col-md-3"> Spent hour :{{ahours}} </div>
+                        <div class="col-md-2"> Status : {{ wrkStatusStr }} </div>
+
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-12"> Client Name : {{clientName}} </div>
+
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">Company Name : {{companyName}} </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-12"> Description : {{description}} </div>
+                    </div>
+
+             </div>
+
+            
+
+            <div class="card-body">
+                <h5 class="card-title"> Invoce Details </h5>
+                <table  class="mb-0 table table-striped">
+                    <thead>
+                        <tr style="font-size:14px">
+                            <th> # </th>
+                            <th> Work No </th>
+                            <th> Name </th>
+                            <th> Invoice No </th>
+                            <th> Invoice Bill </th>
+                            <th> Date </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(wrk,index) in invDetails" :key="wrk.id">
+                            <td>{{index+1}}</td>
+                            <td>{{wrk.workNo}}</td>
+                            <td>{{wrk.workOrderName }}</td>
+                            <td>{{wrk.invoiceNumber }}</td>
+                            <td>{{formatCurrency(wrk.invoiceBill) }}</td>
+                            <td>{{wrk.invoiceDateStr }}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+    </div>
+    @section Scripts {
+    <script src="~/views/DashboardDetails.js"></script>
+    }
+</div>

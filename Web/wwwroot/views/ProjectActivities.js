@@ -167,6 +167,7 @@ const app = new Vue({
             axios.get(clientURL, config).then(result => {
 
                 $("#allwrkBudget").dataTable().fnDestroy();
+                $("#allwrkBudgetStatus").dataTable().fnDestroy();
 
                 this.wrkBudgets = result.data;
 
@@ -177,8 +178,48 @@ const app = new Vue({
                     $('#allwrkBudget').DataTable({
                         "scrollY": "500px",
                         "scrollCollapse": true,
-                        "paging": false
+                        "paging": false,
+                        "columns": [
+                            { "width": "2%" },
+                            { "width": "10%" },
+                            { "width": "8%" },
+                            { "width": "20%" },
+                            { "width": "6%" },
+                            { "width": "6%" },
+                            { "width": "8%" },
+                            { "width": "8%" },
+                            { "width": "6%" },
+                            { "width": "10%" },
+                        ]
                     });
+
+
+                    $('#allwrkBudgetStatus').DataTable({
+                        "scrollY": "500px",
+                        "scrollCollapse": true,
+                        "paging": false,
+                        "columns": [
+                            { "width": "2%" },
+                            { "width": "10%" },
+                            { "width": "20%" },
+                            { "width": "8%" },
+                            { "width": "6%" },
+                            { "width": "6%" },
+                            { "width": "8%" },
+                            { "width": "8%" },
+                            { "width": "6%" },
+                            { "width": "10%" },
+                        ]
+                    });
+
+
+                  /*  $('#allwrkBudgetStatus').DataTable({
+                        "scrollY": "500px",
+                        "scrollCollapse": true,
+                        "paging": false
+                    }); */
+
+
                 }, 100);
 
 

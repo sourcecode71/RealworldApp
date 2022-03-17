@@ -60,12 +60,79 @@ namespace PMG.Data.Repository.Projects
 
                         };
 
+                        wOT.WrkStatusStr = this.GetStatusString(wOT.WrkStatus);
+
+
                         wrkList.Add(wOT);
 
                     }
                 }
 
                 return wrkList;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<WorkOrderDTO> LoadWorkOrdersById(string wrkId)
+        {
+            try
+            {
+                DbCommand cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandText = "dbo.Wrk_WorkOrderById";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                var param = cmd.CreateParameter();
+                param.ParameterName = "@WrkId";
+                param.Value = new Guid(wrkId);
+                cmd.Parameters.Add(param);
+
+                WorkOrderDTO wOTNull = new WorkOrderDTO()
+                {
+
+                };
+                _context.Database.OpenConnection();
+                using (DbDataReader rd = await cmd.ExecuteReaderAsync())
+                {
+                    while (rd.Read())
+                    {
+                        WorkOrderDTO wOT = new WorkOrderDTO()
+                        {
+                            Id = new Guid(rd.GetValue("id").ToString()),
+                            ProjectId = rd.GetValue("ProjectId").ToString(),
+                            ClinetName = rd.GetValue("ClientName").ToString(),
+                            ProjectName = rd.GetValue("ProjectName").ToString(),
+                            OriginalBudget = Convert.ToDouble(rd.GetValue("OriginalBudget").ToString()),
+                            ApprovedBudget = Convert.ToDouble(rd.GetValue("ApprovedBudget").ToString()),
+                            Balance = Convert.ToDouble(rd.GetValue("Balance").ToString()),
+                            SpentHour = Convert.ToDouble(rd.GetValue("SpentHour").ToString()),
+                            ConsecutiveWork = rd.GetValue("ConsWork").ToString(),
+                            OTDescription = rd.GetValue("OTDescription").ToString(),
+                            CompanyName = rd.GetValue("CompanyName") != null ? rd.GetValue("CompanyName").ToString() : "",
+                            ClientName = rd.GetValue("ClientName") != null ? rd.GetValue("ClientName").ToString() : "",
+                            ProjectNo = rd.GetValue("ProjectNo").ToString(),
+                            ProjectYear = Convert.ToInt16(rd.GetValue("pYear").ToString()),
+                            WorkOrderNo = rd.GetValue("WorkOrderNo").ToString(),
+                            WrkBudgetNo = rd.GetValue("BudgetNo").ToString(),
+                            WrkStatus = (ProjectStatus)(Convert.ToInt16(rd.GetValue("WrkStatus").ToString())),
+                            StartDateStr = rd.GetValue("SubmitDate").ToString(),
+                            EndDateStr = rd.GetValue("EnDate").ToString(),
+                            ApprovedDateStr = rd.GetValue("ApprovalDate").ToString(),
+
+                        };
+
+                        wOT.WrkStatusStr = this.GetStatusString(wOT.WrkStatus);
+
+                        return wOT;
+
+                    }
+                }
+
+                return wOTNull;
             }
             catch (Exception ex)
             {
@@ -167,8 +234,6 @@ namespace PMG.Data.Repository.Projects
                     }
                 }
         }
-
-
         public IQueryable<WorkOrderDTO> GetFilteredWorkOrder(string strOT)
         {
             try
@@ -200,8 +265,6 @@ namespace PMG.Data.Repository.Projects
             }
         }
 
-
-
        private async Task<bool> CreateWorkOrderBudget(WorkOrderDTO dto, Guid wrkId, string wrkNo)
         {
             try
@@ -231,7 +294,6 @@ namespace PMG.Data.Repository.Projects
                 throw ex;
             }
         }
-
        private void AssignWorkOrderEmploye(WorkOrderDTO dto, string wrkId)
         {
             foreach (ProjectEmp emp in dto.Engineers)
@@ -262,7 +324,6 @@ namespace PMG.Data.Repository.Projects
                 _context.WorkOrderEmployee.Add(empWD);
             }
         }
-
         private string GetWorkOrderNumber(WorkOrderDTO dTO)
         {
             DateTime CurrentDate = DateTime.Now;
@@ -398,6 +459,27 @@ namespace PMG.Data.Repository.Projects
             {
 
                 throw ex;
+            }
+        }
+
+        private string GetStatusString(ProjectStatus status)
+        {
+            switch (status)
+            {
+                case ProjectStatus.Budgeted:
+                    return "Budget phase";
+                case ProjectStatus.Active:
+                    return "Active";
+                case ProjectStatus.Completed:
+                    return "Completed";
+                case ProjectStatus.Archived:
+                    return "Archived";
+                case ProjectStatus.Delayed:
+                    return "Delayed";
+                case ProjectStatus.Canceled:
+                    return "Cancel";
+                default:
+                    return "On Time";
             }
         }
     }

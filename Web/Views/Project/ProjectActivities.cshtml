@@ -7,6 +7,7 @@
 
 
     <link rel="stylesheet" href="~/css/projects.css" />
+     <link rel="stylesheet" href="~/css/data-table.css" />
 
     <div class="main-card mb-3 card">
     <div id="projectAct" class="card-body">
@@ -25,8 +26,8 @@
                             <thead>
                                 <tr>
                                     <th> # </th>
-                                    <th> Year </th>
-                                    <th> Project </th>
+                                   @* <th> Year </th>
+                                    <th> Project </th>*@
                                     <th> Budget No </th>
                                     <th> Work Order </th>
                                     <th>  Name </th>
@@ -43,8 +44,8 @@
                             <tbody>
                             <tr v-for="(wrk,index) in wrkBudgets" :key="wrk.id">
                                 <td>{{index+1}}</td>
-                                <td>{{wrk.year}}</td>
-                                <td>{{wrk.projectNo}}</td>
+                            @*    <td>{{wrk.year}}</td>
+                                <td>{{wrk.projectNo}}</td>*@
                                 <td>{{wrk.budegtNo}}</td>
                                 <td>{{wrk.workerOrderNo}}</td>
                                 <td>{{wrk.consecutiveWork}}</td>
@@ -74,8 +75,8 @@
                             <thead>
                                 <tr>
                                     <th> # </th>
-                                    <th> Year </th>
-                                    <th> Project </th>
+                                   @* <th> Year </th>
+                                    <th> Project </th>*@
                                     <th> Work Order </th>
                                     <th>  Name </th>
                                     <th> Budget</th>
@@ -91,8 +92,8 @@
                             <tbody>
                             <tr v-for="(wrk,index) in wrkBudgets" :key="wrk.id">
                                 <td>{{index+1}}</td>
-                                <td>{{wrk.year}}</td>
-                                <td>{{wrk.projectNo}}</td>
+                               @* <td>{{wrk.year}}</td>
+                                <td>{{wrk.projectNo}}</td>*@
                                 <td>{{wrk.workerOrderNo}}</td>
                                 <td>{{wrk.consecutiveWork}}</td>
                                 <td>{{formatCurrenct(wrk.budget)}}</td>

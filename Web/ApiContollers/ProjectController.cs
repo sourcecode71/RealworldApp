@@ -243,8 +243,7 @@ namespace Web.ApiControllers
         [HttpGet("emp-wise/load-project")]
         public async Task<ActionResult> LoadAllProjectByEmp(string empId)
         {
-            if (empId == null)
-                empId = "89eac876-cd03-4049-974c-c0c759063e75";
+          
 
             var allClients = await _project.GetAllProjects(empId);
             return Ok(allClients);

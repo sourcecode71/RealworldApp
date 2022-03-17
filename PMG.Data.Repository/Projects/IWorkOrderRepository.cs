@@ -14,6 +14,7 @@ namespace PMG.Data.Repository.Projects
         Task<bool> UpdateWorkOrderStatus(WorkOrderDTO orderDTO);
         Task<List<WorkOrderDTO>> LoadAllWorkOrdersByEmp(string EmpId);
         Task<List<WorkOrderDTO>> WorkOrderByProjects(string PrId);
+        Task<WorkOrderDTO> LoadWorkOrdersById(string wrkId);
 
     }
 }

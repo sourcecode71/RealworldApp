@@ -309,7 +309,7 @@
           this.hrsDetails = !this.hrsDetails;
           this.loadAllWorkOrder();
           this.pageName = "Work Order";
-          this.LoadHoursLogSummery(wrk.id);
+         
 
       },
 
@@ -319,9 +319,6 @@
           $("#allWorkOrder").dataTable().fnDestroy();
           this.hrsDetails = !this.hrsDetails;
           this.pageName = this.hrsDetails ? "Invoice Details" : "Work Order";
-         
-
-          console.log(" budhet --- ", wrk);
 
           const config = { headers: { "Content-Type": "application/json" } };
           var base_url = window.location.origin;
@@ -360,6 +357,9 @@
           $("#invDetailsOrder").dataTable().fnDestroy();
           this.hrsDetails = !this.hrsDetails;
           this.pageName = this.hrsDetails ? "HRS Details" : "Work Order";
+
+
+          this.LoadHoursLogSummery(wrk.id);
           this.LoadHoursLogDetails(wrk.id);
 
       },
@@ -372,6 +372,8 @@
           axios.get(wrkURL, config).then(
               (result) => {
                   this.assignEmp = result.data;
+
+                  console.log(" Assing emp ", this.assignEmp);
               },
               (error) => {
                   console.error(error);

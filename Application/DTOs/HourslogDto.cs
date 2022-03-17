@@ -4,6 +4,7 @@ namespace Application.DTOs
 {
     public class HourslogDto
     {
+        public string EmpId { get; set; }
         public string WrkId { get; set; }
         public string ProjectNo { get; set; }
         public string WrkNo { get; set; }
@@ -17,5 +18,6 @@ namespace Application.DTOs
         public double Lhour { get; set; }
         public DateTime LogDate { get; set; }
         public string LogDateStr { get; set; }
+        public string Remarks { get; set; }
     }
 }

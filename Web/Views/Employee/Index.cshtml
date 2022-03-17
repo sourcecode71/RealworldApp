@@ -31,6 +31,7 @@
 }
 
 <div id="archiveDiv">
+    <link rel="stylesheet" href="~/css/data-table.css" />
     <div style="min-height:500px" class="main-card mb-3 card">
             <div class="card-body"><h5 class="card-title"> Active Proejcts </h5>
                      <div class="card-body"><h5 class="card-title"> Projects </h5>
@@ -45,7 +46,7 @@
                                                 <th> Name  </th>
                                                 <th> Budget </th>
                                                 <th> Paid Amount </th>
-                                                <th style="width:270px" > Action </th>
+                                            
                                             </tr>
                                             </thead>
                                                <tbody>
@@ -58,25 +59,7 @@
                                                         <td>{{wrk.consecutiveWork }}</td>
                                                         <td>{{wrk.approvedBudget }}</td>
                                                         <td>{{wrk.approvedBudget - wrk.balance  }}</td>
-                                                        <td> 
-                                                            <div class="row">
-                                                                <div class="col-md-6 col-lg-6 col-sm-6">      
-                                                                    <button style="text-align:left" type="button" v-on:click="ShowAllInvoice(wrk.id)"
-                                                                      class="btn btn-sm btn-outline-warning">  INV
-                                                                     </button>   
-                                                                </div>
-                                                                <div class="col-md-6 col-lg-6 col-sm-6">
-                                                                          <button style="text-align:right" type="button" v-on:click="ShowAllHRS(wrk.id)"
-                                                                            class="btn btn-sm btn-outline-warning">  HRS 
-                                                                         </button> 
-
-                                                                </div>
-                                                            </div>
                                                      
-                                                                     
-                                                        
-                                                        
-                                                        </td>
                                                     </tr>
                                                  </tbody>
                                           

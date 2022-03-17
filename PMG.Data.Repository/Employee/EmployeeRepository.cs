@@ -93,6 +93,7 @@ namespace PMG.Data.Repository.Employee
                         HourslogDto wOT = new HourslogDto()
                             {
 
+                                EmpId = rd.GetValue("empId").ToString(),
                                 WrkId = rd.GetValue("wrkId").ToString(),
                                 WrkNo= rd.GetValue("WorkOrderNo").ToString() !=null? rd.GetValue("WorkOrderNo").ToString() :"",
                                 WrkName = rd.GetValue("ConsWork").ToString() !=null ? rd.GetValue("ConsWork").ToString() :"",
@@ -144,7 +145,7 @@ namespace PMG.Data.Repository.Employee
 
                         HourslogDto wOT = new HourslogDto()
                         {
-
+                            EmpId = rd.GetValue("EmpId").ToString() != null ? rd.GetValue("EmpId").ToString() : "",
                             WrkNo = rd.GetValue("WorkOrderNo").ToString() != null ? rd.GetValue("WorkOrderNo").ToString() : "",
                             WrkName = rd.GetValue("ConsWork").ToString() != null ? rd.GetValue("ConsWork").ToString() : "",
                             Lhour = Convert.ToDouble(rd.GetValue("SpentHour").ToString()),
@@ -153,6 +154,58 @@ namespace PMG.Data.Repository.Employee
                             LastName = rd.GetValue("LastName") != null ? rd.GetValue("LastName").ToString() : "",
                             LogDateStr = rd.GetValue("SpentDate") != null ? rd.GetValue("SpentDate").ToString() : "",
                             ProjectNo = rd.GetValue("ProjectNo") != null ? rd.GetValue("ProjectNo").ToString() : ""
+
+                        };
+
+                        wOT.EmpName = String.Format("{0} {1}", wOT.FirstName, wOT.LastName);
+
+                        hrsD.Add(wOT);
+
+                    }
+                }
+
+                return hrsD;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<List<HourslogDto>> GetEmpWisehourLogs(string empId)
+        {
+            try
+            {
+                DbCommand cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandText = "dbo.Hrs_EmpWiseHourLogs";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                var param = cmd.CreateParameter();
+                param.ParameterName = "@EmpId";
+                param.Value = new Guid(empId);
+                cmd.Parameters.Add(param);
+
+                List<HourslogDto> hrsD = new List<HourslogDto>();
+
+                _context.Database.OpenConnection();
+                using (DbDataReader rd = await cmd.ExecuteReaderAsync())
+                {
+                    while (rd.Read())
+                    {
+                        
+                        HourslogDto wOT = new HourslogDto()
+                        {
+                            EmpId = rd.GetValue("EmpId").ToString() != null ? rd.GetValue("EmpId").ToString() : "",
+                            WrkNo = rd.GetValue("WorkOrderNo").ToString() != null ? rd.GetValue("WorkOrderNo").ToString() : "",
+                            WrkName = rd.GetValue("ConsWork").ToString() != null ? rd.GetValue("ConsWork").ToString() : "",
+                            Lhour = Convert.ToDouble(rd.GetValue("SpentHour").ToString()),
+                            EmpType = rd.GetValue("UserRole").ToString(),
+                            FirstName = rd.GetValue("FirstName") != null ? rd.GetValue("FirstName").ToString() : "",
+                            LastName = rd.GetValue("LastName") != null ? rd.GetValue("LastName").ToString() : "",
+                            LogDateStr = rd.GetValue("SpentDate") != null ? rd.GetValue("SpentDate").ToString() : "",
+                            ProjectNo = rd.GetValue("ProjectNo") != null ? rd.GetValue("ProjectNo").ToString() : "",
+                            Remarks = rd.GetValue("Remarks") != null ? rd.GetValue("Remarks").ToString() : ""
 
                         };
 

@@ -1,0 +1,33 @@
+﻿@{
+	ViewData["Title"] = "Archived Page";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Web.Models
+@model AdminPageDetails
+@{
+    string currentName = "";
+    string currentRole = "";
+    byte[] currentRoleByte;
+    byte[] currentNameByte;
+
+    if (Context.Session.Keys.Count() > 0)
+    {
+        Context.Session.TryGetValue("current_user_role", out currentRoleByte);
+        Context.Session.TryGetValue("current_user_name", out currentNameByte);
+
+        if (currentRoleByte != null && currentNameByte != null)
+        {
+            currentRole = System.Text.Encoding.Default.GetString(currentRoleByte);
+            currentName = System.Text.Encoding.Default.GetString(currentNameByte);
+        }
+    }
+}
+
+
+
+<div id="archiveDiv">
+    <div style="min-height:200px" class="main-card mb-3 card">
+            <h2 style="color:#32a8a8" class="card-title p-3 mt-3"> You don have permission to view the page </h2>
+
+            </div>
+  </div>

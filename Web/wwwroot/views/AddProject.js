@@ -206,6 +206,14 @@
                         scrollY: "500px",
                         scrollCollapse: true,
                         paging: false,
+                        "columns": [
+                            { "width": "2%" },
+                            { "width": "8%" },
+                            { "width": "30%" },
+                            { "width": "30%" },
+                            { "width": "8%" },
+                            { "width": "10%" },
+                        ]
                     });
                 }, 100);
               

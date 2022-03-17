@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -7,31 +7,132 @@ namespace Web.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                if (currentRole == "Admin")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Forbidden", "Home");
+                }
+            }
+
+            return RedirectToAction("Login", "Home");
         }
 
-        [Authorize(AuthenticationSchemes = "Cookies")]
         public IActionResult Client()
         {
-            return View();
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                if (currentRole == "Admin")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Forbidden", "Home");
+                }
+            }
+
+            return RedirectToAction("Login", "Home");
         }
 
-        [Authorize(AuthenticationSchemes = "Cookies")]
         public IActionResult Invoice()
         {
-            return View();
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                if (currentRole == "Admin")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Forbidden", "Home");
+                }
+            }
+
+            return RedirectToAction("Login", "Home");
         }
 
-        [Authorize(AuthenticationSchemes = "Cookies")]
         public IActionResult Payment()
         {
-            return View();
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                if (currentRole == "Admin")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Forbidden", "Home");
+                }
+            }
+
+            return RedirectToAction("Login", "Home");
         }
 
-        [Authorize(AuthenticationSchemes = "Cookies")]
         public IActionResult HourLogs()
         {
-            return View();
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                if (currentRole == "Admin" || currentRole == "Engineering" || currentRole == "Drawing")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Forbidden", "Home");
+                }
+            }
+
+            return RedirectToAction("Login", "Home");
         }
     }
 }

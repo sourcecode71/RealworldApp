@@ -38,8 +38,17 @@ namespace Web.ApiContollers
         [HttpPut("status-change")]
         public async Task<ActionResult> UpdateWorkOrderStatus(WorkOrderDTO dTO)
         {
-            bool isSuccess = await _woRepository.UpdateWorkOrderStatus(dTO);
-            return Ok(isSuccess);
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                bool isSuccess = await _woRepository.UpdateWorkOrderStatus(dTO);
+                return Ok(isSuccess);
+            }
+            else
+            {
+                return RedirectToAction("Forbidden", "Home");
+            }
         }
 
         [HttpGet("load-approved-orders/emp-wise")]
@@ -89,7 +98,7 @@ namespace Web.ApiContollers
         {
             var wrkList = _woRepository.LoadAllWorkOrders();
             var filterWrk = wrkList.Where(w=>w.WrkStatus == ProjectStatus.Archived || w.WrkStatus == ProjectStatus.Completed);
-            return Ok(wrkList);
+            return Ok(filterWrk);
         }
 
         [HttpGet("load-work-orders/active")]
@@ -99,7 +108,7 @@ namespace Web.ApiContollers
             {
                 var wrkList = _woRepository.LoadAllWorkOrders();
                 var filterWrk = wrkList.Where(w => w.WrkStatus != ProjectStatus.Archived || w.WrkStatus != ProjectStatus.Completed);
-                return Ok(wrkList);
+                return Ok(filterWrk);
             }
             catch (Exception ex)
             {
@@ -112,6 +121,14 @@ namespace Web.ApiContollers
         public async Task<ActionResult> GetWorkOrderByProject(string PrId)
         {
             var wrkList = await _woRepository.WorkOrderByProjects(PrId);
+            return Ok(wrkList);
+        }
+
+
+        [HttpGet("work-orders-by-id")]
+        public async Task<ActionResult> GetWorkOrderByWorkOrderId(string WrkId)
+        {
+            var wrkList = await _woRepository.LoadWorkOrdersById(WrkId);
             return Ok(wrkList);
         }
 

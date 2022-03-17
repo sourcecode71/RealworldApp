@@ -55,7 +55,12 @@ namespace Web.Controllers
             return View();
         }
 
-        public ResultModel Login(EmployeeModel loginUser)
+        public IActionResult Forbidden()
+        {
+            return View();
+        }
+
+       public ResultModel Login(EmployeeModel loginUser)
         {
             ResultModel result = _apiService.CallLogin(loginUser).Result;
 

@@ -246,5 +246,12 @@ namespace Web.ApiControllers
             var empDto = await _empRepository.EmployeHourLogDetails(wrkId);
             return empDto;
         }
+
+        [HttpGet("emp-wise-hour")]
+        public async Task<ActionResult<List<HourslogDto>>> GetEmpWisehourLogs(string EmpId)
+        {
+            var empDto = await _empRepository.GetEmpWisehourLogs(EmpId);
+            return empDto;
+        }
     }
 }

@@ -6,7 +6,7 @@
 
  <div id="invPay">
     <link rel="stylesheet" href="~/css/projects.css" />
-   
+    <link rel="stylesheet" href="~/css/data-table.css" />
 
     <div style="min-height:500px" class="main-card mb-3 card">
             <div class="card-body"><h5 class="card-title"> Payment </h5>
@@ -20,7 +20,7 @@
                                                 <th> Date  </th>
                                                 <th> Invoice Bill </th>
                                                 <th> Balance </th>
-                                                <th> Action </th>
+                                                @*<th> Action </th>*@
                                             </tr>
                                             </thead>
                                                <tbody>
@@ -31,7 +31,7 @@
                                                         <td>{{inv.invoiceDateStr}}</td>
                                                         <td>{{inv.invoiceNumber}}</td>
                                                         <td>{{inv.balance}}</td>
-                                                        <td> </td>
+                                                       @* <td> </td>*@
                                                     </tr>
                                                  </tbody>
                                           

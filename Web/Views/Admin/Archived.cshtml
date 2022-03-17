@@ -1,5 +1,5 @@
 ﻿@{
-	ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Archived Page";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @using Web.Models
@@ -23,64 +23,179 @@
     }
 }
 
+  <link rel="stylesheet" href="~/css/data-table.css" />
+
 <div id="archiveDiv">
     <div style="min-height:500px" class="main-card mb-3 card">
-            <div class="card-body"><h5 class="card-title"> Completed and Archived Project </h5>
-                     <div class="card-body"><h5 class="card-title"> Projects </h5>
-                                        <table id="wrkArchived" class="mb-0 table table-striped">
-                                            <thead>
-                                            <tr style="font-size:14px">
-                                                <th> # </th>
-                                                <th> Year </th>
-                                                <th> Project No</th>
-                                                <th> Budget No</th>
-                                                <th> Work  No </th>
-                                                <th> Name  </th>
-                                                <th> Budget </th>
-                                                <th> Paid Amount </th>
-                                                <th style="width:270px" > Action </th>
-                                            </tr>
-                                            </thead>
-                                               <tbody>
-                                                  <tr v-for="(wrk,index) in workOrders" :key="wrk.id">
-                                                        <td>{{index+1}}</td>
-                                                        <td>{{wrk.projectYear}}</td>
-                                                        <td>{{wrk.projectNo }}</td>
-                                                        <td>{{wrk.wrkBudgetNo }}</td>
-                                                        <td>{{wrk.workOrderNo }}</td>
-                                                        <td>{{wrk.consecutiveWork }}</td>
-                                                        <td>{{wrk.approvedBudget }}</td>
-                                                        <td>{{wrk.approvedBudget - wrk.balance  }}</td>
-                                                        <td> 
-                                                            <div class="row">
-                                                                <div class="col-md-6 col-lg-6 col-sm-6">      
-                                                                    <button style="text-align:left" type="button" v-on:click="ShowAllInvoice(wrk.id)"
-                                                                      class="btn btn-sm btn-outline-warning">  INV
-                                                                     </button>   
-                                                                </div>
-                                                                <div class="col-md-6 col-lg-6 col-sm-6">
-                                                                          <button style="text-align:right" type="button" v-on:click="ShowAllHRS(wrk.id)"
-                                                                            class="btn btn-sm btn-outline-warning">  HRS 
-                                                                         </button> 
+            <h5 class="card-title p-3"> Completed & Archived Proejcts </h5>
+             
+             <div v-if="allInv" style="font-size:14px" class="card-body card-div">
+                   <div class="row">
+                        <div class="col-md-4"> Project No : {{projectNo}} </div>
+                        <div class="col-md-3"> Project : {{consProject}} </div>
+                        <div class="col-md-3"> Year :{{projectYear}} </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4"> Work Order No : {{wrkNo}} </div>
+                        <div class="col-md-3"> Work Order : {{wrkConsWork}} </div>
+                        <div class="col-md-3"> Start Date :{{wrkStartDate}} </div>
+                        <div style="width:20% !important" class="col-md-2">Due Date :{{wrkEndDate}} </div>
 
-                                                                </div>
-                                                            </div>
-                                                     
-                                                                     
-                                                        
-                                                        
-                                                        </td>
-                                                    </tr>
-                                                 </tbody>
-                                          
-                                        </table>
+                    </div>
+
+                    <div class="row mt-3">
+                        <a href="#" v-on:click="showInvoiceDetails(wrk)" class="col-md-4">  Paid : {{formatCurrency(paidAmt)}}
+                        </a>
+                        <div class="col-md-3"> Approved Budget : {{formatCurrency(abudget)}} </div>
+
+                        <a href="#" v-on:click="ShowAllHRS(wrk)" class="col-md-3"> Spent hour :{{ahours}} </a>
+                        <div class="col-md-2"> Status : {{ wrkStatusStr }} </div>
+
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-12"> Client Name : {{clientName}} </div>
+
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">Company Name : {{companyName}} </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-12"> Description : {{description}} </div>
+                    </div>
+
+             </div>
+
+              <div v-if="allHrs" style="font-size:14px" class="card-body card-div">
+
+                    <div class="row">
+                    <div class="col-md-4"> Project No : {{projectNo}} </div>
+                    <div class="col-md-3"> Project : {{consProject}} </div>
+                    <div class="col-md-3"> Year :{{projectYear}} </div>
+                </div>
+                <div class="row p-2 mt-3">
+                    <div> Work Order No :  {{wrkNo}}  </div>
+                    <div class="col-md-3"> Work Order : {{wrkConsWork}} </div>
+                    <div class="col-md-3"> Start Date :{{wrkStartDate}} </div>
+                    <div style="width:20% !important" class="col-md-2">Due Date :{{wrkEndDate}} </div>
+                </div>
+
+                <div  class="row p-2 mt-2">
+                    <div class="col-md-6 col-lg-6">
+                      <div> <h5 style="color:#34c0eb">  Total hour :{{empTotalLog(assignEmp)}}  </h5></div>
+                      
+                      <table class="mb-0 table table-borderless" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type </th>
+                                <th> Budgeted </th>
+                                <th> HRS </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(hrs,index) in assignEmp" :key="hrs.id">
+                                <td>{{hrs.empName}}</td>
+                                <td>{{hrs.empType}}</td>
+                                <td>{{hrs.bhour}}</td>
+                                <td> <a href="#" v-on:click="EmpHoursLogDetails(hrs.empId)"> {{hrs.lhour}} </a> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    </div>
+
+                    <div class="col-md-6 col-lg-6">
+                        <div v-if="isHrsDetails"> 
+
+                       <div> <h5 style="color:#34c0eb">  Total hour :{{empTotalLog(empHrs)}}  </h5></div>
+
+                       <table class="mb-0 table table-borderless" style="width:100%;max-height:250px;overflow:scroll">
+                        <thead>
+                            <tr>
+                                <th>Name </th>
+                                <th>Description  </th>
+                                <th> Date </th>
+                                <th> HRS </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(hrs,index) in empHrs" :key="hrs.id">
+                                <td>{{hrs.empName}}</td>
+                                <td>{{hrs.remarks}}</td>
+                                <td>{{hrs.logDateStr}}</td>
+                                <td>  {{hrs.lhour}}  </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                        </div>
+              
+
+                    </div>
+                  
+                </div>
+
+
+              </div>
+
+            <div class="card-body">
+                <h5 class="card-title"> Projects </h5>
+                <table id="wrkAdminPanel" style="width:99%" class="mb-0 table table-striped">
+                    <thead>
+                        <tr style="font-size:14px">
+                            <th> # </th>
+                            <th> Year </th>
+                            <th> Project No</th>
+                            <th> Budget No</th>
+                            <th> Work No </th>
+                            <th> Name </th>
+                            <th> Budget </th>
+                            <th> Paid Amount </th>
+                            <th style="width:270px"> Action </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(wrk,index) in workOrders" :key="wrk.id">
+                            <td>{{index+1}}</td>
+                            <td>{{wrk.projectYear}}</td>
+                            <td>{{wrk.projectNo }}</td>
+                            <td>{{wrk.wrkBudgetNo }}</td>
+                            <td>{{wrk.workOrderNo }}</td>
+                            <td>{{wrk.consecutiveWork }}</td>
+                            <td>{{wrk.approvedBudget }}</td>
+                            <td>{{wrk.approvedBudget - wrk.balance }}</td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6">
+                                        <button style="text-align:left" type="button"
+                                            v-on:click="ShowAllInvoice(wrk)" class="btn btn-sm btn-outline-info">
+                                            INV
+                                        </button>
                                     </div>
-        </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6">
+                                        <button style="text-align:right" type="button" v-on:click="ShowAllHRS(wrk)"
+                                            class="btn btn-sm btn-outline-info"> HRS
+                                        </button>
+
+                                    </div>
+                                </div>
+
+
+
+
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
     </div>
     @section Scripts {
-        <script src="~/views/Archived.js"></script>
+    <script src="~/views/Archived.js"></script>
     }
-  </div>
+</div>
+
 
 
 

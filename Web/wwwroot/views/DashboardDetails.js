@@ -1,7 +1,8 @@
 ﻿const app = new Vue({
-    el: '#archiveDiv',
+    el: '#invoiceDiv',
     beforeMount() {
-        this.loadAllWorkOrder();
+        this.LoadWorkOrderById();
+        this.LoadInvoiceDetails();
     },
     data: {
         errors: [],
@@ -9,7 +10,7 @@
         wrkS: '0',
         allInv: false,
         allHrs: false,
-        isHrsDetails: false,
+       
         projectNo: '',
         consProject: '',
         projectYear: '',
@@ -31,52 +32,60 @@
         clientName: '',
         wrkStatusStr: '',
         assignEmp: [],
-        empHrs:[]
+        invDetails:[],
     },
     methods: {
 
-       
-        loadAllWorkOrder: function () {
+        LoadInvoiceDetails: function () {
+
+            var url_string =location.href;
+            var url = new URL(url_string);
+            var wrkId = url.searchParams.get("wrkId");
+
 
             const config = { headers: { "Content-Type": "application/json" } };
             var base_url = window.location.origin;
-            const clientURL = base_url + "/api/WorkOrder/load-work-orders/active";
+            const clientURL = base_url + "/api/invoice/work-order/load-invoices?wrkId=" + wrkId;
 
             axios.get(clientURL, config).then(
                 (result) => {
-
-                    $("#wrkAdminPanel").dataTable().fnDestroy();
-
-                    this.workOrders = result.data;
-
                     setTimeout(() => {
-                        $('#wrkAdminPanel').DataTable({
-                            "scrollY": "500px",
-                            "scrollCollapse": true,
-                            "paging": false,
-                            "columns": [
-                                { "width": "2%" },
-                                { "width": "5%" },
-                                { "width": "11%" },
-                                { "width": "9%" },
-                                { "width": "9%" },
-                                { "width": "20%" },
-                                { "width": "10%" },
-                                { "width": "12%" },
-                                { "width": "12%" },
-                            ]
-                        });
-                    }, 100);
+                        this.invDetails = result.data;
 
-                    console.log(" datata ", this.workOrders);
+                        console.log("  this.invDetails ", this.invDetails)
+
+                    }, 100);
 
                 },
                 (error) => {
                     console.error(error);
-                }
-            );
+                });
 
         },
+
+        LoadWorkOrderById: function () {
+            var url_string = location.href;
+            var url = new URL(url_string);
+            var wrkId = url.searchParams.get("wrkId");
+
+
+            const config = { headers: { "Content-Type": "application/json" } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/WorkOrder/work-orders-by-id?WrkId=" + wrkId;
+
+            axios.get(clientURL, config).then(
+                (result) => {
+                    setTimeout(() => {
+                        // this.invDetails = result.data;
+                        this.AssignInfo(result.data);
+                    }, 100);
+
+                },
+                (error) => {
+                    console.error(error);
+                });
+        },
+
 
         AssignInfo: function (wrk) {
             this.wrk = wrk;
@@ -123,8 +132,6 @@
             axios.get(wrkURL, config).then(
                 (result) => {
                     this.assignEmp = result.data;
-
-                    console.log("  this.assignEmp ", this.assignEmp);
                 },
                 (error) => {
                     console.error(error);
@@ -163,49 +170,19 @@
                 });
 
         },
-        EmpHoursLogDetails: function (empid) {
 
-            this.isHrsDetails = true;
-
-            const config = { headers: { "Content-Type": "application/json" } };
-            var base_url = window.location.origin;
-            const wrkURL = base_url + "/api/Employee/emp-wise-hour?empId=" + empid;
-
-            axios.get(wrkURL, config).then(
-                (result) => {
-
-                    console.log(" emp hrs ", this.empHrs);
-
-                    this.empHrs = result.data;
-                },
-                (error) => {
-                    console.error(error);
-                });
-
-        },
-
-        empTotalLog: function (hrs) {
-            var total_amount = 0;
-            $.each(hrs, function (i, v) { total_amount += v.lhour; });
-            return total_amount;
-        },
-
-        showInvoiceDetails: function (wrk) {
-            var base_url = window.location.origin;
-            const wrkURL = base_url + "/Dashboard/InvoiceDetails?wrkId=" + wrk.id;
-            window.location = wrkURL;
-        },
-
+       
         formatCurrency: function (Crn) {
             let dollarUS = Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
             });
+      
+            return dollarUS.format(Crn);
 
-            return  dollarUS.format(Crn);
-            
         }
-  }
+      
+    }
 
 
 });

@@ -68,7 +68,7 @@ namespace Web.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Login", "Home");
+                    return RedirectToAction("Forbidden", "Home");
                 }
             }
 
@@ -102,7 +102,7 @@ namespace Web.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Login", "Home");
+                    return RedirectToAction("Forbidden", "Home");
                 }
             }
 
@@ -128,7 +128,7 @@ namespace Web.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Login", "Home");
+                    return RedirectToAction("Forbidden", "Home");
                 }
             }
 
@@ -159,7 +159,7 @@ namespace Web.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Login", "Home");
+                    return RedirectToAction("Forbidden", "Home");
                 }
             }
 
