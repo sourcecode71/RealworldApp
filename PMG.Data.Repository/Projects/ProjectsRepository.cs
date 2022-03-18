@@ -36,7 +36,7 @@ namespace PMG.Data.Repository.Projects
         public async Task< List<ProjectDto>> GetProjectBySearch(string SearchTag)
         {
             var projects = await _context.Projects.Join(_context.Clients,
-                prj =>prj.ClientId,
+                prj =>prj.CompanyId,
                 cln=>cln.Id,(prj,cln) =>new { Proj =prj,client=cln})
                 .Where(pp => pp.Proj.Name.Contains(SearchTag)).Take(20).Select(pp=> new
                 ProjectDto()
@@ -44,7 +44,6 @@ namespace PMG.Data.Repository.Projects
                     Id = pp.Proj.Id,
                     Name = pp.Proj.Name,
                     Client=pp.client.Name,
-                    Budget=pp.Proj.Budget,
                     Balance =pp.Proj.Balance,
                     DeliveryDate=pp.Proj.DeliveryDate,
                     Description =pp.Proj.Description,
@@ -74,7 +73,6 @@ namespace PMG.Data.Repository.Projects
 
                     project.BudgetApprovedStatus = 0;
                     project.BudgetSubmitDate = DateTime.Now;
-                    project.Budget = dto.Budget;
 
                     var pmApproval = new ProjectBudgetActivities
                     {
@@ -309,7 +307,7 @@ namespace PMG.Data.Repository.Projects
             {
                 var projects = await (from prj in _context.Projects
                                join emw in _context.ProjectEmployees on prj.Id equals emw.ProjectId
-                               join cli in _context.Clients on prj.ClientId equals cli.Id into cliList
+                               join cli in _context.Company on prj.CompanyId equals cli.Id into cliList
                                from cts in cliList.DefaultIfEmpty()
                                 where emw.EmployeeId == empId && prj.Status != ProjectStatus.Completed
                                select new ProjectDto
@@ -318,9 +316,8 @@ namespace PMG.Data.Repository.Projects
                                    Id = prj.Id,
                                    ProjectNo = prj.ProjectNo,
                                    Year = prj.Year,
-                                   Budget = prj.Budget,
                                    Description = prj.Description,
-                                   ClientName = cts.Name,
+                                   CompanyName = cts.Name,
                                    
                                }).Distinct().ToListAsync();
 
@@ -340,10 +337,8 @@ namespace PMG.Data.Repository.Projects
             try
             {
                 var projects = await (from prj in _context.Projects
-                                     join cli in _context.Clients on prj.ClientId equals cli.Id into cliList
-                                     from cts in cliList.DefaultIfEmpty()
-                                     join pa in _context.ProjectBudgetActivities on prj.Id equals pa.ProjectId into paActs
-                                     from paAct in paActs.DefaultIfEmpty()
+                                     join cli in _context.Company on prj.CompanyId equals cli.Id into cmList
+                                     from cts in cmList.DefaultIfEmpty()
                                      where  prj.Status != ProjectStatus.Completed
                                      select new ProjectDto
                                      {
@@ -351,13 +346,11 @@ namespace PMG.Data.Repository.Projects
                                          Id = prj.Id,
                                          ProjectNo = prj.ProjectNo,
                                          Year = prj.Year,
-                                         Budget = prj.Budget,
                                          Description = prj.Description,
-                                         ClientName = cts.Name,
+                                         CompanyName = cts.Name,
                                          Week = prj.Week,
                                          StartDateStr = prj.StartDate.ToString("MM/dd/yyyy"),
                                          DeliveryDateStr = prj.DeliveryDate.ToString("MM/dd/yyyy"),
-                                         BudgetApprovalStr = paAct.Status == 0 ? "Waiting" : paAct.Status == 1 ? "Approved" : "Not Approved",
                                          Status = EnumConverter.ProjectStatusString(prj.Status)
 
                                      }).Distinct().ToListAsync();
@@ -420,7 +413,7 @@ namespace PMG.Data.Repository.Projects
                         Year = DateTime.Now.Year,
                         ProjectNo = ProjectNo,
                         Balance = dto.Budget,
-                        ClientId = new Guid(dto.Client),
+                        CompanyId = new Guid(dto.CompanyId),
                         Week = dto.Week,
                         DeliveryDate = DateTime.Now.AddDays(dto.Week * 7),
                         StartDate = DateTime.Now,
@@ -429,15 +422,14 @@ namespace PMG.Data.Repository.Projects
                         Progress = 0,
                         Status = ProjectStatus.Budgeted,
                         CreatedDate = DateTime.Now,
-                        Budget = dto.Budget,
                         Description =dto.Description
                     };
 
                     _context.Projects.Add(projectDomain);
 
-                    this.AssignProjectEmploye(dto,cnPid);
+                   // this.AssignProjectEmploye(dto,cnPid);
                     
-                    bool bStatus= await this.CreateProjectBudget(dto, cnPid, ProjectNo);
+                   // bool bStatus= await this.CreateProjectBudget(dto, cnPid, ProjectNo);
 
                     int State = await _context.SaveChangesAsync();
                    

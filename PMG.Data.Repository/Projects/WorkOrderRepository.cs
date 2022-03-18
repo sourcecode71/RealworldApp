@@ -156,7 +156,6 @@ namespace PMG.Data.Repository.Projects
                         WorkOrderNo = OTNo,
                         ConsWork = dTO.ConsecutiveWork,
                         ProjectId = dTO.ProjectId,
-                        CompanyId = new Guid(dTO.CompanyId),
                         OriginalBudget = dTO.OriginalBudget,
                         Balance = dTO.OriginalBudget,
                         StartDate = dTO.StartDate,

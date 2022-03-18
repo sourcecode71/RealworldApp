@@ -147,17 +147,27 @@
       axios.get(clientURL, config).then(
         (result) => {
 
-              $("#allWorkOrder").dataTable().fnDestroy();
+              $("#empWrkOrder").dataTable().fnDestroy();
 
               setTimeout(() => {
                   this.workOrders = result.data;
               }, 100);
 
           setTimeout(() => {
-            $("#allWorkOrder").DataTable({
+              $("#empWrkOrder").DataTable({
               scrollY: "500px",
               scrollCollapse: true,
-              paging: false,
+                paging: false,
+                columns: [
+                    { "width": "3%" },
+                    { "width": "9%" },
+                    { "width": "10%" },
+                    { "width": "25%" },
+                    { "width": "13%" },
+                    { "width": "13%" },
+                    { "width": "12%" },
+                    { "width": "15%" },
+                ]
             });
           }, 500); 
 
@@ -437,9 +447,9 @@
         this.errors.push("Project is required.");
       }
 
-      if (!comapnyId || comapnyId == "0") {
-        this.errors.push("Company is required.");
-      }
+      //if (!comapnyId || comapnyId == "0") {
+      //  this.errors.push("Company is required.");
+      //}
 
       if (!this.consecutiveWork) {
         this.errors.push("Work order name is required.");

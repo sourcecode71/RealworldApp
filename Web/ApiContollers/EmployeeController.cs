@@ -243,6 +243,13 @@ namespace Web.ApiControllers
             return PempDto;
         }
 
+        [HttpGet("all-emp-workorder")]
+        public async Task<ActionResult<List<EpmProjectsDto>>> GetEmpWorkOrders(string EmpId)
+        {
+            var WrkDto = await _empRepository.GetEmpWorkOrder(EmpId);
+            return WrkDto;
+        }
+
 
         [HttpGet("workorder/emp-hour-summery")]
         public async Task<ActionResult<List<HourslogDto>>> GethourLogSummery(string wrkId)

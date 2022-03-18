@@ -32,7 +32,6 @@ namespace Application.Core.Projects
                 if(project != null)
                 {
                     project.Paid = request.Paid;
-                    project.Balance = project.Budget - project.Paid;
 
                     await _context.SaveChangesAsync();
                 }

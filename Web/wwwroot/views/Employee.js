@@ -162,8 +162,31 @@ const app = new Vue({
             const clientURL = base_url + "/api/Employee/all-active-employee";
 
             axios.get(clientURL, config).then(result => {
-                console.log(result.data);
-                this.allEmp = result.data;
+                $("#allEmployee").dataTable().fnDestroy();
+
+                setTimeout(() => {
+                    this.allEmp = result.data;
+                }, 100);
+
+                setTimeout(() => {
+
+                $("#allEmployee").DataTable({
+                    scrollY: "500px",
+                    scrollCollapse: true,
+                    paging: false,
+                    columns: [
+                        { "width": "4%" },
+                        { "width": "23%" },
+                        { "width": "15%" },
+                        { "width": "27%" },
+                        { "width": "14%" },
+                        { "width": "15%" }
+                    ]
+                });
+
+            }, 500);
+
+
             }, error => {
                 console.error(error);
             });
@@ -174,7 +197,7 @@ const app = new Vue({
         {
             const config = { headers: { 'Content-Type': 'application/json' } };
             var base_url = window.location.origin;
-            const clientURL = base_url + "/api/Employee/all-emp-project?empId=" + emp.id;
+            const clientURL = base_url + "/api/Employee/all-emp-workorder?EmpId=" + emp.id;
 
             this.empName = emp.name;
             this.empEmail = emp.email;
@@ -183,7 +206,35 @@ const app = new Vue({
             $("#EmpProject").modal("show");
 
             axios.get(clientURL, config).then(result => {
-                this.empProjects = result.data;
+
+                $("#empWorksOrder").dataTable().fnDestroy();
+
+                setTimeout(() => {
+                    this.empProjects = result.data;
+                }, 100);
+
+                setTimeout(() => {
+
+                    $("#empWorksOrder").DataTable({
+                        scrollY: "300px",
+                        scrollCollapse: true,
+                        paging: false,
+                        searching: false,
+                        columns: [
+                            { "width": "4%" },
+                            { "width": "13%" },
+                            { "width": "30%" },
+                            { "width": "12%" },
+                            { "width": "20%" },
+                            { "width": "14%" }
+                        ]
+                    });
+
+                }, 500);
+
+
+                console.log("this.empProjects ", this.empProjects);
+
             }, error => {
                 Swal.fire({
                     position: 'top-end',

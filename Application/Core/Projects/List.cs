@@ -93,7 +93,6 @@ namespace Application.Core.Projects
                         Description = item.Description,
                         SelfProjectId = item.SelfProjectId,
                         Balance = item.Balance,
-                        Budget = item.Budget,
                         Factor = item.Factor,
                         Paid = item.Paid,
                         Progress = Math.Abs(Math.Round((DateTime.Now - item.CreatedDate).TotalDays / 7, 2)),

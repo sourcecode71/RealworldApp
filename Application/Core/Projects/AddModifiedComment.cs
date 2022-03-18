@@ -32,7 +32,6 @@ namespace Application.Core.Projects
 
                 if (project != null)
                 {
-                    project.Budget = request.Budget;
                     project.Balance = request.Budget - project.Paid;
                     project.Factor = request.Budget / project.Schedule;
                     project.AdminModifiedComment = request.Modified;

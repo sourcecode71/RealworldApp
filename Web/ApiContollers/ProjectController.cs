@@ -80,7 +80,6 @@ namespace Web.ApiControllers
                 ProjectNo = ProjectNo,
                 Balance = project.Budget,
                 Factor = project.Budget / (double)project.Schedule,
-                ClientId = new Guid(project.Client),
                 DeliveryDate = project.DeliveryDate,
                 StartDate = project.StartDate,
                 Paid = 0,
@@ -89,7 +88,6 @@ namespace Web.ApiControllers
                 Schedule = project.Schedule,
                 Status = ProjectStatus.Budgeted,
                 CreatedDate = DateTime.Now,
-                Budget = project.Budget
             };
 
             return Ok(await Mediator.Send(new Create.Command { Project = projectDomain, ProejctEmp = employees }));

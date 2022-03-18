@@ -2,7 +2,7 @@
     el: '#addProject',
     beforeMount() {
         sClientId = "0";
-        this.loadAllClients();
+        this.loadAllcompany();
         this.LoadEmployee();
         this.LoadAllActiveProjects();
     },
@@ -26,86 +26,15 @@
         allEng: [],
         allDrw: [],
         allProjects: [],
-        wrksBYP : [],
+        wrksBYP: [],
+        companies: [],
+        companyId:'0',
         hideNow: false,
         seen: false
 
     },
     methods: {
-      
-    
-        AddEnginer: function () {
-            this.engErrors = [];
-            let eng = this.engineer;
-
-            let existEng = this.engineers.filter(v => v.id == eng.id).length;
-
-            this.validateEngineerHours();
-
-            if (existEng == 0 && this.engErrors.length==0) {
-                let engD = {
-                    id: eng.id,
-                    name: eng.name,
-                    email: eng.email,
-                    hour: this.peHours
-                }
-
-                this.engineers.push(engD);
-                this.peHours = "";
-                this.engineer = "00";
-            } else if (existEng > 0) {
-                Swal.fire({
-                    position: 'top-end',
-                    title: 'Error!',
-                    text: 'Already added the engineer!.',
-                    icon: 'error',
-                    confirmButtonText: 'Ok',
-                })
-            }
-         
-
-        },
-        RemoverEngineer: function (id) {
-            this.engineers = this.engineers.filter(function (el) { return el.id != id; });
-        },
-
-        AddDrawing: function () {
-
-            this.drwErrors = [];
-            let drw = this.drawing;
-
-            console.log(" drw ", drw);
-
-            let existdrw = this.drawings.filter(v => v.id == drw.id).length;
-
-            this.validateDrawingHours();
-
-            if (existdrw == 0 && this.drwErrors.length == 0) {
-                let drwMan = {
-                    id: drw.id,
-                    name: drw.name,
-                    email: drw.email,
-                    hour: this.drawhours
-                }
-
-                this.drawings.push(drwMan);
-                this.drawhours = "";
-                this.drawing = "00";
-            } else if (existdrw > 0) {
-                Swal.fire({
-                    position: 'top-end',
-                    title: 'Error!',
-                    text: 'Already added the drawing man!.',
-                    icon: 'error',
-                    confirmButtonText: 'Ok',
-                })
-            }
-
-        },
-        RemoveDrwaing: function (id) {
-            this.drawings = this.drawings.filter(function (el) { return el.id != id; });
-        },
-
+       
         SubmitProject: function () {
 
             this.errors = [];
@@ -122,11 +51,8 @@
 
                 let project = {
                     name: this.name,
-                    client: sClientId,
-                    budget: (this.budget.substring(1)).replace(",",''),
+                    companyId: this.companyId,
                     week: this.pweek,
-                    engineers: this.engineers,
-                    drawings: this.drawings,
                     description: this.workorderDesc
                 }
 
@@ -172,6 +98,20 @@
             });
 
         },
+        loadAllcompany: function () {
+            const config = { headers: { "Content-Type": "application/json" } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/company/all-companies";
+
+            axios.get(clientURL, config).then(
+                (result) => {
+                    this.companies = result.data;
+                },
+                (error) => {
+                    console.error(error);
+                }
+            );
+        },
         LoadEmployee: function () {
             const config = { headers: { 'Content-Type': 'application/json' } };
             var base_url = window.location.origin;
@@ -206,13 +146,14 @@
                         scrollY: "500px",
                         scrollCollapse: true,
                         paging: false,
-                        "columns": [
+                        columns: [
                             { "width": "2%" },
-                            { "width": "8%" },
-                            { "width": "30%" },
-                            { "width": "30%" },
-                            { "width": "8%" },
+                            { "width": "4%" },
+                            { "width": "18%" },
+                            { "width": "35%" },
                             { "width": "10%" },
+                            { "width": "10%" },
+                            { "width": "15%" },
                         ]
                     });
                 }, 100);
@@ -262,48 +203,20 @@
             var dblBudget = this.budget.replace(",", "");
             this.budget = this.budget.charAt(0) == "$" ? dollarUS.format(dblBudget.substring(1)) : dollarUS.format(dblBudget);
         },
-        validateEngineerHours: function () {
-
-         /*   if (!this.engineer || this.engineers.id=="00") {
-                this.engErrors.push("Please select the engineer");
-            }
-            if (!this.peHours) {
-                this.engErrors.push("Please add the budgeted hours");
-            } */
-        },
-        validateDrawingHours: function () {
-          /*  if (!this.drawing || this.drawing.id == "01") {
-                this.drwErrors.push("Please select the drawing man");
-            }
-            if (!this.drawhours) {
-                this.drwErrors.push("Please add the budgeted hours");
-            } */
-        },
+  
         validateProject: function () {
             if (!this.name) {
                 this.errors.push("Project name is required");
             }
 
-            if (sClientId == "0") {
+            if (this.companyId == "0") {
                 this.errors.push("Client name is required");
             }
-
-            if (!this.budget) {
-                this.errors.push("Project budget is required");
-            }
-
 
             if (!this.pweek) {
                 this.errors.push("Project budgeted time is required");
             }
 
-            /*if (this.engineers.length ==0) {
-                this.errors.push("Project engineer is required");
-            }
-
-            if (this.drawings.length == 0) {
-                this.errors.push("Project drwaing man required");
-            } */
         },
         clearAll: function () {
             this.errors = [];
@@ -323,12 +236,13 @@
 
             if (this.seen)
                 setTimeout(() => {
-                    $("#pClient").select2({
+                    $("#pCompany").select2({
 
                     }).on('change', function (e) {
-                        var id = $("#pClient option:selected").val();
-                        sClientId = id;
-                        console.log(" selected client id ", sClientId)
+                        var id = $("#pCompany option:selected").val();
+                        app.companyId = id;
+                        console.log(" company Id ", app.companyId);
+                       
                     });
 
                 }, 200);

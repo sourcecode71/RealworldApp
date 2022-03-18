@@ -14,7 +14,9 @@ namespace Application.DTOs
         public int Year { get; set; }
         public double Week { get; set; }
         public string ProjectNo { get; set; }
+        public string CompanyId { get; set; }
         public string Client { get; set; }
+        public string CompanyName { get; set; }
         public string ClientName { get; set; }
         public DateTime StartDate { get; set; }
         public string StartDateStr { get; set; }

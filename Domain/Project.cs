@@ -1,3 +1,4 @@
+using Domain.Common;
 using Domain.Enums;
 using Domain.Projects;
 using System;
@@ -22,7 +23,8 @@ namespace Domain
         [MaxLength(300)]
         public string Description { get; set; }
         public int SelfProjectId { get; set; }
-        public Guid ClientId { get; set; }
+        public Guid CompanyId { get; set; }
+
         [MaxLength(100)]
         public string Client { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -31,11 +33,11 @@ namespace Domain
         public int Schedule { get; set; }
         public int Progress { get; set; }
         public double Week { get; set; }
-        public double Budget { get; set; }
         public DateTime BudgetSubmitDate { get; set; }
         public double? ApprovedBudget { get; set; }
         public DateTime BudgetApprovedDate { get; set; }
         public double Paid { get; set; }
+        public double Budget { get; set; }
         public double Balance { get; set; }
         public double Factor { get; set; }
         public bool Invoiced { get; set; }

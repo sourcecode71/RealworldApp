@@ -21,6 +21,8 @@
         }
     }
 }
+<link rel="stylesheet" href="~/css/aa-project.css" />
+<link rel="stylesheet" href="~/css/data-table.css" />
 
 <div class="main-card mb-3 card">
     <div id="addEmploye"  class="card-body">
@@ -118,7 +120,7 @@
      <div class="mb-3">
       <div v-if="allEmp.length > 0" class="card-body">
                 <h5 class="card-title">Client List </h5>
-                <table id="allClients" class="table table-striped table-bordered" style="width:100%">
+                <table id="allEmployee" class="table table-striped table-bordered" style="width:100%">
                 <thead>
                 <tr>
                     <th>SL</th>
@@ -140,7 +142,7 @@
 
                     <td> 
                         <button type="button" v-on:click="showProjectsByemp(emp)" class="btn btn-outline-info btn-sm">
-                            <i class="metismenu-icon pe-7s-more"></i> Projects
+                            <i class="metismenu-icon pe-7s-server"></i> Projects
                         </button>  
                      </td>
                 </tr>
@@ -170,23 +172,25 @@
 
           <div class="modal-body" style="width:100%">
 
-            <table id="clientCompany" class="table table-striped table-bordered" style="width:100%">
+            <table id="empWorksOrder" class="table table-striped table-bordered" style="width:100%">
                 <thead style="width:100%">
                     <tr>
                         <th>SL</th>
-                        <th>Name </th>
-                        <th>Client</th>
-                        <th> Bugdet Hour </th>
-                        <th> Due Date </th>
+                        <th>Project </th>
+                        <th>Company</th>
+                        <th>OT No </th>
+                        <th> OT </th>
+                        <th> B. HRS </th>
                     </tr>
                 </thead>
             <tbody>
               <tr v-for="(pemp,index) in empProjects" :key="pemp.id">
                     <td>{{index+1}}</td>
-                    <td>{{pemp.name}}</td>
-                    <td>{{pemp.client}}</td>
+                    <td>{{pemp.projectNo}}</td>
+                    <td>{{pemp.companyName}}</td>
+                    <td>{{pemp.wrkNo}}</td>
+                    <td>{{pemp.consWork}}</td>
                     <td>{{pemp.bHours}}</td>
-                    <td>{{pemp.deliveryDateStr}}</td>
                 </tr>
         
              </tbody>

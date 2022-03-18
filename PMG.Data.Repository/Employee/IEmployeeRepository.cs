@@ -8,6 +8,7 @@ namespace PMG.Data.Repository.Employee
     {
         Task<List<EmployeeDto>> GetAllActiveEmployee();
         Task<List<EpmProjectsDto>> GetEmpProjects(string empId);
+        Task<List<EpmProjectsDto>> GetEmpWorkOrder(string empId);
         Task<List<HourslogDto>> EmployeHourLogSummery(string wrkId); 
          Task<List<HourslogDto>> EmployeHourLogDetails(string wrkId);
         Task<List<HourslogDto>> GetEmpWisehourLogs(string empId);

@@ -36,13 +36,13 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-lg-6">
-                                    <label for="wrkCompany" class=""> Company </label>
+                                   @* <label for="wrkCompany" class=""> Company </label>
                                     <select id="wrkCompany" v-model="comapny" class="form-control ">
                                         <option :value="0"> Please select a project </option>
                                         <option v-for="cmp in companies" :value="cmp.id">
                                             {{ cmp.name }}
                                         </option>
-                                    </select>
+                                    </select>*@
 
                                 </div>
                             </div>
@@ -51,16 +51,10 @@
 
                         <div class="position-relative form-group">
                             <div class="form-row mt-3">
-                                <div v-if="isName" class=" col-md-6 col-sm-6 col-lg-6">
-                                    <label for="workorder" class=""> Work order name </label>
-                                    <input name="workorder" placeholder="Work order name" class="form-control"
-                                        v-model="name">
-                                </div>
-
 
                                 <div class=" col-md-6 col-sm-12 col-lg-6">
-                                    <label for="consecutiveWork" class=""> Consecutive Work </label>
-                                    <input name="consecutiveWork" placeholder="Consecutive  Work" class="form-control"
+                                    <label for="consecutiveWork" class=""> Work Order Name </label>
+                                    <input name="consecutiveWork" placeholder="Work Order Name" class="form-control"
                                         v-model="consecutiveWork">
                                 </div>
 
@@ -237,8 +231,8 @@
                         <div class="col-md-3"> Year :{{projectYear}} </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-md-4"> Work Order No : {{wrkNo}} </div>
-                        <div class="col-md-3"> Work Order : {{wrkConsWork}} </div>
+                        <div class="col-md-4"> OT No : {{wrkNo}} </div>
+                        <div class="col-md-3"> OT Name : {{wrkConsWork}} </div>
                         <div class="col-md-3"> Start Date :{{wrkStartDate}} </div>
                         <div style="width:20% !important" class="col-md-2">Due Date :{{wrkEndDate}} </div>
 

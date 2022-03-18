@@ -54,20 +54,28 @@
                             </div>
 
                             <div class="com-md-6 col-sm-12 col-lg-6">
-                                <label for="addProjectClient">Client </label>
-                                <select v-model="client" id="pClient" class="form-control">
-                                    <option :value="0"> Please select a client </option>
+                                <label for="addProjectClient">Company </label>
+                               @* <select v-model="client" id="pClient" class="form-control">
+                                    <option :value="0"> Please select a Company </option>
                                     <option v-for="client in clients" :value="client.id">
                                         {{ client.name }}
                                     </option>
+                                </select>*@
+
+                                <select v-model="companyId" id="pCompany" class="form-control">
+                                    <option :value="0"> Please select a Company </option>
+                                    <option v-for="company in companies" :value="company.id">
+                                        {{ company.name }}
+                                    </option>
                                 </select>
+
                             </div>
 
-                            <div class="com-md-6 col-sm-12 col-lg-6 mt-2">
+                         @*   <div class="com-md-6 col-sm-12 col-lg-6 mt-2">
                                 <label for="addbudget" >Budget </label>
                                 <input type="text" v-model="budget" v-on:keypress="isNumber($event)"
                                     v-on:blur="formatNumber" value="$ 0" class="form-control" />
-                            </div>
+                            </div>*@
                             <div class="com-md-6 col-sm-12 col-lg-6 mt-2">
                                 <label for="pWeek" >Schedule Weeks </label>
                                 <input type="text" v-model="pweek" v-on:keypress="isNumber($event)"
@@ -216,7 +224,7 @@
                                     <th>SL</th>
                                     <th>Project No</th>
                                     <th>Name</th>
-                                     <th>Client</th>
+                                     <th>Company </th>
                                     <th>End Date</th>
                                     <th>S. Week</th>
                                     <th> Actions </th>
@@ -227,7 +235,7 @@
                                     <td>{{index+1}}</td>
                                     <td>{{allP.projectNo}}</td>
                                     <td>{{allP.name }}</td>
-                                    <td>{{allP.clientName}}</td>
+                                    <td>{{allP.companyName}}</td>
                                     <td>{{allP.deliveryDateStr}}</td>
                                     <td>{{allP.week}}</td>
                                     <td> 
@@ -252,7 +260,7 @@
                 </button>
               </div>
           <div class="modal-body" style="width:100%">
-            <table  class="table table-striped table-bordered" style="width:100%">
+            <table id="empWrkOrder"  class="table table-striped table-bordered" style="width:100%">
                 <thead style="width:100%">
                     <tr>
                          <th>SL</th>

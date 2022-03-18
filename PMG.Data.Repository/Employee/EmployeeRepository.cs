@@ -50,13 +50,13 @@ namespace PMG.Data.Repository.Employee
             {
                 var pemp = await (from ep in _context.ProjectEmployees
                                   join em in _context.Projects on ep.ProjectId equals em.Id
-                                  join cn in _context.Clients on em.ClientId equals cn.Id
+                                  join cn in _context.Company on em.CompanyId equals cn.Id
                                   where ep.EmployeeId == empId
                                   select (new EpmProjectsDto
                                   {
                                       Id = em.Id,
                                       BHours = ep.BudgetHours,
-                                      Client = cn.Name,
+                                      CompanyName = cn.Name,
                                       Name = em.Name,
                                       StartDateStr = em.StartDate.ToString("MM/dd/yyyy"),
                                       DeliveryDateStr = em.DeliveryDate.ToString("MM/dd/yyyy")
@@ -278,9 +278,40 @@ namespace PMG.Data.Repository.Employee
             }
         }
 
+        public async Task<List<EpmProjectsDto>> GetEmpWorkOrder(string empId)
+        {
+            try
+            {
+                var wemp = await(from ew in _context.WorkOrderEmployee
+                                 join wr in _context.WorkOrder on ew.WorkOrderId equals wr.Id
+                                 join p in  _context.Projects on wr.ProjectId equals p.Id
+                                 join em in _context.Employees on ew.EmployeeId equals em.Id
+                                 join cm in _context.Company on p.CompanyId equals cm.Id into cmm
+                                 from c in cmm.DefaultIfEmpty()
+                                 where ew.EmployeeId == empId
+                                 select (new EpmProjectsDto
+                                 {
+                                     Id = ew.Id.ToString(),
+                                     BHours = ew.BudgetHours,
+                                     CompanyName = c.Name,
+                                     Name = string.Format("{0} {1}", em.FirstName, em.LastName),
+                                     StartDateStr = wr.StartDate.ToString("MM/dd/yyyy"),
+                                     DeliveryDateStr = wr.EndDate.ToString("MM/dd/yyyy"),
+                                     WrkNo = wr.WorkOrderNo,
+                                     Year = p.Year,
+                                     ProjectNo = p.ProjectNo,
+                                     ConsWork = wr.ConsWork
+                                      
+                                 })).ToListAsync();
+                return wemp;
+            }
+            catch (System.Exception ex)
+            {
 
-       
+                throw ex;
+            }
         }
+    }
 
  }
 
