@@ -162,6 +162,7 @@ namespace PMG.Data.Repository.Projects
                         wrk.BudgetStatus = dto.Status;
                         wrk.ApprovalDate = DateTime.Now;
                         wrk.ApprovedBudget = appBudget;
+                        wrk.Balance = appBudget;
                         wrk.BudgetStatus = 1;
                     }
 
@@ -173,7 +174,7 @@ namespace PMG.Data.Repository.Projects
                         pba.ApprovedDate = DateTime.Now;
                         pba.ApprovedBudget = dto.ApprovedBudget;
                         pba.Comments = dto.Comments;
-                        pba.ApprovalSetUser = dto.ApprovalSetUser;
+                        pba.ApprovalSetUser = dto.SetUser;
                     }
 
                     var Status = await _context.SaveChangesAsync();
@@ -218,7 +219,7 @@ namespace PMG.Data.Repository.Projects
                         OriginalBudget = pba.Budget,
                         OriginalSetDate = pba.SetDate,
                         OriginalSetUser = pba.SetUser,
-                        SetUser = pba.SetUser,
+                        SetUser = dto.SetUser,
                         SetDate = DateTime.Now,
                         Status = pba.Status,
                         Comments = pba.Comments

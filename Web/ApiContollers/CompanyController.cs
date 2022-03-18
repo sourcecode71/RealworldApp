@@ -32,8 +32,19 @@ namespace Web.ApiContollers
         [HttpPost("save-client")]
         public async Task<IActionResult> SaveClient(ClientDTO dTO)
         {
-            bool savingStatus = await _cmRepository.SaveCleint(dTO);
-            return Ok(savingStatus);
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                dTO.SetUser = HttpContext.Session.GetString("current_user_id");
+                bool savingStatus = await _cmRepository.SaveCleint(dTO);
+                return Ok(savingStatus);
+            }
+            else
+            {
+                return Ok(false);
+            }
+
+        
         }
 
         [HttpGet("all-companies")]
@@ -75,6 +86,24 @@ namespace Web.ApiContollers
             if (!string.IsNullOrEmpty(currentEmail))
             {
                 dTO.EmpId = new Guid(HttpContext.Session.GetString("current_user_id"));
+                dTO.SetUser = HttpContext.Session.GetString("current_user_id");
+                bool savingStatus = await _cmRepository.SaveEmployeHourLog(dTO);
+                return Ok(savingStatus);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Home");
+            }
+        }
+
+        [HttpPost("admin/save-hour-log")]
+        public async Task<IActionResult> SaveByAdminHourlog(HourlogsDTO dTO)
+        {
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                dTO.SetUser = HttpContext.Session.GetString("current_user_id");
                 bool savingStatus = await _cmRepository.SaveEmployeHourLog(dTO);
                 return Ok(savingStatus);
             }
@@ -129,6 +158,79 @@ namespace Web.ApiContollers
                     
 
         }
+
+
+        [Authorize(AuthenticationSchemes = "Cookies")]
+        [HttpGet("wrk-hour-log")]
+        public async Task<IActionResult> LoadWrkHourLog(string wrkId)
+        {
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                var empId = HttpContext.Session.GetString("current_user_id");
+
+
+               if (currentRole == "Engineering")
+                {
+                    var logs = await _cmRepository.GetWorkOrderHourLogs(empId, wrkId, EmployeeType.Engineering);
+                    return Ok(logs);
+                }
+                else if (currentRole == "Drawing")
+                {
+                    var logs = await _cmRepository.GetWorkOrderHourLogs(empId, wrkId, EmployeeType.Drawing);
+                    return Ok(logs);
+                }
+                else
+                {
+                    return Ok(null);
+                }
+            }
+            else
+            {
+                return Ok(null);
+            }
+
+
+        }
+
+
+        [Authorize(AuthenticationSchemes = "Cookies")]
+        [HttpGet("admin-wrk-hour-log")]
+        public async Task<IActionResult> LoadWrkHourLogForAdmin(string wrkId, string empId)
+        {
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                string currentRole = HttpContext.Session.GetString("current_user_role");
+
+                if (string.IsNullOrEmpty(currentRole))
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+
+                // TODO : create new repository method for admin hour logs loading 
+                var logs = await _cmRepository.GetWorkOrderHourLogs(empId, wrkId, EmployeeType.Engineering);
+                return Ok(logs);
+            }
+            else
+            {
+                return Ok(null);
+            }
+
+
+        }
+
+
+     
 
 
     }

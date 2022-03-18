@@ -16,6 +16,7 @@ using System;
 using System.Globalization;
 using PMG.Data.Repository.Projects;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 
 namespace Web.ApiControllers
 {
@@ -212,8 +213,19 @@ namespace Web.ApiControllers
         [HttpPost("budegt-approval/status")]
         public async Task<ActionResult> SaveWorkOrderApproval(ProjectApprovalDto dto)
         {
-            bool isApproved = dto.Status == 3? await _project.BudgetChanges(dto) : await _project.ApprovalBudget(dto);
-            return Ok(isApproved);
+           
+
+            string currentEmail = HttpContext.Session.GetString("current_user_email");
+            if (!string.IsNullOrEmpty(currentEmail))
+            {
+                dto.SetUser = HttpContext.Session.GetString("current_user_id");
+                bool isApproved = dto.Status == 3 ? await _project.BudgetChanges(dto) : await _project.ApprovalBudget(dto);
+                return Ok(isApproved);
+            }
+            else
+            {
+                return Ok(false);
+            }
         }
 
 

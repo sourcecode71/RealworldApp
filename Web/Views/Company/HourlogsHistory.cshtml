@@ -1,0 +1,165 @@
+﻿
+@{
+    ViewData["Title"] = "Hour Logs History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Web.Models
+@model AdminPageDetails
+@{
+    string currentName = "";
+    string currentRole = "";
+    byte[] currentRoleByte;
+    byte[] currentNameByte;
+
+    if (Context.Session.Keys.Count() > 0)
+    {
+        Context.Session.TryGetValue("current_user_role", out currentRoleByte);
+        Context.Session.TryGetValue("current_user_name", out currentNameByte);
+
+        if (currentRoleByte != null && currentNameByte != null)
+        {
+            currentRole = System.Text.Encoding.Default.GetString(currentRoleByte);
+            currentName = System.Text.Encoding.Default.GetString(currentNameByte);
+        }
+    }
+}
+
+    <link rel="stylesheet" href="~/css/projects.css" />
+    <link rel="stylesheet" href="~/css/data-table.css" />
+    <div id="hourLog" >
+        
+        <div class="row main-card mb-3 card">
+            <div class="card-body "> 
+                
+                 <div> 
+                    <h5 class="card-title">Hours log </h5>
+
+                           <p v-if="errors.length">
+                    <b class="text-danger">Please correct the following error(s):</b>
+                    <ul>
+                      <li v-for="error in errors" class="text-danger">{{ error }}</li>
+                    </ul>
+                  </p>
+               
+                    <form style="display:none" class="p-2" >
+                        <div class="form-row">
+
+                        <div class="col-md-4 col-lg-4">
+                          <label for="wrkOrderId"> Work Order </label>
+                         <select style="width:100%" id="wrkOrderId"  v-model="wrkId" class="form-control">
+                            <option :value="0"> Please select a work order </option>
+                            <option v-for="wrkS in workOrders" :value="wrkS.id">
+                                {{ wrkS.consecutiveWork }}
+                            </option>
+                        </select>
+                        </div>
+                     
+                         <div class="col-md-4 col-lg-4">
+                        <label for="wrkOrderId"> Employe </label>
+                        <select style="width:100%" id="employeeId"  v-model="empId" class="form-control">
+                            <option :value="0"> Please select Employee </option>
+                            <option v-for="emp in hrsEmp" :value="emp.id">
+                                {{ emp.name }}
+                            </option>
+                        </select>
+                        </div>
+
+                          <div class="col-md-2 col-lg-2">
+                             <button type="button"  v-on:click ="SubmitHourLogs()" style="margin-top:31px" class=" btn btn-outline-primary">  Submit </button>
+
+                          </div>
+                        </div>
+
+
+                    </form>
+                
+            </div>
+
+
+      <div id="hourLog" class="col-md-12 col-sm-12 col-lg-12" >
+
+        <div v-if="empHrs.length" class="modal-body wrkHourLog mb-2" style="width:70%"> 
+             <table id="empHourLog" class="table table-striped table-bordered" >
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Work No</th>
+                        <th> Spent Date </th>
+                        <th> Spent Hour </th>
+               
+                    </tr>
+                </thead>
+            <tbody>
+              <tr v-for="(log,index) in empHrs" :key="log.id">
+                    <td>{{index+1}}</td>
+                    <td>{{log.wrkNo}}</td>
+                    <td>{{log.logDateStr}}</td>
+                    <td>{{log.lhour}}</td>
+                </tr>
+        
+             </tbody>
+          
+            </table>
+
+
+        </div>
+
+         <div class="modal-body wrkHourLog" style="width:100%">
+            <table id="empHourLogSummery" class="table table-striped table-bordered" >
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Name </th>
+                        <th>Emp Type</th>
+                        <th>Work No</th>
+                        <th>Work Order</th>
+                        <th> Budget Hour </th>
+                        <th> Spent Hour </th>
+                        <th> Actions </th>
+               
+                    </tr>
+                </thead>
+            <tbody>
+              <tr v-for="(log,index) in empHrsSummery" :key="log.id">
+                    <td>{{index+1}}</td>
+                    <td >{{log.empName}}</td>
+                    <td> {{log.empType}} </td>
+                    <td>{{log.wrkNo}}</td>
+                    <td>{{log.wrkName}}</td>
+                    <td>{{log.bhour}}</td>
+                    <td>{{log.lhour}}</td>
+                    <td>
+                         <button style="text-align:right" type="button" v-on:click="ShowAllHRS(log)"
+                                            class="btn btn-sm btn-outline-info"> Details
+                                        </button>
+                    </td>
+                </tr>
+        
+             </tbody>
+             <tfoot>
+            <tr>
+                <th colspan="6" style="text-align:right">Total:</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+            </table>
+            
+              </div>
+
+                </div>
+
+            </div>
+       
+    </div>
+    </div>
+   
+    
+     <script src="~/views/hourlogsHistory.js"></script>
+
+      <div class="col-md-1"></div>
+
+  
+
+

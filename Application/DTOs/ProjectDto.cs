@@ -78,6 +78,7 @@ namespace Application.DTOs
         public string ConsecutiveWork { get; set; }
         public int Year { get; set; }
         public double SceduleWeek { get; set; }
+        public string SetUser { get; set; }
     }
 
     public class ProjectEmp

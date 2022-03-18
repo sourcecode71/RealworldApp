@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
 using System;
@@ -121,6 +122,58 @@ namespace PMG.Data.Repository.Employee
 
         }
 
+        public async Task<List<HourslogDto>> EmployeHourLogSummeryAll()
+        {
+            try
+            {
+                DbCommand cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandText = "dbo.Hrs_HourLogSummery_All";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                //var param = cmd.CreateParameter();
+                //param.ParameterName = "@WrkId";
+                //param.Value = new Guid(wrkId);
+                //cmd.Parameters.Add(param);
+
+                List<HourslogDto> wrkList = new List<HourslogDto>();
+
+                _context.Database.OpenConnection();
+                using (DbDataReader rd = await cmd.ExecuteReaderAsync())
+                {
+                    while (rd.Read())
+                    {
+
+                        HourslogDto wOT = new HourslogDto()
+                        {
+
+                            EmpId = rd.GetValue("empId").ToString(),
+                            WrkId = rd.GetValue("wrkId").ToString(),
+                            WrkNo = rd.GetValue("WorkOrderNo").ToString() != null ? rd.GetValue("WorkOrderNo").ToString() : "",
+                            WrkName = rd.GetValue("ConsWork").ToString() != null ? rd.GetValue("ConsWork").ToString() : "",
+                            Bhour = Convert.ToDouble(rd.GetValue("BudgetHours").ToString()),
+                            Lhour = Convert.ToDouble(rd.GetValue("SpentHour").ToString()),
+                            EmpType = rd.GetValue("RoleName").ToString(),
+                            FirstName = rd.GetValue("FirstName") != null ? rd.GetValue("FirstName").ToString() : "",
+                            LastName = rd.GetValue("LastName") != null ? rd.GetValue("LastName").ToString() : ""
+                        };
+
+                        wOT.EmpName = String.Format("{0} {1}", wOT.FirstName, wOT.LastName);
+
+                        wrkList.Add(wOT);
+
+                    }
+                }
+
+                return wrkList;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
 
         public  async Task<List<HourslogDto>> EmployeHourLogDetails(string wrkId)
         {
@@ -224,5 +277,10 @@ namespace PMG.Data.Repository.Employee
                 throw ex;
             }
         }
-    }
-}
+
+
+       
+        }
+
+ }
+

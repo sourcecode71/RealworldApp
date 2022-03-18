@@ -41,8 +41,7 @@
                       <li v-for="error in errors" class="text-danger">{{ error }}</li>
                     </ul>
                   </p>
-                @if (currentRole == "Engineering" || currentRole == "Drawing")
-                {
+               
                     <form class="p-2" >
 
                          <label for="wrkOrderId"> Work Order </label>
@@ -50,6 +49,14 @@
                             <option :value="0"> Please select a work order </option>
                             <option v-for="wrkS in workOrders" :value="wrkS.id">
                                 {{ wrkS.consecutiveWork }}
+                            </option>
+                        </select>
+
+                          <label for="wrkOrderId"> Employe </label>
+                        <select style="width:100%" id="employeeId"  v-model="empId" class="form-control">
+                            <option :value="0"> Please select Employee </option>
+                            <option v-for="emp in hrsEmp" :value="emp.id">
+                                {{ emp.name }}
                             </option>
                         </select>
 
@@ -76,7 +83,7 @@
 
                         <button type="button"  v-on:click ="SubmitHourLogs()" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> </button>
                     </form>
-                }
+                
             </div>
 
 
@@ -118,7 +125,7 @@
     </div>
    
     
-     <script src="~/views/hourlogs.js"></script>
+     <script src="~/views/adminHourlogs.js"></script>
 
       <div class="col-md-1"></div>
 

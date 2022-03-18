@@ -7,6 +7,7 @@ const app = new Vue({
 
        // this.LoadAllHourLogs();
         this.LoadActiveWorkOrder();
+        this.loadAllEmpoyee();
         this.Select2Setup();
     },
     data: {
@@ -14,9 +15,11 @@ const app = new Vue({
         logs: [],
         workOrders: [],
         wrkId: '0',
+        empId:'0',
         spentHour: '',
         comments: '',
-        hourLogDate:'',
+        hourLogDate: '',
+        hrsEmp: [],
         isSeenEmp: false
     },
     methods: {
@@ -27,11 +30,12 @@ const app = new Vue({
             if (this.isValidFrom()) {
                 const config = { headers: { 'Content-Type': 'application/json' } };
                 var base_url = window.location.origin;
-                var hrsUrl = base_url + "/api/company/save-hour-log";
+                var hrsUrl = base_url + "/api/company/admin/save-hour-log";
 
                 const hrsData =
                 {
-                    workOrderId: wrkIdSelect,
+                    workOrderId: this.wrkId,
+                    empId: this.empId,
                     spentHour: this.spentHour,
                     remarks: this.comments,
                     spentDate: this.hourLogDate
@@ -46,8 +50,9 @@ const app = new Vue({
                             showConfirmButton: false,
                             timer: 1500
                         })
+                        this.LoadHourLogForEmpWrk();
                         this.clearAll();
-                        this.LoadAllHourLogs();
+
 
                     }).catch(errors => {
                         Swal.fire({
@@ -65,7 +70,7 @@ const app = new Vue({
         LoadActiveWorkOrder: function () {
             const config = { headers: { "Content-Type": "application/json" } };
             var base_url = window.location.origin;
-            const clientURL = base_url + "/api/WorkOrder/load-approved-orders/emp-wise";
+            const clientURL = base_url + "/api/WorkOrder/load-work-orders/active";
 
             axios.get(clientURL, config).then(
                 (result) => {
@@ -87,7 +92,7 @@ const app = new Vue({
 
             axios.get(clientURL, config).then(result => {
 
-                $("#empHourLog").dataTable().fnDestroy();
+
 
                 this.logs = result.data;
 
@@ -105,62 +110,70 @@ const app = new Vue({
 
         },
 
-        LoadHourLogForEmpWrk: function (wrkId) {
+        LoadHourLogForEmpWrk: function () {
 
-            console.log(" load work ordeer Id ", wrkId);
+            if (this.empId !=0  && this.wrkId !=0) {
+                const config = { headers: { 'Content-Type': 'application/json' } };
+                var base_url = window.location.origin;
+                const clientURL = base_url + "/api/Company/admin-wrk-hour-log?wrkId=" + this.wrkId + "&empId=" + this.empId;
 
-            const config = { headers: { 'Content-Type': 'application/json' } };
+                axios.get(clientURL, config).then(result => {
+                    console.log(result.data)
+                    this.logs = result.data;
+
+                    setTimeout(() => {
+                        $('#empHourLog').DataTable({
+                            "scrollY": "500px",
+                            "scrollCollapse": true,
+                            "paging": false
+                        });
+                    }, 100);
+
+                }, error => {
+                    console.error(error);
+                });
+            }
+
+        
+
+        },
+        loadAllEmpoyee: function () {
+            const config = { headers: { "Content-Type": "application/json" } };
             var base_url = window.location.origin;
-            const clientURL = base_url + "/api/Company/wrk-hour-log?wrkId=" + wrkId;
+            const clientURL = base_url + "/api/Employee/load-hourlogs-emp";
 
-            axios.get(clientURL, config).then(result => {
-                console.log(result.data)
-                this.logs = result.data;
-
-                setTimeout(() => {
-                    $('#empHourLog').DataTable({
-                        "scrollY": "500px",
-                        "scrollCollapse": true,
-                        "paging": false
-                    });
-                }, 100);
-
-            }, error => {
-                console.error(error);
-            });
-
+            axios.get(clientURL, config).then(
+                (result) => {
+                    this.hrsEmp = result.data;
+                },
+                (error) => {
+                    console.error(error);
+                }
+            );
         },
 
         Select2Setup: function () {
             setTimeout(() => {
                 $("#wrkOrderId").select2({}).on('change', function (e) {
                     var id = $("#wrkOrderId option:selected").val();
-                    wrkIdSelect = id;
-                    app.LoadHourLogForEmpWrk(wrkIdSelect);
-                });;
+                    app.wrkId = id;
+                    app.LoadHourLogForEmpWrk();
+                });
+
+
+                $("#employeeId").select2({}).on('change', function (e) {
+                    var id = $("#employeeId option:selected").val();
+                    app.empId = id;
+                    app.LoadHourLogForEmpWrk();
+                });
+                
 
             }, 100);
         },
         isValidFrom: function () {
             this.errors = [];
 
-            if (wrkIdSelect == "0") {
-                this.errors.push(" Please select the work order ");
-            }
-
-            if (!this.spentHour) {
-                this.errors.push(" Please enter spent hours");
-            }
-
-            if (!this.hourLogDate) {
-                this.errors.push(" Please select spent Date");
-            }
-
-            if (this.errors.length > 0) {
-                return false;
-            } else {
-                return true;
-            }
+          
         },
 
         isNumber: function (evt) {

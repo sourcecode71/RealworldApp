@@ -44,17 +44,31 @@ const app = new Vue({
 
                 axios.post(clientURL, clientData, config)
                     .then(response => {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Record has been added successfully!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        this.clearAll();
-                        this.LoadEmployee();
+
+                        var resp = response.data;
+                        console.log("response --- ", response.data);
+
+                        if (resp.succeeded) {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Record has been added successfully!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            this.clearAll();
+                            this.LoadEmployee();
+                        } else {
+                            resp.errors.forEach(err => {
+                                this.errors.push(err.description);
+                            })
+                        }
+                       
 
                     }).catch(errors => {
+
+                        console.log(" error.response", error.response);
+
                         Swal.fire({
                             position: 'top-end',
                             title: 'Error!',
@@ -97,6 +111,11 @@ const app = new Vue({
             if (this.password != this.confirmPassword) {
                 this.errors.push("Confirm password is not matching.");
             }
+
+            if (!this.role) {
+                this.errors.push("Please select the emloyee role.");
+            }
+
             
 
             if (!this.errors.length) {

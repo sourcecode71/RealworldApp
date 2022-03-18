@@ -137,43 +137,54 @@ namespace Web.ApiControllers
         [HttpPost("register")]
         public async Task<ActionResult<EmployeeDto>> Register(RegisterDto registerDto)
         {
-            if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
+            try
             {
-                return BadRequest("Email taken");
-            }
-
-            var user = new Employee
-            {
-                Name = registerDto.Name,
-                Email = registerDto.Email,
-                UserName = registerDto.Email,
-                FirstName = registerDto.FirstName,
-                LastName = registerDto.LastName,
-                PhoneNumber = registerDto.Phone,
-            };
-
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
-
-            if (result.Succeeded)
-            {
-                bool existRole = await _roleManager.RoleExistsAsync(registerDto.Role);
-
-                if (!existRole)
+                if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
                 {
-                    IdentityRole role = new IdentityRole();
-                    role.Name = registerDto.Role;
-
-                    await _roleManager.CreateAsync(role);
+                    return BadRequest("Email taken");
                 }
 
-                await _userManager.AddToRoleAsync(user, registerDto.Role);
+                var user = new Employee
+                {
+                    Name = registerDto.Name,
+                    Email = registerDto.Email,
+                    UserName = registerDto.Email,
+                    FirstName = registerDto.FirstName,
+                    LastName = registerDto.LastName,
+                    PhoneNumber = registerDto.Phone,
+                };
 
-                IList<string> roles = await _userManager.GetRolesAsync(user);
+                var result = await _userManager.CreateAsync(user, registerDto.Password);
 
-                return CreateEmployeeObject(user, roles.Count > 0 ? roles[0] : string.Empty);
+                if (result.Succeeded)
+                {
+                    bool existRole = await _roleManager.RoleExistsAsync(registerDto.Role);
+
+                    if (!existRole)
+                    {
+                        IdentityRole role = new IdentityRole();
+                        role.Name = registerDto.Role;
+
+                        await _roleManager.CreateAsync(role);
+                    }
+
+                    await _userManager.AddToRoleAsync(user, registerDto.Role);
+
+                    IList<string> roles = await _userManager.GetRolesAsync(user);
+
+                    var usrResp= CreateEmployeeObject(user, roles.Count > 0 ? roles[0] : string.Empty);
+                    
+                   // return Ok(usrResp);
+
+                }
+
+                return Ok(result);
             }
+            catch (System.Exception ex)
+            {
 
-            return BadRequest("Problem registring user");
+                throw ex;
+            }
         }
 
         
@@ -246,12 +257,28 @@ namespace Web.ApiControllers
             var empDto = await _empRepository.EmployeHourLogDetails(wrkId);
             return empDto;
         }
+       
+
+        [HttpGet("all-hour-log/summery")]
+        public async Task<ActionResult<List<HourslogDto>>> GetHourLogsSummeryAll()
+        {
+            var empDto = await _empRepository.EmployeHourLogSummeryAll();
+            return empDto;
+        }
 
         [HttpGet("emp-wise-hour")]
         public async Task<ActionResult<List<HourslogDto>>> GetEmpWisehourLogs(string EmpId)
         {
             var empDto = await _empRepository.GetEmpWisehourLogs(EmpId);
             return empDto;
+        }
+
+        [HttpGet("load-hourlogs-emp")]
+        public async Task<ActionResult<List<EmployeeDto>>> GetHrsLogEmployes()
+        {
+            var empDto = await _empRepository.GetAllActiveEmployee();
+            var filterEmp = empDto.Where(p => p.Role == "Drawing" || p.Role == "Engineering").Select(p=>p).ToList();
+            return filterEmp;
         }
     }
 }

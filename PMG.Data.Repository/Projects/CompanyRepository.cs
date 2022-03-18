@@ -20,7 +20,7 @@ namespace PMG.Data.Repository.Projects
         Task<List<CompanyDTO>> GetAllCompany(Guid guid);
         Task<bool> SaveEmployeHourLog(HourlogsDTO dTO);
         Task<List<HourlogsDTO>> GetAllHourLogs(string empId,EmployeeType empType);
-  
+        Task<List<HourlogsDTO>> GetWorkOrderHourLogs(string empId, string wrkId, EmployeeType empType);
 
     }
     public class CompanyRepository : ICompanyRepository
@@ -100,6 +100,9 @@ namespace PMG.Data.Repository.Projects
                    ContactName = dTO.ContactName,
                    email = dTO.Email,
                    phone= dTO.Phone,
+                   SetDate=DateTime.Now,
+                   SetUser = dTO.SetUser,
+
                };
                 _context.Clients.Add(client);
                 int State = await _context.SaveChangesAsync();
@@ -123,7 +126,9 @@ namespace PMG.Data.Repository.Projects
                     ClientId = dTO.ClientId,
                     ContactName =dTO.ContactName,
                     Email = dTO.Email,
-                    Phone=dTO.Phone
+                    Phone=dTO.Phone,
+                    SetUser=dTO.SetUser,
+                    SetDate=DateTime.Now
                 };
 
                 _context.Company.Add(company);
@@ -153,9 +158,9 @@ namespace PMG.Data.Repository.Projects
                         SpentDate = dTO.SpentDate,
                         BalanceHour = (prevHour + dTO.SpentHour),
                         Remarks = dTO.Remarks,
-                        SetDate=dTO.SpentDate,
+                        SetDate= DateTime.Now,
                         HourLogFor =1,
-                        SetUser = dTO.EmpId.ToString()
+                        SetUser = dTO.SetUser
                     };
 
                     _context.Hourlogs.Add(hourlogs);
@@ -212,6 +217,55 @@ namespace PMG.Data.Repository.Projects
                             return result;
                         }
                        
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+
+        public async Task<List<HourlogsDTO>> GetWorkOrderHourLogs(string empId,string wrkId, EmployeeType empType)
+        {
+            try
+            {
+                var hrLogs = (from hr in _context.Hourlogs
+                              join wrk in _context.WorkOrder on hr.WorkOrderId equals wrk.Id
+                              join e in _context.Employees on hr.EmpId.ToString() equals e.Id
+                              join p in _context.Projects on wrk.ProjectId equals p.Id
+                              where (wrk.Status != ProjectStatus.Archived && wrk.Id == new Guid(wrkId))
+                              select new HourlogsDTO
+                              {
+                                  EmpId = hr.EmpId,
+                                  EmpName = String.Format("{0} {1}", e.FirstName, e.LastName),
+                                  SpentHour = hr.SpentHour,
+                                  SpentDate = hr.SpentDate,
+                                  BalanceHour = hr.BalanceHour,
+                                  WorkOrderId = hr.WorkOrderId,
+                                  WorkOrderNo = wrk.WorkOrderNo,
+                                  WorkOrderName = wrk.ConsWork,
+                                  ProjectNo = p.ProjectNo,
+                                  ProjectId = p.Id,
+                                  ProjectName = p.Name,
+                                  Year = p.Year,
+                                  SpentDateStr = hr.SetDate.ToString("MM/dd/yyyy"),
+                                  Remarks = hr.Remarks
+                              }).AsQueryable();
+
+                if (empType == EmployeeType.Engineering || empType == EmployeeType.Drawing)
+                {
+
+                    var result = await hrLogs.Where(p => p.EmpId == new Guid(empId)).ToListAsync();
+                    return result;
+                }
+                else
+                {
+                    var result = await hrLogs.ToListAsync();
+                    return result;
+                }
+
             }
             catch (Exception ex)
             {

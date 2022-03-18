@@ -22,5 +22,6 @@ namespace Application.DTOs
         public DateTime SpentDate { get; set; }
         public string SpentDateStr { get; set; }
         public string Remarks { get; set; }
+        public string SetUser { get; set; }
     }
 }

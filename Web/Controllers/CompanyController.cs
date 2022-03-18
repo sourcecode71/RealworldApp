@@ -134,5 +134,11 @@ namespace Web.Controllers
 
             return RedirectToAction("Login", "Home");
         }
+
+
+        public IActionResult HourlogsHistory()
+        {
+            return View();
+        }
     }
 }
