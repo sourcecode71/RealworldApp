@@ -109,7 +109,10 @@ const app = new Vue({
             axios.get(wrkURL, config).then(
                 (result) => {
                     $("#empHourLog").dataTable().fnDestroy();
-                    this.empHrs = result.data;
+                    setTimeout(() => {
+                        this.empHrs = result.data;
+
+                    }, 100);
                     setTimeout(() => {
                         $('#empHourLog').DataTable({
                             "scrollY": "230px",
@@ -117,7 +120,7 @@ const app = new Vue({
                             "paging": false,
                             searching: false,
                         });
-                    }, 100);
+                    }, 500);
                   
 
                 },
