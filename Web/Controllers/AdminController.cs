@@ -62,7 +62,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                if (currentRole == "Admin")
+                if (currentRole == "Admin" || currentRole == "Management")
                 {
                     return View();
                 }
@@ -88,7 +88,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                if (currentRole == "Admin")
+                if (currentRole == "Admin" || currentRole == "Management")
                 {
                     AdminPageDetails adminPage = new AdminPageDetails();
 
@@ -122,7 +122,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                if (currentRole == "Admin")
+                if (currentRole == "Admin" || currentRole == "Management")
                 {
                     return View();
                 }
@@ -148,7 +148,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                if (currentRole == "Admin")
+                if (currentRole == "Admin" || currentRole == "Management")
                 {
                     AdminPageDetails adminPage = new AdminPageDetails();
 

@@ -4,8 +4,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
- <div id="invPay" class="row">
+ <div id="invPay" class="">
     <link rel="stylesheet" href="~/css/projects.css" />
+     <link rel="stylesheet" href="~/css/data-table.css" />
     <style>
     .select2-container .select2-selection--single{
         min-height:37px;
@@ -14,7 +15,8 @@
 
     <div class="main-card mb-3 card">
             <div class="card-body"><h5 class="card-title"> Invoice </h5>
-                <form class="p-2" action="#" onsubmit="SubmitInvoice();return false" >
+                <div class="col-md-8 col-lg-8"> 
+            <form v-if="seen" class="p-2" action="#" onsubmit="SubmitInvoice();return false" >
                      <p v-if="errors.length">
                         <b class="text-danger">Please correct the following error(s):</b>
                         <ul>
@@ -34,32 +36,21 @@
                         </div>
                     </div>
 
-                    <div v-if="isWrkVisiblity" >
-                         <div class="row">
-                            <div class="col-md-6 col-sm-12"> OT No :  </div>
-                            <div class="col-md-6 col-sm-12"> OT Name :  </div>
-                            <div class="col-md-6 col-sm-12"> OT Budget :  </div>
-                            <div class="col-md-6 col-sm-12">  Balance :  </div>
-
-                            <div class="col-md-6 col-sm-12"> Project No   :  </div>
-                            <div class="col-md-6 col-sm-12"> Project Year :  </div>
-                           
-                        </div>
-                    </div>
+                    
 
                     <div  class="position-relative form-group">
                         <div class="row">
-                            <div class =" col-md-6 col-sm-6 col-lg-6">
+                           @* <div class =" col-md-6 col-sm-6 col-lg-6">
                                 <label for="partialBill" class="">  Partial bill :  </label>
                                 <input name="project" v-model="partialBill" id="partialBill"  v-on:keypress="isNumber($event)" v-on:blur="formatNumberPartialBill" placeholder="Partial bill" class="form-control">
-                            </div>
+                            </div>*@
 
                              <div class ="col-md-6 col-sm-6 col-lg-6">
                                 <label id="invbill" for="exampleEmail" class=""> Invoice bill:  </label>
                                 <input name="project" v-model="invoicebill" id="invbill"  v-on:keypress="isNumber($event)" v-on:blur="formatNumberInvBill" placeholder="Approved Budget" class="form-control">
                             </div>
 
-                             <div class =" mt-4 col-md-6 col-sm-6 col-lg-6">
+                             <div class ="col-md-6 col-sm-6 col-lg-6">
                                 <label for="invNumber" class="">  Invoice Number :  </label>
                                 <input name="project" v-model="invoiceNumber" id="invNumber" placeholder="Invoice Number" class="form-control">
                             </div>
@@ -81,7 +72,32 @@
                     <button type="button" v-on:click="submitInvoice()" class="mt-1 btn btn-primary"> <strong> <i class='fa fa-save'></i> <span id="spSaveUpdate"> Submit </span>  </strong> </button>
                 </form>
 
-                     <div class="card-body"><h5 class="card-title"> Invoice </h5>
+                <div class="col-md-3">
+                    <button v-on:click="showHide()" type="button" class="btn btn-outline-warning mt-4">
+                        <i v-if="!seen" class="pe-7s-plus"> </i>
+                        <i v-if="seen" class="pe-7s-less"> </i>
+                         Invoice
+                    </button>
+                </div>
+                </div>
+                   <div class="col-md-9 col-lg-9 col-sm-12"> 
+
+                             <div v-if="seenInvDetails" class="card-body row " >
+                                    <div class="col-md-4 col-lg-4 col-sm-6"> OT No : {{inv.workNo}}  </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6"> OT Name : {{inv.workOrderName}}  </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6"> Due Date :{{inv.dueDateStr}}  </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6">  Original Budegt : {{formatCurrency(inv.originalBudget)}}  </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6">  Approved Budegt : {{formatCurrency(inv.approvedBudget)}}  </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6">  Approved Date : {{inv.approvedDateStr}}  </div>
+
+                                    <div class="col-md-4 col-lg-4 col-sm-6"> Invoice No   : {{inv.invoiceNumber}}  </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6"> Invoice Bill  : {{formatCurrency(inv.invoiceBill)}}  </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6"> Invoice Date  : {{inv.invoiceDateStr}}  </div>
+                            </div>
+                       </div>
+
+
+                     <div class="card-body"><h5 class="card-title"> Invoice List </h5>
                                         <table id="invAllLogs" class="mb-0 table table-striped">
                                             <thead>
                                             <tr style="font-size:14px">
@@ -89,8 +105,10 @@
                                                 <th> OT No </th>
                                                 <th> OT Name </th>
                                                 <th> Date  </th>
+                                                <th> Invoice No </th>
                                                 <th> Invoice Bill </th>
                                                 <th> Balance </th>
+                                                <th> Action </th>
                                             </tr>
                                             </thead>
                                                <tbody>
@@ -100,7 +118,15 @@
                                                         <td>{{inv.workOrderName}}</td>
                                                         <td>{{inv.invoiceDateStr}}</td>
                                                         <td>{{inv.invoiceNumber}}</td>
+                                                        <td>{{inv.invoiceBill}}</td>
                                                         <td>{{inv.balance}}</td>
+                                                        <td>
+                                                            <button type="button" v-on:click="showInvoiceDetails(inv)" class="btn btn-outline-info btn-sm">
+                                                                <i class="metismenu-icon pe-7s-repeat"></i> Details
+                                                           </button> 
+                                                        </td>
+                                                       
+
                                                     </tr>
                                                  </tbody>
                                           

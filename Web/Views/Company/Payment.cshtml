@@ -1,47 +1,153 @@
-﻿
-@{
-    ViewData["Title"] = "Payment";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@{
+  ViewData["Title"] = "Payment";
+  Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
- <div id="invPay">
-    <link rel="stylesheet" href="~/css/projects.css" />
-    <link rel="stylesheet" href="~/css/data-table.css" />
+<div id="invPay">
+  <link rel="stylesheet" href="~/css/projects.css" />
+  <link rel="stylesheet" href="~/css/data-table.css" />
 
-    <div style="min-height:500px" class="main-card mb-3 card">
-            <div class="card-body"><h5 class="card-title"> Payment </h5>
-                     <div class="card-body"><h5 class="card-title"> Payment </h5>
-                                        <table id="invAllLogs" class="mb-0 table table-striped">
-                                            <thead>
-                                            <tr style="font-size:14px">
-                                                <th> # </th>
-                                                <th> Work No</th>
-                                                <th> Work Order </th>
-                                                <th> Date  </th>
-                                                <th> Invoice Bill </th>
-                                                <th> Balance </th>
-                                                @*<th> Action </th>*@
-                                            </tr>
-                                            </thead>
-                                               <tbody>
-                                                  <tr v-for="(inv,index) in allInv" :key="inv.id">
-                                                        <td>{{index+1}}</td>
-                                                        <td>{{inv.workNo}}</td>
-                                                        <td>{{inv.workOrderName}}</td>
-                                                        <td>{{inv.invoiceDateStr}}</td>
-                                                        <td>{{inv.invoiceNumber}}</td>
-                                                        <td>{{inv.balance}}</td>
-                                                       @* <td> </td>*@
-                                                    </tr>
-                                                 </tbody>
-                                          
-                                        </table>
-                                    </div>
+  <div style="min-height:500px" class="main-card mb-3 card">
+    <div class="card-body">
+      <h5 class="card-title"> Payment </h5>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-2 col-lg-2 cl-sm-0"></div>
+          <div class="col-md-8 col-lg-8 col-sm-12">
+            <h5 class="card-title"> Pending Invoicce for Payment </h5>
+            <table id="invAllLogs" class="mb-0 table table-striped">
+              <thead>
+                <tr style="font-size:14px">
+                  <th> Invoice No </th>
+                  <th> Invoice Bill </th>
+                  <th> Date </th>
+                  <th> Pay </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(inv,index) in allInv" :key="inv.id">
+                  <td>{{inv.invoiceNumber}}</td>
+                  <td>{{formatCurrency(inv.invoiceBill)}}</td>
+                  <td>{{inv.invoiceDateStr}}</td>
+                  <td>
+                    <button type="button" v-on:click="PayInvoiceBill(inv)" style="padding:0.05rem 0.5rem"
+                      class="btn btn-outline-info btn-sm">
+                      <i class="metismenu-icon pe-7s-credit"></i> Pay
+                    </button>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-2 col-lg-2 cl-sm-0"></div>
         </div>
+
+        <div class="mt-5">
+
+          <h5 class="card-title"> Paid Information  </h5>
+          <table id="paidLogs" class="mb-0 table table-striped">
+            <thead>
+              <tr style="font-size:14px">
+                <th> SL </th>
+                <th> Project No </th>
+                <th> OT No </th>
+                <th> OT  </th>
+                <th> Invoice No </th>
+                <th> Invoice Bill </th>
+                <th> Invoice Date </th>
+                <th> Paid Ammount </th>
+                <th> Paid Date </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(inv,index) in paidAll" :key="inv.id">
+                <td>{{ index + 1 }}</td>
+                <td>{{inv.projectNo}}</td>
+                <td>{{inv.workNo}}</td>
+                <td>{{inv.workOrderName}}</td>
+                <td>{{inv.invoiceNo}}</td>
+                <td>{{formatCurrency(inv.invoiceBill)}}</td>
+                <td>{{inv.invoiceDateStr}}</td>
+                <td>{{formatCurrency(inv.payAmount)}}</td>
+                <td>{{inv.payDateStr}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+
+        </div>
+
+        <div class="modal fade" id="invPayment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Payment </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+
+                  <div class="form-group">
+
+                  </div>
+
+                  <div class="form-group mt-1">
+                    <div class="row">
+                      <div class="col-md-6 col-lg-6 cl-sm-6"> OT No: {{ invPay.workNo }} </div>
+                      <div class="col-md-6 col-lg-6 cl-sm-6"> OT : {{ invPay.workOrderName }} </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 col-lg-6 cl-sm-6"> Invoice No : {{invPay.invoiceNumber}} </div>
+                      <div class="col-md-6 col-lg-6 cl-sm-6"> Invoice Bill : {{formatCurrency(invPay.invoiceBill)}}
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="form-group mt-2 row">
+                    <div class="col-md-6 col-lg-6 cl-sm-6">
+                      <label for="message-text" class="col-form-label"> Pay Amount </label>
+                      <input v-on:keypress="isNumber($event)" v-on:blur="formatPayAmount" class="form-control"
+                        type="text" v-model="payAmount" />
+                    </div>
+
+                    <div class="col-md-6 col-lg-6 cl-sm-6">
+                      <label for="message-text" class="col-form-label"> Pay Date </label>
+                      <input class="form-control" type="date" v-model="payDate" />
+                    </div>
+
+                    <div class=" col-md-12 col-sm-12 col-lg-12">
+                      <label for="invoiceDate" class=""> Remarks: </label>
+                      <textarea name="text" id="remark" v-model="remark" class="form-control"></textarea>
+                    </div>
+                  </div>
+
+                  <p v-if="errors.length">
+                    <b class="text-danger">Please correct the following error(s):</b>
+                  <ul>
+                    <li v-for="error in errors" class="text-danger">{{ error }}</li>
+                  </ul>
+                  </p>
+
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button v-on:click="submitPayment()" type="button" class="btn btn-info"> <strong> <i
+                      class='fa fa-save'></i> Submit </strong> </button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    @section Scripts {
-        <script src="~/views/InvoicePay.js"></script>
-    }
   </div>
-
-
+  @section Scripts {
+  <script src="~/views/Paymnet.js"></script>
+  }
+</div>

@@ -145,6 +145,42 @@
     }
 
 
+   @if(Model == "Accounting")
+    {
+      <div class="scrollbar-sidebar">
+            <div class="app-sidebar__inner">
+                <ul class="vertical-nav-menu">
+                    <li class="app-sidebar__heading">Dashboards</li>
+                    <li>
+                        <a href="/Admin/Index" >
+                            <i class="metismenu-icon pe-7s-rocket"></i>
+                            Project Dashboards
+                        </a>
+
+
+                   <li class="app-sidebar__heading">Invoice & Payment</li>
+                    <li>
+                         <a href="/company/invoice">
+                            <i class="metismenu-icon pe-7s-bookmarks"></i> Invoice
+                        </a>
+                         <a href="/company/payment">
+                            <i class="metismenu-icon pe-7s-cash"></i>Payment
+                        </a>
+                    </li>
+
+                    <li class="app-sidebar__heading">Reports</li>
+                    <li>
+                         <a href="/Admin/GenerateReports">
+                            <i class="metismenu-icon pe-7s-graph2"></i> Generate Reports
+                        </a>
+                    </li>
+                   
+                </ul>
+            </div>
+        </div>
+    }
+
+
 
 </div>
 

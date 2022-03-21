@@ -24,7 +24,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                if (currentRole == "Admin")
+                if (currentRole == "Admin" || currentRole == "Management")
                 {
                     return View();
                 }

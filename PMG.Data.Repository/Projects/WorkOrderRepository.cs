@@ -157,7 +157,6 @@ namespace PMG.Data.Repository.Projects
                         ConsWork = dTO.ConsecutiveWork,
                         ProjectId = dTO.ProjectId,
                         OriginalBudget = dTO.OriginalBudget,
-                        Balance = dTO.OriginalBudget,
                         StartDate = dTO.StartDate,
                         EndDate = dTO.EndDate,
                         OTDescription = dTO.OTDescription,

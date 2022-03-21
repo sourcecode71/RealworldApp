@@ -2,8 +2,8 @@
     el: '#invPay',
     beforeMount() {
         selectedWrkId = "0";
-        this.loadAllWorkOrder();
         this.loadAllInvoice();
+        this.loadPaidInvoice();
        
     },
     data: {
@@ -20,25 +20,29 @@
         remark: '',
         allInv: [],
         filterWrk: [],
-        inv:''
+        inv: '',
+        payDate: '',
+        payAmount: '',
+        paidAll :[],
+        invPay :'',
 
     },
     methods: {
 
-        submitInvoice: function () {
+        submitPayment: function () {
             this.errors = [];
+
             if (this.isValidInvFrom()) {
                 const config = { headers: { "Content-Type": "application/json" } };
                 var base_url = window.location.origin;
-                const clientURL = base_url + "/api/invoice/save-invoice";
+                const clientURL = base_url + "/api/invoice/pay-bill";
 
                 const wrkData = {
-                    workOrderId: selectedWrkId,
-                   // partialBill: this.partialBill.substring(1).replace(",", ""),
-                    partialBill: this.invoicebill.substring(1).replace(",", ""),
-                    invoiceBill: this.invoicebill.substring(1).replace(",", ""),
-                    invoiceNumber: this.invoiceNumber,
-                    invoiceDate: this.invoiceDate,
+                    workOrderId: this.invPay.workOrderId,
+                    payAmount: this.payAmount.substring(1).replace(",", ""),
+                    invoiceId: this.invPay.id,
+                    invoiceNo: this.invPay.invoiceNumber,
+                    payDate: this.payDate,
                     remarks: this.remark
                 };
 
@@ -46,9 +50,7 @@
                     .post(clientURL, wrkData, config)
                     .then((response) => {
 
-                        console.log(" response ", response.data);
-
-                        if (response.data == "Success") {
+                        if (response.data) {
                             Swal.fire({
                                 position: "top-end",
                                 icon: "success",
@@ -59,11 +61,13 @@
 
                             this.clearAll();
                             this.loadAllInvoice();
+                            this.loadPaidInvoice();
+                            $("#invPayment").modal("hide");
                         } else {
                             Swal.fire({
                                 position: "top-end",
                                 title: "Error!",
-                                text: "Still the budget is not approved/waitting for approval.",
+                                text: "Payment fail.",
                                 icon: "error",
                                 confirmButtonText: "Ok",
                             });
@@ -89,7 +93,7 @@
         loadAllInvoice: function () {
             const config = { headers: { "Content-Type": "application/json" } };
             var base_url = window.location.origin;
-            const clientURL = base_url + "/api/invoice/load-all-invoice";
+            const clientURL = base_url + "/api/invoice/load-pending-invoice";
 
             axios.get(clientURL, config).then(
                 (result) => {
@@ -99,19 +103,11 @@
                     this.allInv = result.data;
                     setTimeout(() => {
                         $('#invAllLogs').DataTable({
-                            "scrollY": "500px",
+                            "scrollY": "300px",
                             "scrollCollapse": true,
                             "paging": false,
-                            columns: [
-                                { "width": "3%" },
-                                { "width": "9%" },
-                                { "width": "25%" },
-                                { "width": "10%" },
-                                { "width": "10%" },
-                                { "width": "9%" },
-                                { "width": "8%" },
-                                { "width": "12%" },
-                            ]
+                            "searching": false,
+                            "info": false
                         });
                     }, 100);
                 },
@@ -120,26 +116,44 @@
                 }
             );
         },
-        loadAllWorkOrder: function () {
 
+        loadPaidInvoice: function () {
             const config = { headers: { "Content-Type": "application/json" } };
             var base_url = window.location.origin;
-            const clientURL = base_url + "/api/WorkOrder/load-approved-orders";
+            const clientURL = base_url + "/api/invoice/load-all-payment";
 
             axios.get(clientURL, config).then(
                 (result) => {
-                    
 
-                    window.sessionStorage.setItem("wrk", JSON.stringify(result.data));
-                    this.workOrders = result.data;
-                    this.setupControl()
+                    $("#paidLogs").dataTable().fnDestroy();
 
+                    this.paidAll = result.data;
+
+                    console.log(" paid bill ", this.paidAll);
+
+                    setTimeout(() => {
+                        $('#paidLogs').DataTable({
+                            "scrollY": "500px",
+                            "scrollCollapse": true,
+                            "paging": false,
+                            columns: [
+                                { "width": "3%" },
+                                { "width": "9%" },
+                                { "width": "8%" },
+                                { "width": "13%" },
+                                { "width": "10%" },
+                                { "width": "9%" },
+                                { "width": "8%" },
+                                { "width": "9%" },
+                                { "width": "9%" },
+                            ]
+                        });
+                    }, 500);
                 },
                 (error) => {
                     console.error(error);
                 }
             );
-
         },
 
         showInvoiceDetails: function (inv) {
@@ -149,25 +163,22 @@
 
         },
 
+        PayInvoiceBill: function(inv) {
+            console.log(" Invoice bill ", inv);
+
+            $("#invPayment").modal("show");
+            this.invPay = inv;
+        },
+
 
         isValidInvFrom: function () {
-            if (selectedWrkId == "0") {
-                this.errors.push("Please select a work order");
+            
+
+            if (!this.payAmount) {
+                this.errors.push("Payment  bill is reequired");
             }
 
-            //if (!this.partialBill) {
-            //    this.errors.push("Partial bill is reequired");
-            //}
-
-            if (!this.invoicebill) {
-                this.errors.push("Invoice bill is reequired");
-            }
-
-            if (!this.invoiceNumber) {
-                this.errors.push("Invoice number is reequired");
-            }
-
-            if (!this.invoiceDate) {
+            if (!this.payDate) {
                 this.errors.push("Invoice Date is reequired");
             }
 
@@ -201,46 +212,22 @@
             this.invoicebill = this.invoicebill.charAt(0) == "$" ? dollarUS.format(dblBudget.substring(1)) : dollarUS.format(dblBudget);
         },
 
-        formatNumberPartialBill: function (e) {
+        formatPayAmount: function (e) {
             let dollarUS = Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
             });
-            var dblBudget = this.partialBill.replace(",", "");
-            this.partialBill = this.partialBill.charAt(0) == "$" ? dollarUS.format(dblBudget.substring(1)) : dollarUS.format(dblBudget);
-            this.invoicebill = this.partialBill;
-        },
-
-        setupControl: function () {
-            $("#wrkOrderId")
-                .select2()
-                .on("change", function (e) {
-                    var id = $("#wrkOrderId option:selected").val();
-                    selectedWrkId = id;
-
-                    var wrkOD = JSON.parse(window.sessionStorage.getItem("wrk"));
-                    this.filterWrk = wrkOD.filter(p => p.id == id);
-                    this.isWrkVisiblity = this.filterWrk.length > 0;
-                });
+            var dblBudget = this.payAmount.replace(",", "");
+            this.payAmount = this.payAmount.charAt(0) == "$" ? dollarUS.format(dblBudget.substring(1)) : dollarUS.format(dblBudget);
         },
 
         clearAll: function () {
-            this.wrkS = '0';
-            this.seenInvDetails = false;
-            this.partialBill = '';
-            this.invoicebill = '';
-            this.invoiceNumber = '';
+            this.invPay = '';
+            this.payAmount = '';
+            this.payDat = '';
             this.invoiceDate = '';
         },
-        showHide: function () {
-            this.seen = !this.seen;
-            this.seenInvDetails = false;
-            if (this.seen) {
-                setTimeout(() => {
-                    app.setupControl();
-                }, 150);
-            }
-        },
+     
         formatCurrency: function (Crn) {
             let dollarUS = Intl.NumberFormat("en-US", {
                 style: "currency",

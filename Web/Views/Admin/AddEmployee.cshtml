@@ -26,6 +26,8 @@
 
 <div class="main-card mb-3 card">
     <div id="addEmploye"  class="card-body">
+        @if(currentRole == "Admin")
+        { 
         <h5 class="card-title">Add Employee</h5>
         <div  class="card-body">
            <div  v-if="isSeenEmp"> 
@@ -107,7 +109,9 @@
                 </div>
             </form>
           </div>
-        </div>
+         </div>
+        }
+
 
         <div class="col-md-3">
             <button v-on:click="isSeenEmp = !isSeenEmp" type="button" class="btn btn-outline-warning mt-4">

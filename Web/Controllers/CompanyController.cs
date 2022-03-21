@@ -18,7 +18,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                if (currentRole == "Admin")
+                if (currentRole == "Admin" || currentRole == "Management")
                 {
                     return View();
                 }
@@ -44,7 +44,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                if (currentRole == "Admin")
+                if (currentRole == "Admin" || currentRole == "Management")
                 {
                     return View();
                 }
@@ -70,7 +70,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                if (currentRole == "Admin")
+                if (currentRole == "Admin" || currentRole == "Accounting" || currentRole == "Management")
                 {
                     return View();
                 }
@@ -78,6 +78,8 @@ namespace Web.Controllers
                 {
                     return RedirectToAction("Forbidden", "Home");
                 }
+
+                
             }
 
             return RedirectToAction("Login", "Home");
@@ -96,7 +98,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                if (currentRole == "Admin")
+                if (currentRole == "Admin" || currentRole == "Accounting")
                 {
                     return View();
                 }
@@ -137,12 +139,48 @@ namespace Web.Controllers
 
         public IActionResult AdminHourlogs()
         {
-            return View();
+
+            string currentRole = HttpContext.Session.GetString("current_user_role");
+
+            if (string.IsNullOrEmpty(currentRole))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                if (currentRole == "Admin" || currentRole == "Management")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Forbidden", "Home");
+                }
+
+            }
+
         }
 
         public IActionResult HourlogsHistory()
         {
-            return View();
+            string currentRole = HttpContext.Session.GetString("current_user_role");
+
+            if (string.IsNullOrEmpty(currentRole))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                if (currentRole == "Admin" || currentRole == "Management")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Forbidden", "Home");
+                }
+
+            }
         }
     }
 }

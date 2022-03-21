@@ -36,12 +36,46 @@ namespace Web.Controllers
 
         public IActionResult ProjectActivities()
         {
-            return View();
+            string currentRole = HttpContext.Session.GetString("current_user_role");
+
+            if (string.IsNullOrEmpty(currentRole))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                if (currentRole == "Admin" || currentRole == "Management")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Forbidden", "Home");
+                }
+
+            }
         }
 
         public IActionResult ProjectWorkOrder()
         {
-            return View();
+            string currentRole = HttpContext.Session.GetString("current_user_role");
+
+            if (string.IsNullOrEmpty(currentRole))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                if (currentRole == "Admin" || currentRole == "Management")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Forbidden", "Home");
+                }
+
+            }
         }
 
        

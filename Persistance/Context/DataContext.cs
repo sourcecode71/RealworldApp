@@ -23,6 +23,7 @@ namespace Persistance.Context
         public DbSet<Client> Clients { get; set; }
         public DbSet<Company> Company { get; set; }
         public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<Payment> Payment { get; set; }
         public DbSet<Hourlogs> Hourlogs { get; set; }
         public DbSet<ProdStatus> ProdStatus { get; set; }
         public DbSet<ProjectsStatus> ProjectsStatus { get; set; }
