@@ -4,6 +4,25 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+@using Web.Models
+@model EmployeePageDetails
+@{
+    string currentRole = "";
+    byte[] currentRoleByte;
+
+    if (Context.Session.Keys.Count() > 0)
+    {
+        Context.Session.TryGetValue("current_user_role", out currentRoleByte);
+
+        if (currentRoleByte != null)
+        {
+            currentRole = System.Text.Encoding.Default.GetString(currentRoleByte);
+        }
+    }
+}
+
+
 <div>
     <link rel="stylesheet" href="~/css/projects.css" />
     <link rel="stylesheet" href="~/op/plexo.min.css" />
@@ -66,13 +85,16 @@
 
                   </form>
                </div>
-                 <div class="col-md-3">
+            @if(currentRole == "Admin")
+            {
+                <div class="col-md-3">
                     <button v-on:click="seen = !seen" type="button" class="btn btn-outline-warning mt-4">
                         <i v-if="!seen" class="pe-7s-plus"> </i> 
                         <i v-if="seen" class="pe-7s-less"> </i>
                         <strong> Client   </strong> 
                     </button>
                 </div>
+            }
 
     <div class="mb-3">
       <div class="card-body">

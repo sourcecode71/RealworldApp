@@ -112,14 +112,16 @@
          </div>
         }
 
-
-        <div class="col-md-3">
-            <button v-on:click="isSeenEmp = !isSeenEmp" type="button" class="btn btn-outline-warning mt-4">
+        @if (currentRole == "Admin")
+        {
+            <div class="col-md-3">
+                <button v-on:click="isSeenEmp = !isSeenEmp" type="button" class="btn btn-outline-warning mt-4">
                 <i v-if="!isSeenEmp" class="pe-7s-plus"> </i> 
                 <i v-if="isSeenEmp" class="pe-7s-less"> </i>
                 <strong> Employee   </strong> 
             </button>
         </div>
+       }
 
      <div class="mb-3">
       <div v-if="allEmp.length > 0" class="card-body">

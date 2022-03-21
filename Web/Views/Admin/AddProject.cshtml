@@ -211,11 +211,15 @@
             <div class="mb-3">
                 <div class="card-body">
                 <div class="mb-4">
-                    <button v-on:click="addNewDivVisibility()" type="button" class="btn btn-outline-warning mt-4">
-                        <i v-if="!seen" class="pe-7s-plus"> </i> 
-                        <i v-if="seen" class="pe-7s-less"> </i>
-                        <strong> Project   </strong> 
-                    </button>
+                        @if (currentRole == "Admin")
+                        {
+                            <button v-on:click="addNewDivVisibility()" type="button" class="btn btn-outline-warning mt-4">
+                                <i v-if="!seen" class="pe-7s-plus"> </i> 
+                                  <i v-if="seen" class="pe-7s-less"> </i>
+                                 <strong> Project   </strong> 
+                              </button>
+                       }
+
                 </div>
                                 <h5 class="card-title">Project List </h5>
                                 <table id="allProject" class="table table-striped table-bordered" style="width:100%">

@@ -3,6 +3,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@using Web.Models
+@model EmployeePageDetails
+@{
+    string currentRole = "";
+    byte[] currentRoleByte;
+
+    if (Context.Session.Keys.Count() > 0)
+    {
+        Context.Session.TryGetValue("current_user_role", out currentRoleByte);
+
+        if (currentRoleByte != null)
+        {
+            currentRole = System.Text.Encoding.Default.GetString(currentRoleByte);
+        }
+    }
+}
+
+
 <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
 <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
 
@@ -216,11 +234,14 @@
                     </form>
 
                     <div class="col-md-3">
-                        <button v-on:click="showHide()" type="button" class="btn btn-outline-warning mt-4">
-                            <i v-if="!seen" class="pe-7s-plus"> </i>
+                        @if (currentRole == "Admin")
+                        {
+                            <button v-on:click="showHide()" type="button" class="btn btn-outline-warning mt-4">
+                                <i v-if="!seen" class="pe-7s-plus"> </i>
                             <i v-if="seen" class="pe-7s-less"> </i>
                             Work Order
                         </button>
+                       }
                     </div>
 
                 </div>
