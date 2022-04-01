@@ -62,10 +62,17 @@
                                     <input name="email" id="email" placeholder="Please enter valid email here"  type="text" class="form-control" v-model="email" v-on:blur="validateEmail">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="position-relative form-group">
                                     <label for="phone" class="">Phone</label>
                                     <input name="phone" id="phone" placeholder="(999) 9999-9999" type="text" v-model="phone" v-on:input="handleUserInput" class="form-control">
+                                </div>
+                            </div>
+
+                             <div class="col-md-3">
+                                <div class="position-relative form-group">
+                                    <label for="sndPhone" class="">Secondary Phone</label>
+                                    <input name="sndPhone" id="sndPhone" placeholder="(999) 9999-9999" type="text" v-model="sndPhone" v-on:input="handlesndPhoneInput" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -107,6 +114,7 @@
                     <th>Contact Person</th>
                     <th>Phone</th>
                     <th>Email</th>
+                    <th>Address</th>
                     <th> Acction</th>
                
                 </tr>
@@ -118,6 +126,7 @@
                     <td>{{client.contactName}}</td>
                     <td>{{client.phone}}</td>
                     <td>{{client.email}}</td>
+                    <td>{{client.address}}</td>
                     <td> 
                         <button type="button" v-on:click="showCompanyByClient(client)" class="btn btn-outline-info btn-sm">
                             <i class="metismenu-icon pe-7s-door-lock"></i> Company

@@ -10,7 +10,8 @@
             name: null,
             contactName: '',
             email: null,
-            phone:'',
+            phone: '',
+            sndPhone:'',
             address: null,
             seen: false,
             clients: [],
@@ -33,8 +34,8 @@
             name : this.name,
             address : this.address,
             contactName:this.contactName,
-            email : this.email,
-            phone : this.phone
+               email: this.email,
+               phone: this.sndPhone != null ? this.phone + "," + this.sndPhone : this.phone
            };
 
          axios.post(clientURL, clientData, config)
@@ -75,11 +76,11 @@
           this.errors.push("Phone number is required.");
         }
 
-        if (!this.email) {
+       /* if (!this.email) {
         this.errors.push('Email is required.');
         } else if (!this.validateEmail(this.email)) {
         this.errors.push('Valid email is required.');
-        }
+        } */
 
             if (!this.errors.length)
             {
@@ -97,15 +98,26 @@
                 axios.get(clientURL, config).then(result => {
                     $("#allClients").dataTable().fnDestroy();
 
+                    console.log(" client --", result);
+
                     setTimeout(() => {
                         this.clients = result.data;
                     }, 100);
                     
                     setTimeout(() => {
                         $('#allClients').DataTable({
-                            "scrollY": "500px",
+                            "scrollY": "750px",
                             "scrollCollapse": true,
-                            "paging": false
+                            "paging": false,
+                            columns: [
+                                { "width": "3%" },
+                                { "width": "9%" },
+                                { "width": "12%" },
+                                { "width": "12%" },
+                                { "width": "12%" },
+                                { "width": "37%" },
+                                { "width": "15%" }
+                            ]
                         });
                     }, 500);
 
@@ -139,7 +151,13 @@
       handleUserInput: function (e) {
           var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
           this.phone = '(' + x[1] + ') ' + x[2] + '-' + x[3];
-      },
+          },
+
+         
+    handlesndPhoneInput: function (e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        this.sndPhone = '(' + x[1] + ') ' + x[2] + '-' + x[3];
+    },
       clearAll: function () {
           this.name = "";
           this.email = "";

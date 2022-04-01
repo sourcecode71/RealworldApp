@@ -2,6 +2,8 @@
   const app = new Vue({
       el: '#addCompany',
       beforeMount() {
+       
+
           this.loadAllClients();
           this.loadAllCompany();
     },
@@ -11,7 +13,8 @@
             name: null,
             contactName: '',
             email: null,
-            phone:'',
+            phone: '',
+            snPhone:'',
             address: null,
             seen: false,
             clients: [],
@@ -53,8 +56,8 @@
                 name : this.name,
                 address : this.address,
                 contactName:this.contactName,
-                email : this.email,
-                phone : this.phone
+               email: this.email,
+               phone: this.sndPhone != null ? this.phone + "," + this.sndPhone : this.phone
            };
 
          axios.post(clientURL, clientData, config)
@@ -102,11 +105,12 @@
           this.errors.push("Phone number is required.");
         }
 
-        if (!this.email) {
+
+      /*  if (!this.email) {
         this.errors.push('Email is required.');
         } else if (!this.validateEmail(this.email)) {
         this.errors.push('Valid email is required.');
-        }
+        } */
 
             if (!this.errors.length)
             {
@@ -118,7 +122,11 @@
         {
             var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
             this.phone = '(' + x[1] + ') ' + x[2] + '-' + x[3];
-        },
+          },
+          handlesnPhoneInput: function (e) {
+              var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+              this.snPhone = '(' + x[1] + ') ' + x[2] + '-' + x[3];
+          },
         clearAll: function ()
         {
             this.client ='0';
@@ -126,7 +134,8 @@
             this.email = "";
             this.phone ="";
             this.address ="";
-            this.contactName ="";
+            this.contactName = "";
+            this.snPhone = "";
         },
         validateEmail(email) {
             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
@@ -143,18 +152,16 @@
 
                 axios.get(clientURL, config).then(result => {
 
-                    console.log(result.data);
                     this.clients = result.data;
 
-                    setTimeout(() => {
+                   /* setTimeout(() => {
                         $('#allClients').DataTable({
                             "scrollY": "500px",
                             "scrollCollapse": true,
                             "paging": false
                         });
-                    }, 100);
+                    }, 100); */
 
-               
                 
                 }, error => {
                     console.error(error);
@@ -167,10 +174,8 @@
               var base_url = window.location.origin;
               const clientURL = base_url + "/api/company/all-companies";
 
-              //$('#allCompanies').dataTable().fnClearTable();
-             
-
               axios.get(clientURL, config).then(result => {
+
                   $("#allCompanies").dataTable().fnDestroy();
 
                   setTimeout(() => {
@@ -179,10 +184,21 @@
 
                   setTimeout(() => {
                       $('#allCompanies').DataTable({
-                          "scrollY": "500px",
+                          "scrollY": "700px",
                           "scrollCollapse": true,
-                          "paging": false
-                      });
+                          "ordering": false,
+                          "paging": false,
+                          columns: [
+                              { "width": "3%" },
+                              { "width": "25%" },
+                              { "width": "9%" },
+                              { "width": "12%" },
+                              { "width": "12%" },
+                              { "width": "12%" },
+                              { "width": "27%" }
+                          ]
+                      }).fnAdjustColumnSizing(false);
+
                   }, 500); 
 
               }, error => {
