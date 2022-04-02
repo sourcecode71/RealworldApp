@@ -224,6 +224,18 @@
                 });
         },
 
+        wrkProgress: function (wrk) {
+
+            console.log(wrk, " wrk --- ", wrk.budgetHour);
+
+            if (wrk.budgetHour != 0) {
+                var wrkPC = (wrk.spentHour / wrk.budgetHour).toFixed(2) + "%";
+                return wrkPC;
+            } else {
+                return "0%";
+            }
+        },
+
         clearAll: function () {
             this.wrkS = '0';
             this.seenInvDetails = false;

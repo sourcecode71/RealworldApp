@@ -55,15 +55,15 @@
                             "scrollCollapse": true,
                             "paging": false,
                             "columns": [
-                                { "width": "2%" },
+                                { "width": "3%" },
                                 { "width": "5%" },
                                 { "width": "9%" },
-                                { "width": "11%" },
                                 { "width": "9%" },
-                                { "width": "20%" },
-                                { "width": "10%" },
-                                { "width": "10%" },
-                                { "width": "10%" }
+                                { "width": "18%" },
+                                { "width": "9%" },
+                                { "width": "15%" },
+                                { "width": "7%" },
+                                { "width": "12%" }
                             ]
                         });
                     }, 100);
@@ -194,6 +194,18 @@
             var base_url = window.location.origin;
             const wrkURL = base_url + "/Dashboard/InvoiceDetails?wrkId=" + wrk.id;
             window.location = wrkURL;
+        },
+
+        wrkProgress: function (wrk) {
+
+            console.log(wrk.spentHour, " wrk --- ", wrk.budgetHour);
+
+            if (wrk.budgetHour != 0) {
+                var wrkPC = (wrk.spentHour / wrk.budgetHour).toFixed(2) + "%";
+                return wrkPC;
+            } else {
+                return "0%";
+            }
         },
 
         formatCurrency: function (Crn) {

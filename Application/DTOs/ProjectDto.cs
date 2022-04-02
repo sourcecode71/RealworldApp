@@ -60,6 +60,7 @@ namespace Application.DTOs
         public int ApporvalSatus { get; set; }
         public string ProjectNo { get; set; }
         public string BudegtNo { get; set; }
+        public string BudegtVersionNo { get; set; }
         public string ClientName { get; set; }
         public DateTime ApprovalDate { get; set; }
         public String ApprovalDateStr { get; set; }

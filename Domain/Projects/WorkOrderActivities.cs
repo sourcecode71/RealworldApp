@@ -16,6 +16,7 @@ namespace Domain.Projects
         public string WorkOrderNo { get; set; }
         [MaxLength(15)]
         public string BudgetNo { get; set; }
+        public string BudgetVersionNo { get; set; }
         public double Budget { get; set; }
         public DateTime BudgetSubmitDate { get; set; }
         public double? ApprovedBudget { get; set; }

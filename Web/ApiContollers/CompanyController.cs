@@ -48,10 +48,10 @@ namespace Web.ApiContollers
         }
 
         [HttpGet("all-companies")]
-        public async Task<ActionResult> GetAllCompaniesResult()
+        public async Task<List<CompanyDTO>> GetAllCompaniesResult()
         {
             var project = await _cmRepository.GetAllCompany();
-            return Ok(project);
+            return project;
         }
 
         [HttpGet("all-companies-client")]

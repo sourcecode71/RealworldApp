@@ -30,19 +30,7 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                
-                    AdminPageDetails adminPage = new AdminPageDetails();
-
-                    List<ProjectModel> projects = _apiService.CallGetProjects().Result;
-                    List<EmployeeModel> employees = _apiService.CallGetEmployees().Result;
-                    List<ClientDTO> clientModels = _apiService.CallAllClient().Result;
-
-
-                    adminPage.Projects = projects.Where(x => x.Status != "Archived").ToList();
-                    adminPage.Employees = employees;
-                    adminPage.Clients = clientModels;
-
-                    return View(adminPage);
+                    return View();
                 
             }
 
@@ -90,15 +78,7 @@ namespace Web.Controllers
 
                 if (currentRole == "Admin" || currentRole == "Management")
                 {
-                    AdminPageDetails adminPage = new AdminPageDetails();
-
-                    List<EmployeeModel> employees = _apiService.CallGetEmployees().Result;
-                    List<ClientDTO> clientModels = _apiService.CallAllClient().Result;
-
-                    adminPage.Employees = employees;
-                    adminPage.Clients = clientModels;
-
-                    return View(adminPage);
+                    return View();
                 }
                 else
                 {
@@ -150,12 +130,7 @@ namespace Web.Controllers
 
                 if (currentRole == "Admin" || currentRole == "Management")
                 {
-                    AdminPageDetails adminPage = new AdminPageDetails();
-
-                    List<ProjectModel> projects = _apiService.CallGetProjects().Result;
-                    adminPage.Projects = projects.Where(x => x.Status == "Completed" || x.Status == "Invoiced" || x.Status == "Archived").ToList();
-
-                    return View(adminPage);
+                    return View();
                 }
                 else
                 {

@@ -12,6 +12,8 @@ namespace Application.DTOs
         public double PartialBill { get; set; }
         public double InvoiceBill { get; set; }
         public double Balance { get; set; }
+        public double SpentHour { get; set; }
+        public double BudgetHour { get; set; }
         public string InvoiceNumber { get; set; }
         public string OTName { get; set; }
         public string ProjectName { get; set; }

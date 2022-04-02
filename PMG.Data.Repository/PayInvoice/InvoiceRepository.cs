@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
+using System.Data;
 
 namespace PMG.Data.Repository.PayInvoice
 {
@@ -18,39 +20,91 @@ namespace PMG.Data.Repository.PayInvoice
         }
         public async Task<List<InvoiceDTO>> GetAllInvoice()
         {
-            var invDTO = await (from inv in _context.Invoice
-                         join wrk in _context.WorkOrder on inv.WorkOrderId equals wrk.Id
-                         join prj in _context.Projects on wrk.ProjectId equals prj.Id
-                         join c in _context.Company on prj.CompanyId equals c.Id into cc 
-                         from cm in cc.DefaultIfEmpty()
-                         join l in _context.Clients on cm.ClientId equals l.Id into ll
-                         from cl in ll.DefaultIfEmpty()
-                         orderby inv.SetDate descending
-                         select new InvoiceDTO
-                         {
-                             Id = inv.Id.ToString(),
-                             WorkOrderId = inv.WorkOrderId.ToString(),
-                             WorkNo = wrk.WorkOrderNo,
-                             WorkOrderName = wrk.ConsWork,
-                             OTName = wrk.OTDescription,
-                             ProjectName = prj.Name,
-                             PartialBill = inv.PartialBill,
-                             InvoiceBill = inv.InvoiceBill,
-                             InvoiceNumber = inv.InvoiceNumber,
-                             InvoiceDate = inv.InvoiceDate,
-                             InvoiceDateStr = inv.InvoiceDate.ToString("MM/dd/yyyy"),
-                             Balance = inv.Balance,
-                             Remarks = inv.Remarks,
-                             OriginalBudget = wrk.OriginalBudget,
-                             ApprovedBudget = wrk.ApprovedBudget,
-                             ApprovedDateStr = wrk.ApprovalDate.ToString("MM/dd/yyyy"),
-                             CompanyName =cm.Name,
-                             ClientName = cl.Name,
-                             DueDateStr = wrk.EndDate.ToString("MM/dd/yyyy")
+            try
+            {
+                DbCommand cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandText = "dbo.ActiveInvoice";
+                cmd.CommandType = CommandType.StoredProcedure;
 
-                         }).ToListAsync();
+                List<InvoiceDTO> invDTO = new List<InvoiceDTO>();
 
-            return invDTO;
+                _context.Database.OpenConnection();
+                using (DbDataReader rd = await cmd.ExecuteReaderAsync())
+                {
+                    while (rd.Read())
+                    {
+
+                        InvoiceDTO inv = new InvoiceDTO()
+                        {
+                            Id = rd.GetValue("id").ToString(),
+                            WorkOrderId = rd.GetValue("wrkId").ToString(),
+                            WorkNo = rd.GetValue("WorkOrderNo").ToString(),
+                            WorkOrderName = rd.GetValue("ConsWork").ToString(),
+                            OTName = rd.GetValue("OTDescription").ToString(),
+                            ProjectName = rd.GetValue("Name").ToString(),
+                            ClientName = rd.GetValue("ClientName").ToString(),
+                            CompanyName = rd.GetValue("CompanyName").ToString(),
+                            OriginalBudget = Convert.ToDouble(rd.GetValue("OriginalBudget").ToString()),
+                            ApprovedBudget = Convert.ToDouble(rd.GetValue("ApprovedBudget").ToString()),
+                            Balance = Convert.ToDouble(rd.GetValue("Balance").ToString()),
+                            SpentHour = Convert.ToDouble(rd.GetValue("SpentHour").ToString()),
+                            BudgetHour = Convert.ToDouble(rd.GetValue("BudgetHour").ToString()),
+                            InvoiceBill = Convert.ToDouble(rd.GetValue("BudgetHour").ToString()),
+                            PartialBill = Convert.ToDouble(rd.GetValue("BudgetHour").ToString()),
+                            InvoiceNumber = rd.GetValue("BudgetHour").ToString(),
+                            ApprovedDateStr = rd.GetValue("ApprovalDate").ToString(),
+                            InvoiceDateStr = rd.GetValue("InvoiceDate").ToString(),
+                            DueDateStr = rd.GetValue("EndDate").ToString()
+
+                        };
+
+                        invDTO.Add(inv);
+                    }
+                }
+
+                return invDTO;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            //var invDTO = await (from inv in _context.Invoice
+            //             join wrk in _context.WorkOrder on inv.WorkOrderId equals wrk.Id
+            //             join prj in _context.Projects on wrk.ProjectId equals prj.Id
+            //             join c in _context.Company on prj.CompanyId equals c.Id into cc 
+            //             from cm in cc.DefaultIfEmpty()
+            //             join l in _context.Clients on cm.ClientId equals l.Id into ll
+            //             from cl in ll.DefaultIfEmpty()
+            //             orderby inv.SetDate descending
+            //             select new InvoiceDTO
+            //             {
+            //                 Id = inv.Id.ToString(),
+            //                 WorkOrderId = inv.WorkOrderId.ToString(),
+            //                 WorkNo = wrk.WorkOrderNo,
+            //                 WorkOrderName = wrk.ConsWork,
+            //                 OTName = wrk.OTDescription,
+            //                 ProjectName = prj.Name,
+            //                 PartialBill = inv.PartialBill,
+            //                 InvoiceBill = inv.InvoiceBill,
+            //                 InvoiceNumber = inv.InvoiceNumber,
+            //                 InvoiceDate = inv.InvoiceDate,
+            //                 InvoiceDateStr = inv.InvoiceDate.ToString("MM/dd/yyyy"),
+            //                 Balance = inv.Balance,
+            //                 Remarks = inv.Remarks,
+            //                 OriginalBudget = wrk.OriginalBudget,
+            //                 ApprovedBudget = wrk.ApprovedBudget,
+            //                 ApprovedDateStr = wrk.ApprovalDate.ToString("MM/dd/yyyy"),
+            //                 CompanyName =cm.Name,
+            //                 ClientName = cl.Name,
+            //                 DueDateStr = wrk.EndDate.ToString("MM/dd/yyyy")
+
+            //             }).ToListAsync();
+
+
+
+       
         }
 
 

@@ -260,8 +260,8 @@
                     </div>
 
                     <div class="row mt-3">
-                        <div class="col-md-4"> Submit Budget : {{sbudget}} </div>
-                        <a href="#" v-on:click="showFullBudget(wrk,1)" class="col-md-4"> Approved Budget : {{abudget}}
+                        <div class="col-md-4"> Submit Budget : {{formatCurrenct(sbudget)}} </div>
+                        <a href="#" v-on:click="showFullBudget(wrk,1)" class="col-md-4"> Approved Budget : {{formatCurrenct(abudget)}}
                         </a>
                         <a href="#" v-on:click="showFullHrs(wrk,2)" class="col-md-2"> Spent hour :{{ahours}} </a>
 
@@ -305,7 +305,7 @@
                                     <td>{{wrk.consecutiveWork}}</td>
                                     <td>{{wrk.startDateStr}}</td>
                                     <td>{{wrk.endDateStr}}</td>
-                                    <td>{{wrk.approvedBudget}}</td>
+                                    <td>{{formatCurrenct(wrk.originalBudget)}}</td>
                                     <td>
                                         <button type="button" v-on:click="ShowWorkOrder(wrk)"
                                             class="btn btn-outline-info btn-sm">
@@ -382,9 +382,9 @@
                                 <td>{{inv.workNo}}</td>
                                 <td>{{inv.workOrderName}}</td>
                                 <td>{{inv.invoiceNumber}}</td>
-                                <td>{{inv.partialBill}}</td>
+                                <td>{{formatCurrenct(inv.partialBill)}}</td>
                                 <td>{{inv.invoiceDateStr}}</td>
-                                <td>{{inv.balance}}</td>
+                                <td>{{formatCurrenct(inv.balance)}}</td>
                             </tr>
 
                         </tbody>

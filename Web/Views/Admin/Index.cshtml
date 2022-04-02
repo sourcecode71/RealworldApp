@@ -147,12 +147,13 @@
                         <tr style="font-size:14px">
                             <th> # </th>
                             <th> Year </th>
-                            <th> Project No</th>
+                            @*<th> Project No</th>*@
                             <th> Budget No</th>
                             <th> OT No </th>
                             <th> OT Name </th>
                             <th> Budget </th>
                             <th> Paid Amount </th>
+                             <th> Progress </th>
                             <th> Action </th>
                         </tr>
                     </thead>
@@ -160,12 +161,14 @@
                         <tr v-for="(wrk,index) in workOrders" :key="wrk.id">
                             <td>{{index+1}}</td>
                             <td>{{wrk.projectYear}}</td>
-                            <td>{{wrk.projectNo }}</td>
+                            @*<td>{{wrk.projectNo }}</td>*@
                             <td>{{wrk.wrkBudgetNo }}</td>
                             <td>{{wrk.workOrderNo }}</td>
                             <td>{{wrk.consecutiveWork }}</td>
-                            <td>{{wrk.approvedBudget }}</td>
-                            <td>{{wrk.approvedBudget - wrk.balance }}</td>
+                            <td>{{formatCurrency(wrk.approvedBudget) }}</td>
+                            <td>{{formatCurrency(wrk.approvedBudget - wrk.balance) }}</td>
+                            <td>{{wrkProgress(wrk) }}</td>
+
                             <td>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-6 col-sm-6">

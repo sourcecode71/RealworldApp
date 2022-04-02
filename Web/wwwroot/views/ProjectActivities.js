@@ -201,7 +201,8 @@ const app = new Vue({
                         "columns": [
                             { "width": "2%" },
                             { "width": "10%" },
-                            { "width": "20%" },
+                            { "width": "5%" },
+                            { "width": "15%" },
                             { "width": "8%" },
                             { "width": "6%" },
                             { "width": "6%" },

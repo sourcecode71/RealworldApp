@@ -18,6 +18,7 @@ namespace Domain.Projects
         public string ProjectId { get; set; }
         public virtual Project Project { get; set; }
         public Guid CompanyId { get; set; }
+        public int Year { get; set; }
 
         [MaxLength(10)]
         public string ProjectNo { get; set; }

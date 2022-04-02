@@ -134,6 +134,8 @@
 
             axios.get(clientURL, config).then(result => {
 
+                console.log(" project -- ", result);
+
                 $("#allProject").dataTable().fnDestroy();
 
                 setTimeout(() => {
@@ -143,7 +145,7 @@
 
                 setTimeout(() => {
                     $("#allProject").DataTable({
-                        scrollY: "500px",
+                        scrollY: "750px",
                         scrollCollapse: true,
                         paging: false,
                         columns: [

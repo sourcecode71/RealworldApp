@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance.Context;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220401175143_ukf1")]
+    partial class ukf1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -390,15 +392,10 @@ namespace Persistance.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("BudgetNo")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("BudgetSubmitDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("BudgetVersionNo")
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
 
                     b.Property<double>("ChangedBudget")
                         .HasColumnType("float");
@@ -418,8 +415,7 @@ namespace Persistance.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OriginalSetUser")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProjectId")
                         .HasColumnType("nvarchar(450)");
@@ -878,9 +874,6 @@ namespace Persistance.Migrations
 
                     b.Property<DateTime>("BudgetSubmitDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("BudgetVersionNo")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Comments")
                         .HasMaxLength(250)

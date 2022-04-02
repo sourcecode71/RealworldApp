@@ -23,12 +23,12 @@ namespace PMG.Data.Repository.Projects
         public string GetProjectNumber(ProjectDto projectDto)
         {
             DateTime CurrentDate = DateTime.Now;
-            var TodayPmCount = _context.Projects.Where(P=>P.CreatedDate.Date == CurrentDate.Date ).Count()+1;
+            var TodayPmCount = _context.Projects.Where(P=>P.Year == CurrentDate.Date.Year ).Count()+1;
 
-            string Day = CurrentDate.Day.ToString("00");
-            string Month = CurrentDate.Month.ToString("00");
+            //string Day = CurrentDate.Day.ToString("00");
+            //string Month = CurrentDate.Month.ToString("00");
             string Year = CurrentDate.Year.ToString();
-            string ProjectNumber = string.Format("{0}{1}{2}{3}", Day, Month, Year, TodayPmCount.ToString("00"));
+            string ProjectNumber = string.Format("{0}{1}", Year, TodayPmCount.ToString("00000"));
 
             return ProjectNumber;
         }
@@ -205,6 +205,7 @@ namespace PMG.Data.Repository.Projects
                         wrk.BudgetStatus = dto.Status;
                     }
 
+
                     var pba = await _context.WorkOrderActivities.FirstOrDefaultAsync(p => p.WorkOrderId == dto.WorkOrderId);
 
                     HisBudgetActivities his = new HisBudgetActivities
@@ -212,6 +213,7 @@ namespace PMG.Data.Repository.Projects
                         Id = new Guid(),
                         BudgetFor = 1,
                         BudgetNo = pba.BudgetNo,
+                        BudgetVersionNo = pba.BudgetVersionNo,
                         WorkOrderId = dto.WorkOrderId,
                         ChangedBudget = appBudget,
                         OriginalBudget = pba.Budget,
@@ -225,7 +227,8 @@ namespace PMG.Data.Repository.Projects
                     _context.HisBudgetActivities.Add(his);
 
 
-
+                    int bNo = int.Parse(pba.BudgetVersionNo.Remove(0, 1)) + 1;
+                    pba.BudgetVersionNo = string.Format("v{0}", bNo.ToString("00"));
                     pba.Budget = (double)(dto.ApprovedBudget == null ? 0 : dto.ApprovedBudget);
                     pba.Status = dto.Status;  // 0= waiting , 1= Approved , 2=Not approved , 3= Changed 
                     pba.Comments = dto.Comments;
@@ -260,6 +263,7 @@ namespace PMG.Data.Repository.Projects
                                    ConsecutiveWork =wr.ConsWork,
                                    WorkerOrderNo = wr.WorkOrderNo,
                                    BudegtNo = pa.BudgetNo,
+                                   BudegtVersionNo =pa.BudgetVersionNo,
                                    WorkOrderId = wr.Id,
                                    Budget = pa.Budget,
                                    ApprovalStatus = pa.Status,

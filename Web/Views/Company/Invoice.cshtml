@@ -108,6 +108,7 @@
                                                 <th> Invoice No </th>
                                                 <th> Invoice Bill </th>
                                                 <th> Balance </th>
+                                                <th> Progress </th>
                                                 <th> Action </th>
                                             </tr>
                                             </thead>
@@ -118,8 +119,9 @@
                                                         <td>{{inv.workOrderName}}</td>
                                                         <td>{{inv.invoiceDateStr}}</td>
                                                         <td>{{inv.invoiceNumber}}</td>
-                                                        <td>{{inv.invoiceBill}}</td>
-                                                        <td>{{inv.balance}}</td>
+                                                        <td>{{formatCurrency(inv.invoiceBill)}}</td>
+                                                        <td>{{formatCurrency(inv.balance)}}</td>
+                                                        <td> {{wrkProgress(inv)}}</td>
                                                         <td>
                                                             <button type="button" v-on:click="showInvoiceDetails(inv)" class="btn btn-outline-info btn-sm">
                                                                 <i class="metismenu-icon pe-7s-repeat"></i> Details

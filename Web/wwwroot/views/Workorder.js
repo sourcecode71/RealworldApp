@@ -530,7 +530,15 @@
 
         var dblBudget = this.budget.replace(",", "");
         this.budget = this.budget.charAt(0) == "$" ? dollarUS.format(dblBudget.substring(1)) : dollarUS.format(dblBudget);
-    },
+      },
+
+      formatCurrenct: function (crnMoney) {
+          let dollarUS = Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+          });
+          return dollarUS.format(crnMoney);
+      },
 
       showHide: function () {
           this.seen = !this.seen;

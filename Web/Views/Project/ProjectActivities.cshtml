@@ -26,10 +26,8 @@
                             <thead>
                                 <tr>
                                     <th> # </th>
-                                   @* <th> Year </th>
-                                    <th> Project </th>*@
                                     <th> Budget No </th>
-                                    <th>  OT No </th>
+                                    <th>  Version </th>
                                     <th> OT Name </th>
                                     <th> Budget</th>
                                     <th> S. Date </th>
@@ -47,11 +45,11 @@
                             @*    <td>{{wrk.year}}</td>
                                 <td>{{wrk.projectNo}}</td>*@
                                 <td>{{wrk.budegtNo}}</td>
-                                <td>{{wrk.workerOrderNo}}</td>
+                                <td>{{wrk.budegtVersionNo}}</td>
                                 <td>{{wrk.consecutiveWork}}</td>
                                 <td>{{formatCurrenct(wrk.budget)}}</td>
                                 <td>{{wrk.budgetSubmitDateStr}}</td>
-                                <td>{{wrk.approvedBudget}}</td>
+                                <td>{{formatCurrenct(wrk.approvedBudget)}}</td>
                                 <td v-if="wrk.approvalDateStr !='01/01/00001'">{{wrk.approvalDateStr}}</td>
                                 <td v-if="wrk.approvalDateStr =='01/01/00001'"> </td>
                                 <td>{{wrk.approvalStatusStr}}</td>
@@ -78,6 +76,7 @@
                                    @* <th> Year </th>
                                     <th> Project </th>*@
                                     <th> OT No </th>
+                                     <th>  Version </th>
                                     <th> OT Name </th>
                                     <th> Budget</th>
                                     <th> S. Date </th>
@@ -95,10 +94,11 @@
                                @* <td>{{wrk.year}}</td>
                                 <td>{{wrk.projectNo}}</td>*@
                                 <td>{{wrk.workerOrderNo}}</td>
+                                <td>{{wrk.budegtVersionNo}}</td>
                                 <td>{{wrk.consecutiveWork}}</td>
                                 <td>{{formatCurrenct(wrk.budget)}}</td>
                                 <td>{{wrk.budgetSubmitDateStr}}</td>
-                                <td>{{wrk.approvedBudget}}</td>
+                                <td>{{formatCurrenct(wrk.approvedBudget)}}</td>
                                 <td v-if="wrk.approvalDateStr !='01/01/00001'">{{wrk.approvalDateStr}}</td>
                                 <td v-if="wrk.approvalDateStr =='01/01/00001'"> </td>
                                 <td>{{wrk.workOrderStatus}}</td>
@@ -137,7 +137,7 @@
                                  <div class=" row m-3">
                                       <div class="col-md-6 col-sm-6">  Budget No : {{budgetNo}}  </div>
                                       <div class="col-md-6 col-sm-6">  Work Order Name : {{wrkName}}  </div>
-                                      <div class="col-md-6 col-sm-6">  Budget : {{appBudget}}  </div>
+                                      <div class="col-md-6 col-sm-6">  Budget : {{formatCurrenct(appBudget)}}  </div>
                                       <div class="col-md-6 col-sm-6">  Submit Date : {{submitDate}}  </div>
                                  </div>
                                  

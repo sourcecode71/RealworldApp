@@ -154,6 +154,7 @@ namespace PMG.Data.Repository.Projects
                     {
                         Id = guid,
                         WorkOrderNo = OTNo,
+                        Year = dTO.StartDate.Year,
                         ConsWork = dTO.ConsecutiveWork,
                         ProjectId = dTO.ProjectId,
                         OriginalBudget = dTO.OriginalBudget,
@@ -173,7 +174,7 @@ namespace PMG.Data.Repository.Projects
 
                     await transaction.CommitAsync();
 
-                    return Status == 1;
+                    return Status > 0;
                 }
                 catch (Exception ex)
                 {
@@ -268,12 +269,14 @@ namespace PMG.Data.Repository.Projects
             try
             {
                
-                string wrkBudgetNo = GetWrkNumber(wrkNo);
+                string wrkBudgetNo = GetWrkNumber(wrkNo,wrkId);
+                string budgetVersion = GetBudgetVersion(wrkNo, wrkId);
 
                 var wrkApproval = new WorkOrderActivities
                 {
                     Id = Guid.NewGuid(),
                     BudgetNo = wrkBudgetNo,
+                    BudgetVersionNo = budgetVersion,
                     WorkOrderId = wrkId,
                     WorkOrderNo = wrkNo,
                     Budget = dto.OriginalBudget,
@@ -292,7 +295,10 @@ namespace PMG.Data.Repository.Projects
                 throw ex;
             }
         }
-       private void AssignWorkOrderEmploye(WorkOrderDTO dto, string wrkId)
+
+     
+
+        private void AssignWorkOrderEmploye(WorkOrderDTO dto, string wrkId)
         {
             foreach (ProjectEmp emp in dto.Engineers)
             {
@@ -325,25 +331,27 @@ namespace PMG.Data.Repository.Projects
         private string GetWorkOrderNumber(WorkOrderDTO dTO)
         {
             DateTime CurrentDate = DateTime.Now;
-
-            string Day = CurrentDate.Day.ToString("00");
-            string Month = CurrentDate.Month.ToString("00");
+          
             string Year = CurrentDate.Year.ToString();
-            string ProjectNumber = string.Format("{0}{1}{2}", Day, Month, Year);
-
-            var PmOTCount = _context.WorkOrder.Where(P => P.ProjectNo == dTO.ProjectNo).Count() + 1;
-            
-            string workOrderNo = string.Format("{0}{1}{2}", ProjectNumber, "OT", PmOTCount.ToString("00"));
+            var PmOTCount = _context.WorkOrder.Where(P => P.Year == dTO.StartDate.Year).Count() + 1;
+            string workOrderNo = string.Format("{0}{1}", Year, PmOTCount.ToString("00000"));
             return workOrderNo;
         }
 
-        public string GetWrkNumber(string wrkNo)
+        public string GetWrkNumber(string wrkNo, Guid wrkId)
         {
             DateTime CurrentDate = DateTime.Now;
-            var TodayWrkCount = _context.WorkOrderActivities.Where(P => P.WorkOrderNo == wrkNo).Count() + 1;
+            var TodayWrkCount = _context.HisBudgetActivities.Where(P => P.WorkOrderId == wrkId).Count() + 1;
             string wrkBudgetNo = string.Format("{0}{1}", wrkNo, TodayWrkCount.ToString("00"));
 
             return wrkBudgetNo;
+        }
+
+        private string GetBudgetVersion(string wrkNo, Guid wrkId)
+        {
+            int vCount = _context.HisBudgetActivities.Where(P => P.WorkOrderId == wrkId).Count() + 1;
+            string versionNO = string.Format("v{0}", vCount.ToString("00"));
+            return versionNO;
         }
 
         public async Task<bool> UpdateWorkOrderStatus(WorkOrderDTO dTO)
