@@ -19,5 +19,6 @@ namespace Application.DTOs
         public DateTime LogDate { get; set; }
         public string LogDateStr { get; set; }
         public string Remarks { get; set; }
+        public bool IsActive { get; set; }
     }
 }

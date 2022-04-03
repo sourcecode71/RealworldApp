@@ -5,13 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Projects
 {
-    public class WorkOrderEmployee {
+    public class WorkOrderEmployee : BasedModel
+    {
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public Guid WorkOrderId { get; set; }
         public virtual WorkOrder WorkOrder { get; set; }
+        public double OriginalBHours { get; set; }
         public double BudgetHours { get; set; }
         public double TotalHourLog { get; set; }
         public string EmployeeId { get; set; }

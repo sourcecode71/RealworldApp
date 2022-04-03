@@ -78,11 +78,36 @@ namespace Web.Controllers
             }
         }
 
-       
+        public IActionResult WorkOrderEmployee()
+        {
+            string currentRole = HttpContext.Session.GetString("current_user_role");
+
+            if (string.IsNullOrEmpty(currentRole))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                if (currentRole == "Admin" || currentRole == "Management")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Forbidden", "Home");
+                }
+
+            }
+        }
+
+
 
         public ResultModel AddActivity(ActivityModel activity)
         {
             return _apiService.CallAddActivity(activity).Result;
         }
+
+
+
     }
 }

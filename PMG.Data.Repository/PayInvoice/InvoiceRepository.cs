@@ -66,45 +66,9 @@ namespace PMG.Data.Repository.PayInvoice
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
 
-            //var invDTO = await (from inv in _context.Invoice
-            //             join wrk in _context.WorkOrder on inv.WorkOrderId equals wrk.Id
-            //             join prj in _context.Projects on wrk.ProjectId equals prj.Id
-            //             join c in _context.Company on prj.CompanyId equals c.Id into cc 
-            //             from cm in cc.DefaultIfEmpty()
-            //             join l in _context.Clients on cm.ClientId equals l.Id into ll
-            //             from cl in ll.DefaultIfEmpty()
-            //             orderby inv.SetDate descending
-            //             select new InvoiceDTO
-            //             {
-            //                 Id = inv.Id.ToString(),
-            //                 WorkOrderId = inv.WorkOrderId.ToString(),
-            //                 WorkNo = wrk.WorkOrderNo,
-            //                 WorkOrderName = wrk.ConsWork,
-            //                 OTName = wrk.OTDescription,
-            //                 ProjectName = prj.Name,
-            //                 PartialBill = inv.PartialBill,
-            //                 InvoiceBill = inv.InvoiceBill,
-            //                 InvoiceNumber = inv.InvoiceNumber,
-            //                 InvoiceDate = inv.InvoiceDate,
-            //                 InvoiceDateStr = inv.InvoiceDate.ToString("MM/dd/yyyy"),
-            //                 Balance = inv.Balance,
-            //                 Remarks = inv.Remarks,
-            //                 OriginalBudget = wrk.OriginalBudget,
-            //                 ApprovedBudget = wrk.ApprovedBudget,
-            //                 ApprovedDateStr = wrk.ApprovalDate.ToString("MM/dd/yyyy"),
-            //                 CompanyName =cm.Name,
-            //                 ClientName = cl.Name,
-            //                 DueDateStr = wrk.EndDate.ToString("MM/dd/yyyy")
-
-            //             }).ToListAsync();
-
-
-
-       
         }
 
 

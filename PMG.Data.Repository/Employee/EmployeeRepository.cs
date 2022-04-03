@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Domain.Enums;
+using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
 using System;
@@ -102,7 +103,8 @@ namespace PMG.Data.Repository.Employee
                                 Lhour = Convert.ToDouble(rd.GetValue("SpentHour").ToString()),
                                 EmpType = rd.GetValue("RoleName").ToString(),
                                 FirstName = rd.GetValue("FirstName") != null ? rd.GetValue("FirstName").ToString() : "",
-                                LastName = rd.GetValue("LastName") != null ? rd.GetValue("LastName").ToString() : ""
+                                LastName = rd.GetValue("LastName") != null ? rd.GetValue("LastName").ToString() : "",
+                                IsActive = rd.GetValue("isDeleted") !=null? rd.GetValue("isDeleted").ToString() == "True" : false,
                         };
 
                             wOT.EmpName = String.Format("{0} {1}", wOT.FirstName, wOT.LastName);
@@ -308,6 +310,113 @@ namespace PMG.Data.Repository.Employee
             catch (System.Exception ex)
             {
 
+                throw ex;
+            }
+        }
+
+        public async Task<List<HourslogDto>> GetEmpWiseWrkOThourLogs(string empId, string wrkId)
+        {
+            try
+            {
+                DbCommand cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandText = "dbo.Hrs_EmpWiseWrkHourLogs";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+
+                var param = cmd.CreateParameter();
+                param.ParameterName = "@EmpId";
+                param.Value = new Guid(empId);
+                cmd.Parameters.Add(param);
+
+                var paramWrk = cmd.CreateParameter();
+                paramWrk.ParameterName = "@WrkId";
+                paramWrk.Value = new Guid(wrkId);
+                cmd.Parameters.Add(paramWrk);
+
+
+
+                List<HourslogDto> hrsD = new List<HourslogDto>();
+
+                _context.Database.OpenConnection();
+                using (DbDataReader rd = await cmd.ExecuteReaderAsync())
+                {
+                    while (rd.Read())
+                    {
+
+                        HourslogDto wOT = new HourslogDto()
+                        {
+                            EmpId = rd.GetValue("EmpId").ToString() != null ? rd.GetValue("EmpId").ToString() : "",
+                            WrkNo = rd.GetValue("WorkOrderNo").ToString() != null ? rd.GetValue("WorkOrderNo").ToString() : "",
+                            WrkName = rd.GetValue("ConsWork").ToString() != null ? rd.GetValue("ConsWork").ToString() : "",
+                            Lhour = Convert.ToDouble(rd.GetValue("SpentHour").ToString()),
+                            EmpType = rd.GetValue("UserRole").ToString(),
+                            FirstName = rd.GetValue("FirstName") != null ? rd.GetValue("FirstName").ToString() : "",
+                            LastName = rd.GetValue("LastName") != null ? rd.GetValue("LastName").ToString() : "",
+                            LogDateStr = rd.GetValue("SpentDate") != null ? rd.GetValue("SpentDate").ToString() : "",
+                            ProjectNo = rd.GetValue("ProjectNo") != null ? rd.GetValue("ProjectNo").ToString() : "",
+                            Remarks = rd.GetValue("Remarks") != null ? rd.GetValue("Remarks").ToString() : ""
+
+                        };
+
+                        wOT.EmpName = String.Format("{0} {1}", wOT.FirstName, wOT.LastName);
+
+                        hrsD.Add(wOT);
+
+                    }
+                }
+
+                return hrsD;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<bool> UpdateEmaployeeAssignState(HourslogDto dto)
+        {
+            try
+            {
+                var empassign = _context.WorkOrderEmployee.FirstOrDefault(e => e.EmployeeId == dto.EmpId && e.WorkOrderId == new Guid(dto.WrkId));
+                // empassign.OriginalBHours = empassign.BudgetHours;
+                if(empassign == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    empassign.IsDeleted = dto.IsActive;
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+               
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<bool> SetupEmployeeForWrk(HourslogDto dto)
+        {
+            try
+            {
+                WorkOrderEmployee workOrderEmp = new WorkOrderEmployee
+                {
+                    EmployeeId = dto.EmpId,
+                    WorkOrderId = new Guid(dto.WrkId),
+                    BudgetHours = dto.Bhour,
+                    OriginalBHours = dto.Bhour
+                };
+
+                _context.WorkOrderEmployee.Add(workOrderEmp);
+               await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex) 
+            {
                 throw ex;
             }
         }

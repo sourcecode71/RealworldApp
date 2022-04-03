@@ -280,6 +280,29 @@ namespace Web.ApiControllers
             return empDto;
         }
 
+        [HttpGet("emp-ot-hour")]
+        public async Task<ActionResult<List<HourslogDto>>> GetEmpWisehourLogs(string EmpId,string wrkId)
+        {
+            var empDto = await _empRepository.GetEmpWiseWrkOThourLogs(EmpId, wrkId);
+            return empDto;
+        }
+
+
+        [HttpPut("emp-wrk-status")]
+        public async Task<ActionResult<bool>> PutEmpStatus([FromBody] HourslogDto dto)
+        {
+            var empDto = await _empRepository.UpdateEmaployeeAssignState(dto);
+            return empDto;
+        }
+
+
+        [HttpPut("set-emp-wrk")]
+        public async Task<ActionResult<bool>> SetEmployeeForWrk([FromBody] HourslogDto dto)
+        {
+            var empDto = await _empRepository.SetupEmployeeForWrk(dto);
+            return empDto;
+        }
+
         [HttpGet("load-hourlogs-emp")]
         public async Task<ActionResult<List<EmployeeDto>>> GetHrsLogEmployes()
         {

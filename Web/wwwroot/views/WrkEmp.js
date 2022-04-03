@@ -31,11 +31,14 @@
         clientName: '',
         wrkStatusStr: '',
         assignEmp: [],
-        empHrs:[]
+        empHrs: [],
+        msgConfirm: '',
+        wrkSelected: null,
+        hrsStatus: null
     },
     methods: {
 
-       
+
         loadAllWorkOrder: function () {
 
             const config = { headers: { "Content-Type": "application/json" } };
@@ -51,19 +54,18 @@
 
                     setTimeout(() => {
                         $('#wrkAdminPanel').DataTable({
-                            "scrollY": "500px",
+                            "scrollY": "750px",
                             "scrollCollapse": true,
                             "paging": false,
                             "columns": [
                                 { "width": "3%" },
                                 { "width": "5%" },
                                 { "width": "9%" },
+                                { "width": "30%" },
+                                { "width": "10%" },
                                 { "width": "9%" },
-                                { "width": "18%" },
-                                { "width": "9%" },
-                                { "width": "15%" },
-                                { "width": "7%" },
-                                { "width": "12%" }
+                                { "width": "10%" },
+                                { "width": "7%" }
                             ]
                         });
                     }, 100);
@@ -108,6 +110,7 @@
         },
 
         ShowAllHRS: function (wrk) {
+            this.wrkSelected = wrk;
             this.AssignInfo(wrk);
             this.allInv = false;
             this.allHrs = true;
@@ -161,13 +164,13 @@
                 });
 
         },
-        EmpHoursLogDetails: function (empid,wrkId) {
+        EmpHoursLogDetails: function (empid, wrkId) {
 
             this.isHrsDetails = true;
 
             const config = { headers: { "Content-Type": "application/json" } };
             var base_url = window.location.origin;
-            const wrkURL = base_url + "/api/Employee/emp-ot-hour?empId=" + empid +"wrkId="+wrkId;
+            const wrkURL = base_url + "/api/Employee/emp-ot-hour/?empId=" + empid + "&wrkId=" + wrkId;
 
             axios.get(wrkURL, config).then(
                 (result) => {
@@ -209,9 +212,106 @@
                 currency: "USD",
             });
 
-            return  dollarUS.format(Crn);
-            
+            return dollarUS.format(Crn);
+
+        },
+
+        ActionText: function (hrs) {
+            console.log("hrs ", hrs.isActive);
+            var text = hrs.isActive == true ? " Active" : "Inactive";
+            return text;
+        },
+        ChangeStatusPop: function (hrs) {
+            this.hrsStatus = hrs;
+            this.msgConfirm = hrs.isActive ? "Are you sure want to Active the employee" : "Are you sure want to Inactive the employee";
+            $("#otEmpModal").modal("show");
+
+        },
+        ChangeActiveStatus: function () {
+            console.log(" hrs ", this.hrsStatus);
+
+            const config = { headers: { "Content-Type": "application/json" } };
+            var base_url = window.location.origin;
+            const wrkURL = base_url + "/api/Employee/emp-wrk-status";
+
+            const wrkParam = {
+                empId: this.hrsStatus.empId,
+                wrkId: this.hrsStatus.wrkId,
+                isActive: !this.hrsStatus.isActive
+            }
+
+            axios.put(wrkURL, wrkParam, config).then(
+                (result) => {
+                    $("#otEmpModal").modal("hide");
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: "Record has been updaated successfully!",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    this.assignEmp = [];
+                    this.empHrsDetails = [];
+
+
+                },
+                (error) => {
+                    $("#otEmpModal").modal("hide");
+
+                    Swal.fire({
+                        position: "top-end",
+                        title: "Error!",
+                        text: "Fail to change the status.",
+                        icon: "error",
+                        confirmButtonText: "Ok",
+                    });
+
+
+                    console.error(error);
+                });
+        } ,
+
+
+        AssignEmployePop: function (asEmp)
+        {
+            const config = { headers: { "Content-Type": "application/json" } };
+            var base_url = window.location.origin;
+            const wrkURL = base_url + "/api/Employee/set-emp-wrk";
+
+            const wrkParam = {
+                empId: this.hrsStatus.empId,
+                wrkId: this.hrsStatus.wrkId
+            }
+
+            axios.put(wrkURL, wrkParam, config).then(
+                (result) => {
+                    $("#otEmpModal").modal("hide");
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Record has been updaated successfully!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                  
+                    this.LoadHoursLogSummery(wrkParam.wrkId);
+
+                },
+                (error) => {
+                    $("#otEmpModal").modal("hide");
+
+                    Swal.fire({
+                        position: "top-end",
+                        title: "Error!",
+                        text: "Fail to change the status.",
+                        icon: "error",
+                        confirmButtonText: "Ok",
+                    });
+
+                });
+
         }
+
   }
 
 

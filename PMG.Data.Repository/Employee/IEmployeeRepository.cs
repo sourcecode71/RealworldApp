@@ -13,5 +13,8 @@ namespace PMG.Data.Repository.Employee
          Task<List<HourslogDto>> EmployeHourLogDetails(string wrkId);
         Task<List<HourslogDto>> GetEmpWisehourLogs(string empId);
         Task<List<HourslogDto>> EmployeHourLogSummeryAll();
+        Task<List<HourslogDto>> GetEmpWiseWrkOThourLogs(string empId, string wrkId);
+        Task<bool> UpdateEmaployeeAssignState(HourslogDto dto);
+        Task<bool> SetupEmployeeForWrk(HourslogDto dto);
     }
 }
