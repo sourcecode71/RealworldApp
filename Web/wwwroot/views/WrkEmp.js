@@ -2,11 +2,15 @@
     el: '#archiveDiv',
     beforeMount() {
         this.loadAllWorkOrder();
+        this.loadAllEmpoyee();
+        this.Select2Setup();
     },
     data: {
         errors: [],
         workOrders: [],
         wrkS: '0',
+        empId:'0',
+        hrsEmp:[],
         allInv: false,
         allHrs: false,
         isHrsDetails: false,
@@ -131,6 +135,23 @@
                     console.error(error);
                 });
 
+        },
+
+        loadAllEmpoyee: function () {
+            const config = { headers: { "Content-Type": "application/json" } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/Employee/load-hourlogs-emp";
+
+            axios.get(clientURL, config).then(
+                (result) => {
+                    this.hrsEmp = result.data;
+
+                    console.log(" load emp ", this.hrsEmp);
+                },
+                (error) => {
+                    console.error(error);
+                }
+            );
         },
 
         LoadHoursLogDetails: function (wrkId) {
@@ -274,13 +295,21 @@
 
         AssignEmployePop: function (asEmp)
         {
+          
+            $("#OTEmpSetup").modal("show");
+
+
+        },
+
+        SetEmployeeForProject: function () {
+
             const config = { headers: { "Content-Type": "application/json" } };
             var base_url = window.location.origin;
             const wrkURL = base_url + "/api/Employee/set-emp-wrk";
 
             const wrkParam = {
-                empId: this.hrsStatus.empId,
-                wrkId: this.hrsStatus.wrkId
+                empId: 0,
+                wrkId: 6
             }
 
             axios.put(wrkURL, wrkParam, config).then(
@@ -293,7 +322,7 @@
                         showConfirmButton: false,
                         timer: 1500,
                     });
-                  
+
                     this.LoadHoursLogSummery(wrkParam.wrkId);
 
                 },
@@ -310,7 +339,30 @@
 
                 });
 
-        }
+        },
+
+        isNumber: function (evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                evt.preventDefault();;
+            } else {
+                return true;
+            }
+        },
+
+        Select2Setup: function () {
+            setTimeout(() => {
+                $("#employeeId").select2({}).on('change', function (e) {
+                    var id = $("#employeeId option:selected").val();
+                    app.empId = id;
+                    app.LoadHourLogForEmpWrk();
+                });
+
+
+            }, 100);
+        },
+
 
   }
 
