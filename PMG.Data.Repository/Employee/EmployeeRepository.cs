@@ -403,17 +403,28 @@ namespace PMG.Data.Repository.Employee
         {
             try
             {
-                WorkOrderEmployee workOrderEmp = new WorkOrderEmployee
+                var exitHrs = _context.WorkOrderEmployee.Where(e => e.EmployeeId == dto.EmpId && e.WorkOrderId == new Guid(dto.WrkId)).FirstOrDefault();
+                if(exitHrs == null)
                 {
-                    EmployeeId = dto.EmpId,
-                    WorkOrderId = new Guid(dto.WrkId),
-                    BudgetHours = dto.Bhour,
-                    OriginalBHours = dto.Bhour
-                };
+                    WorkOrderEmployee workOrderEmp = new WorkOrderEmployee
+                    {
+                        EmployeeId = dto.EmpId,
+                        WorkOrderId = new Guid(dto.WrkId),
+                        BudgetHours = dto.Bhour,
+                        OriginalBHours = dto.Bhour
+                    };
 
-                _context.WorkOrderEmployee.Add(workOrderEmp);
-               await _context.SaveChangesAsync();
+                    _context.WorkOrderEmployee.Add(workOrderEmp);
+                }
+                else
+                {
+                    exitHrs.BudgetHours = dto.Bhour;
+                    exitHrs.OriginalBHours = dto.Bhour;
+                }
+
+                await _context.SaveChangesAsync();
                 return true;
+
             }
             catch (Exception ex) 
             {

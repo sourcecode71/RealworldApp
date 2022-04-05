@@ -7,8 +7,10 @@
     },
     data: {
         errors: [],
+        popErrors :[],
         workOrders: [],
         wrkS: '0',
+        wrkId : '',
         empId:'0',
         hrsEmp:[],
         allInv: false,
@@ -249,7 +251,7 @@
 
         },
         ChangeActiveStatus: function () {
-            console.log(" hrs ", this.hrsStatus);
+          
 
             const config = { headers: { "Content-Type": "application/json" } };
             var base_url = window.location.origin;
@@ -295,10 +297,8 @@
 
         AssignEmployePop: function (asEmp)
         {
-          
+            this.popErrors = [];
             $("#OTEmpSetup").modal("show");
-
-
         },
 
         SetEmployeeForProject: function () {
@@ -307,38 +307,65 @@
             var base_url = window.location.origin;
             const wrkURL = base_url + "/api/Employee/set-emp-wrk";
 
-            const wrkParam = {
-                empId: 0,
-                wrkId: 6
+
+            if (this.isEmpSetupValid()) {
+
+                const wrkParam = {
+                    empId: this.empId,
+                    wrkId: this.wrk.id,
+                    bHour: this.bhours
+                }
+
+                axios.put(wrkURL, wrkParam, config).then(
+                    (result) => {
+                        $("#OTEmpSetup").modal("hide");
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: "Record has been updaated successfully!",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+
+                        this.LoadHoursLogSummery(wrkParam.wrkId);
+                        this.loadAllWorkOrder();
+
+                    },
+                    (error) => {
+                        $("#OTEmpSetup").modal("hide");
+
+                        Swal.fire({
+                            position: "top-end",
+                            title: "Error!",
+                            text: "Fail to change the status.",
+                            icon: "error",
+                            confirmButtonText: "Ok",
+                        });
+
+                    });
             }
 
-            axios.put(wrkURL, wrkParam, config).then(
-                (result) => {
-                    $("#otEmpModal").modal("hide");
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: "Record has been updaated successfully!",
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
+            
 
-                    this.LoadHoursLogSummery(wrkParam.wrkId);
+        },
 
-                },
-                (error) => {
-                    $("#otEmpModal").modal("hide");
+        isEmpSetupValid: function () {
+            this.popErrors = [];
+            if (this.empId == "0") {
+                this.popErrors.push("Please select employee.");
+            }
 
-                    Swal.fire({
-                        position: "top-end",
-                        title: "Error!",
-                        text: "Fail to change the status.",
-                        icon: "error",
-                        confirmButtonText: "Ok",
-                    });
+            if (this.bhours == 0 || !this.bhours) {
+                this.popErrors.push("Please enter budgeted hour.");
+            }
 
-                });
+            if (!this.popErrors.length) {
+                return true;
+            } else {
+                return false;
+            }
 
+           
         },
 
         isNumber: function (evt) {
@@ -356,7 +383,6 @@
                 $("#employeeId").select2({}).on('change', function (e) {
                     var id = $("#employeeId option:selected").val();
                     app.empId = id;
-                    app.LoadHourLogForEmpWrk();
                 });
 
 

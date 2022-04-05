@@ -192,6 +192,13 @@
                 </button>
               </div>
               <div class="modal-body p-4">
+                    <p v-if="popErrors.length">
+                    <b class="text-danger">Please correct the following error(s):</b>
+                    <ul>
+                      <li v-for="error in popErrors" class="text-danger">{{ error }}</li>
+                    </ul>
+                  </p>
+
                   <div class="row">
                       <label for="wrkOrderId"> Employe </label>
 
@@ -210,7 +217,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"> Cancel </button>
-                <button v-on:click="ChangeActiveStatus()"  type="button" class="btn btn-primary">  <strong> <i class='fa fa-save'></i> Yes </strong> </button>
+                <button v-on:click="SetEmployeeForProject()"  type="button" class="btn btn-primary">  <strong> <i class='fa fa-save'></i> Assign Employee </strong> </button>
                
               </div>
             </div>
