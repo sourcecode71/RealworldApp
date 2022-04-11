@@ -112,7 +112,7 @@
                                 { "width": "12%" },
                             ]
                         });
-                    }, 200);
+                    }, 100);
                 },
                 (error) => {
                     console.error(error);
