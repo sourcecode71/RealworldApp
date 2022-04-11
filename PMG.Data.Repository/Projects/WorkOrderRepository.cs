@@ -44,6 +44,7 @@ namespace PMG.Data.Repository.Projects
                             OriginalBudget =Convert.ToDouble( rd.GetValue("OriginalBudget").ToString()),
                             ApprovedBudget =Convert.ToDouble( rd.GetValue("ApprovedBudget").ToString()),
                             Balance = Convert.ToDouble( rd.GetValue("Balance").ToString()),
+                            BudgetHour = Convert.ToDouble( rd.GetValue("BudgetHours").ToString()),
                             SpentHour = Convert.ToDouble( rd.GetValue("SpentHour").ToString()),
                             ConsecutiveWork = rd.GetValue("ConsWork").ToString(),
                             OTDescription = rd.GetValue("OTDescription").ToString(),

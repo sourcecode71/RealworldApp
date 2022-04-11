@@ -97,21 +97,22 @@
                        </div>
 
 
-                     <div class="card-body"><h5 class="card-title"> Invoice List </h5>
+                     <div class="card-body">
+                         <h5 class="card-title"> Invoice List </h5>
                                         <table id="invAllLogs" class="mb-0 table table-striped">
-                                            <thead>
-                                            <tr style="font-size:14px">
-                                                <th> # </th>
-                                                <th> OT No </th>
-                                                <th> OT Name </th>
-                                                <th> Date  </th>
-                                                <th> Invoice No </th>
-                                                <th> Invoice Bill </th>
-                                                <th> Balance </th>
-                                                <th> Progress </th>
-                                                <th> Action </th>
-                                            </tr>
-                                            </thead>
+                                              <thead>
+                                                    <tr>
+                                                        <th> # </th>
+                                                        <th> OT No </th>
+                                                        <th> OT Name </th>
+                                                        <th> Date  </th>
+                                                        <th> Invoice No </th>
+                                                        <th> Invoice Bill </th>
+                                                        <th> Balance </th>
+                                                        <th> Progress </th>
+                                                        <th> Action </th>
+                                                    </tr>
+                                                </thead>
                                                <tbody>
                                                   <tr v-for="(inv,index) in allInv" :key="inv.id">
                                                         <td>{{index+1}}</td>
@@ -127,8 +128,6 @@
                                                                 <i class="metismenu-icon pe-7s-repeat"></i> Details
                                                            </button> 
                                                         </td>
-                                                       
-
                                                     </tr>
                                                  </tbody>
                                           

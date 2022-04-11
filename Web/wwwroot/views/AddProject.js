@@ -118,7 +118,6 @@
             const clientURL = base_url + "/api/Employee/all-active-employee";
 
             axios.get(clientURL, config).then(result => {
-                this.allProjects = result.data;
                 this.allEng = result.data.filter(p => p.role == "Engineering");
                 this.allDrw = result.data.filter(p => p.role == "Drawing");
             }, error => {

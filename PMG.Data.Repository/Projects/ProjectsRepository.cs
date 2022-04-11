@@ -356,10 +356,9 @@ namespace PMG.Data.Repository.Projects
                                          StartDateStr = prj.StartDate.ToString("MM/dd/yyyy"),
                                          DeliveryDateStr = prj.DeliveryDate.ToString("MM/dd/yyyy"),
                                          Status = EnumConverter.ProjectStatusString(prj.Status)
-
                                      }).Distinct().ToListAsync();
 
-                return projects;
+                return projects.OrderBy(p=>p.ProjectNo).ToList();
             }
             catch (Exception ex)
             {

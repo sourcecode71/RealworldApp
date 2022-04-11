@@ -4,7 +4,6 @@
         selectedWrkId = "0";
         this.loadAllWorkOrder();
         this.loadAllInvoice();
-       
     },
     data: {
         errors: [],
@@ -46,8 +45,6 @@
                     .post(clientURL, wrkData, config)
                     .then((response) => {
 
-                        console.log(" response ", response.data);
-
                         if (response.data == "Success") {
                             Swal.fire({
                                 position: "top-end",
@@ -59,7 +56,8 @@
 
                             this.clearAll();
                             this.loadAllInvoice();
-                        } else {
+                        }
+                        else {
                             Swal.fire({
                                 position: "top-end",
                                 title: "Error!",
@@ -91,10 +89,11 @@
             var base_url = window.location.origin;
             const clientURL = base_url + "/api/invoice/load-all-invoice";
 
+            $("#invAllLogs").dataTable().fnDestroy();
+
+
             axios.get(clientURL, config).then(
                 (result) => {
-
-                    $("#invAllLogs").dataTable().fnDestroy();
 
                     this.allInv = result.data;
                     setTimeout(() => {
@@ -113,7 +112,7 @@
                                 { "width": "12%" },
                             ]
                         });
-                    }, 100);
+                    }, 200);
                 },
                 (error) => {
                     console.error(error);
@@ -128,9 +127,9 @@
 
             axios.get(clientURL, config).then(
                 (result) => {
-                    
 
                     window.sessionStorage.setItem("wrk", JSON.stringify(result.data));
+
                     this.workOrders = result.data;
                     this.setupControl()
 
@@ -145,8 +144,6 @@
         showInvoiceDetails: function (inv) {
             this.seenInvDetails = true;
             this.inv = inv;
-            console.log(" invoice details ", inv);
-
         },
 
 
@@ -226,10 +223,8 @@
 
         wrkProgress: function (wrk) {
 
-            console.log(wrk, " wrk --- ", wrk.budgetHour);
-
             if (wrk.budgetHour != 0) {
-                var wrkPC = (wrk.spentHour / wrk.budgetHour).toFixed(2) + "%";
+                var wrkPC = 100* (wrk.spentHour / wrk.budgetHour).toFixed(4) + "%";
                 return wrkPC;
             } else {
                 return "0%";

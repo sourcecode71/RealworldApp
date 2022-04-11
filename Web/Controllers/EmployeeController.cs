@@ -24,17 +24,7 @@ namespace Web.Controllers
             {
                 return RedirectToAction("Login", "Home");
             }
-
-            EmployeePageDetails employeePageDetails = new EmployeePageDetails();
-
-            employeePageDetails.Projects = _apiService.CallGetProjects().Result.Where(x => x.Status != "Archived").ToList();
-
-            if (!string.IsNullOrEmpty(currentEmail))
-            {
-                employeePageDetails.Activities = _apiService.CallGetActivities(currentEmail).Result;
-            }
-
-            return View(employeePageDetails);
+            return View();
         }
 
         public List<ProjectModel> GetProjects()

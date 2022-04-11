@@ -222,7 +222,7 @@
 
         wrkProgress: function (wrk) {
             if (wrk.budgetHour != 0) {
-                var wrkPC = (wrk.spentHour / wrk.budgetHour).toFixed(2) + "%";
+                var wrkPC =100* (wrk.spentHour / wrk.budgetHour).toFixed(4) + "%";
                 return wrkPC;
             } else {
                 return "0%";
