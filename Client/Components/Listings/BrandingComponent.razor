@@ -1,0 +1,54 @@
+﻿
+
+<div class="row">
+    @if(bndVM != null)
+    {
+     <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+        <div class="row">
+            <label for="inputText" class="col-sm-4 col-form-label">Banding</label>
+            <div class="col-sm-8">
+            <InputSelect @bind-Value=bndVM.BrandId class="form-select">
+                <option value="Pending">Pending</option>
+                <option value="Active">Active</option>
+                <option value="Suspended">Suspended</option>
+            </InputSelect>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+        <div class="row">
+            <label for="inputText" class="col-sm-4 col-form-label pl-4">Category</label>
+            <div class="col-sm-8">
+            <InputSelect @bind-Value=bndVM.CategoryId class="form-select">
+                <option value="Pending">Pending</option>
+                <option value="Active">Active</option>
+                <option value="Suspended">Suspended</option>
+            </InputSelect>
+            </div>
+        </div>
+    </div>
+                      
+    <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+        <div class="row">
+            <label for="inputText" class="col-sm-4 col-form-label ">Sub Category</label>
+            <div class="col-sm-8">
+            <InputSelect @bind-Value=bndVM.SubCategoryId class="form-select">
+                <option value="Pending">Pending</option>
+                <option value="Active">Active</option>
+                <option value="Suspended">Suspended</option>
+            </InputSelect>
+            </div>
+        </div>
+    </div>
+    }
+   
+</div>
+                    
+
+@code {
+
+    [Parameter]
+    public BrandingModel bndVM { get; set; }
+
+}

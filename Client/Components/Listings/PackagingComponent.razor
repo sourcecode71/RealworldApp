@@ -1,0 +1,39 @@
+﻿<div class="row">
+    @if(pkgVM != null)
+    {
+         <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+            <div class="row">
+                 <label for="inputText" class="col-sm-4 col-form-label ">Length</label>
+                 <div class="col-sm-8">
+                    <InputText @bind-Value=pkgVM.Lenth class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+            <div class="row">
+               <label for="inputText" class="col-sm-4 col-form-label pl-4">Weight</label>
+                <div class="col-sm-8">
+                    <InputText @bind-Value=pkgVM.Weight class="form-control" />
+                </div>
+            </div>
+        </div>
+
+      <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+        <div class="row">
+            <label for="inputText" class="col-sm-4 col-form-label">Height</label>
+            <div class="col-sm-8">
+                <InputText @bind-Value=pkgVM.Height class="form-control" />
+            </div>
+        </div>
+    </div> 
+
+    }
+   
+</div>
+
+@code {
+    [Parameter]
+    public PackageModel pkgVM { get; set; }
+
+}

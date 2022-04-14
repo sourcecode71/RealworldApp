@@ -1,0 +1,91 @@
+﻿@page "/listing"
+
+
+
+<PageTitle>Listing</PageTitle>
+
+ <section class="section">
+      <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+		  <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Create Listing</h5>
+
+			   <EditForm Model=@lgVM  OnInvalidSubmit=@InvalidFormSubmitted OnValidSubmit="@ValidFormSubmitted">
+               
+                <div class="row mb-3">
+                  <label for="inputText" class="col-sm-2 col-form-label">Title</label>
+                  <div class="col-sm-10">
+                   <InputText @bind-Value=lgVM.Title   class="form-control" />
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="inputText" class="col-sm-2 col-form-label">Description</label>
+                  <div class="col-sm-10">
+                   <InputTextArea @bind-Value=lgVM.Description class="form-control" />
+                  </div>
+                </div>
+
+                 <div class="row mb-3">
+                     <div class="col-md-6 col-lg-6 col-sm-12">
+                         <div class="row">
+                             <label for="inputText" class="col-sm-4 col-form-label">Size</label>
+                              <div class="col-sm-8">
+                               <InputSelect @bind-Value=lgVM.Size class="form-select">
+                                  <option value="Pending">Pending</option>
+                                  <option value="Active">Active</option>
+                                  <option value="Suspended">Suspended</option>
+                                </InputSelect>
+                              </div>
+                           </div>
+                     </div>
+
+                     <div class="col-md-6 col-sm-12 col-lg-6">
+                        <div class="row">
+                          <label for="inputText" class="col-sm-4 col-form-label">Quantity</label>
+                          <div class="col-sm-8">
+                              <InputNumber @bind-Value=lgVM.Quantity class="form-control" />
+                          </div>
+                        </div>
+                     </div>
+              
+                </div>
+               
+                <div class="mt-4">
+                    <BrandingComponent bndVM=@bndVM />
+                </div>
+
+                <div class="mt-4">
+                    <PackagingComponent pkgVM=@pkgVM />
+                </div>
+
+                <div class="row mb-3">
+                    <div class=" col-2"></div>
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Submit </button>
+                    </div>
+                </div>
+
+			   </EditForm>
+            </div>
+			</div>
+		</div>
+	  </div>
+</section>
+
+@code {
+    ListingModel lgVM = new ListingModel();
+    BrandingModel bndVM = new BrandingModel();
+    PackageModel pkgVM = new PackageModel();
+
+    protected async Task InvalidFormSubmitted()
+    {
+
+    }
+
+    protected async Task ValidFormSubmitted()
+    {
+        
+
+    }
+}

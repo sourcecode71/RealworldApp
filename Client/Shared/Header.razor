@@ -1,0 +1,42 @@
+﻿@inherits LayoutComponentBase
+
+
+      <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <NavLink href="#" class="logo d-flex align-items-center" Match="NavLinkMatch.All">
+        <img src="assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block"> Kernel  Marks </span>
+      </NavLink>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+          <NavLink class="nav-link nav-icon search-bar-toggle " href="#" Match="NavLinkMatch.All">
+            <i class="bi bi-search"></i>
+          </NavLink>
+        </li><!-- End Search Icon-->
+
+
+        <li class="nav-item dropdown pe-3">
+
+          <NavLink class="nav-link nav-profile d-flex align-items-center pe-0" href="#" Match="NavLinkMatch.All" >
+            <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">Mostafiz</span>
+          </NavLink><!-- End Profile Iamge Icon -->
+
+        
+        </li><!-- End Profile Nav -->
+
+      </ul>
+    </nav><!-- End Icons Navigation -->
+
+  </header><!-- End Header -->
+
+@code {
+
+}
