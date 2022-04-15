@@ -12,17 +12,21 @@
               <h5 class="card-title">Create Listing</h5>
 
 			   <EditForm Model=@lgVM  OnInvalidSubmit=@InvalidFormSubmitted OnValidSubmit="@ValidFormSubmitted">
-               
+                <DataAnnotationsValidator />
+
                 <div class="row mb-3">
                   <label for="inputText" class="col-sm-2 col-form-label">Title</label>
                   <div class="col-sm-10">
-                   <InputText @bind-Value=lgVM.Title   class="form-control" />
+                      <InputText class="form-control" @bind-Value=@lgVM.Title />
+                      <ValidationMessage For="@(()=>lgVM.Title)" />
                   </div>
                 </div>
+
                 <div class="row mb-3">
                   <label for="inputText" class="col-sm-2 col-form-label">Description</label>
                   <div class="col-sm-10">
-                   <InputTextArea @bind-Value=lgVM.Description class="form-control" />
+                    <InputTextArea @bind-Value=lgVM.Description class="form-control" /> 
+                    <ValidationMessage For="@(()=>lgVM.Description)" />
                   </div>
                 </div>
 
@@ -36,6 +40,7 @@
                                   <option value="Active">Active</option>
                                   <option value="Suspended">Suspended</option>
                                 </InputSelect>
+                                <ValidationMessage For="@(()=>lgVM.Size)" />
                               </div>
                            </div>
                      </div>
@@ -45,18 +50,19 @@
                           <label for="inputText" class="col-sm-4 col-form-label">Quantity</label>
                           <div class="col-sm-8">
                               <InputNumber @bind-Value=lgVM.Quantity class="form-control" />
+                              <ValidationMessage For="@(()=>lgVM.Quantity)" />
                           </div>
                         </div>
                      </div>
               
                 </div>
                
-                <div class="mt-4">
-                    <BrandingComponent bndVM=@bndVM />
+               <div class="mt-4">
+                    <BrandingComponent bndVM=@bndVM @ref=@bndComponent />
                 </div>
 
-                <div class="mt-4">
-                    <PackagingComponent pkgVM=@pkgVM />
+                 <div class="mt-4">
+                    <PackagingComponent pkgVM=@pkgVM @ref=@pkgComponent />
                 </div>
 
                 <div class="row mb-3">
@@ -77,10 +83,16 @@
     ListingModel lgVM = new ListingModel();
     BrandingModel bndVM = new BrandingModel();
     PackageModel pkgVM = new PackageModel();
+    PackagingComponent pkgComponent;
+    BrandingComponent  bndComponent;
+
 
     protected async Task InvalidFormSubmitted()
     {
-
+        if(bndComponent.CanSubmitBranding() & pkgComponent.CanSubmitPackage())
+        {
+            
+        }
     }
 
     protected async Task ValidFormSubmitted()

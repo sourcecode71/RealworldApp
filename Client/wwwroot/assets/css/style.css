@@ -1056,22 +1056,18 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/*--------------------------------------------------------------
-# Footer
---------------------------------------------------------------*/
-.footer {
-  padding: 20px 0;
-  font-size: 14px;
-  transition: all 0.3s;
-  border-top: 1px solid #cddfff;
+
+.form-control.invalid {
+    border-color: #dc3545;
 }
-.footer .copyright {
-  text-align: center;
-  color: #012970;
+
+.form-control.valid {
+    border-color: #28a745;
 }
-.footer .credits {
-  padding-top: 5px;
-  text-align: center;
-  font-size: 13px;
-  color: #012970;
+
+.validation-message {
+    width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #dc3545;
 }

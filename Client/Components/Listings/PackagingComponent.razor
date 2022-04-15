@@ -1,32 +1,40 @@
-﻿<div class="row">
+﻿<div>
     @if(pkgVM != null)
     {
-         <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
-            <div class="row">
-                 <label for="inputText" class="col-sm-4 col-form-label ">Length</label>
-                 <div class="col-sm-8">
-                    <InputText @bind-Value=pkgVM.Lenth class="form-control" />
+      <EditForm Model=pkgVM @ref=pkgForm > 
+        <DataAnnotationsValidator />
+        <div class="row"> 
+             <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+                <div class="row">
+                     <label for="inputText" class="col-sm-4 col-form-label ">Length</label>
+                     <div class="col-sm-8">
+                        <InputText @bind-Value=pkgVM.Lenth class="form-control" />
+                        <ValidationMessage For="@(()=>pkgVM.Lenth )" />
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+            <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+                <div class="row">
+                   <label for="inputText" class="col-sm-4 col-form-label pl-4">Weight</label>
+                    <div class="col-sm-8">
+                        <InputText @bind-Value=pkgVM.Weight class="form-control" />
+                         <ValidationMessage For="@(()=>pkgVM.Weight )" />
+                    </div>
+                </div>
+            </div>
+
+          <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
             <div class="row">
-               <label for="inputText" class="col-sm-4 col-form-label pl-4">Weight</label>
+                <label for="inputText" class="col-sm-4 col-form-label">Height</label>
                 <div class="col-sm-8">
-                    <InputText @bind-Value=pkgVM.Weight class="form-control" />
+                    <InputText @bind-Value=pkgVM.Height class="form-control" />
+                     <ValidationMessage For="@(()=>pkgVM.Height )" />
                 </div>
             </div>
-        </div>
-
-      <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
-        <div class="row">
-            <label for="inputText" class="col-sm-4 col-form-label">Height</label>
-            <div class="col-sm-8">
-                <InputText @bind-Value=pkgVM.Height class="form-control" />
-            </div>
-        </div>
-    </div> 
+          </div> 
+      </div>
+      </EditForm>
 
     }
    
@@ -35,5 +43,13 @@
 @code {
     [Parameter]
     public PackageModel pkgVM { get; set; }
+    EditForm pkgForm;
 
+    public bool CanSubmitPackage()
+    {
+        if (pkgForm == null)
+            return false;
+
+        return pkgForm.EditContext.Validate();
+    }
 }

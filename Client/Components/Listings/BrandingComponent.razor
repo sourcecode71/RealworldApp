@@ -1,54 +1,82 @@
 ﻿
 
-<div class="row">
+<div>
     @if(bndVM != null)
     {
-     <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
-        <div class="row">
-            <label for="inputText" class="col-sm-4 col-form-label">Banding</label>
-            <div class="col-sm-8">
-            <InputSelect @bind-Value=bndVM.BrandId class="form-select">
-                <option value="Pending">Pending</option>
-                <option value="Active">Active</option>
-                <option value="Suspended">Suspended</option>
-            </InputSelect>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
-        <div class="row">
-            <label for="inputText" class="col-sm-4 col-form-label pl-4">Category</label>
-            <div class="col-sm-8">
-            <InputSelect @bind-Value=bndVM.CategoryId class="form-select">
-                <option value="Pending">Pending</option>
-                <option value="Active">Active</option>
-                <option value="Suspended">Suspended</option>
-            </InputSelect>
+   <EditForm @ref =@bndForm Model="bndVM"> 
+    <DataAnnotationsValidator />
+    <div class="row"> 
+         <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+            <div class="row">
+                <label for="inputText" class="col-sm-4 col-form-label">Banding</label>
+                <div class="col-sm-8">
+                    <InputSelect @bind-Value=bndVM.BrandName class="form-control">
+                        <option value="val"> Value  </option>
+                    </InputSelect>
+
+                    <ValidationMessage For="@(()=>bndVM.BrandName)" />
+                </div>
             </div>
         </div>
-    </div>
+
+        <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+            <div class="row">
+                <label for="inputText" class="col-sm-4 col-form-label pl-4">Category</label>
+                <div class="col-sm-8">
+                <InputSelect @bind-Value=bndVM.CategoryName class="form-select">
+                    <option value="Pending">Pending</option>
+                    <option value="Active">Active</option>
+                    <option value="Suspended">Suspended</option>
+                </InputSelect>
+                
+                <ValidationMessage For="@(()=>bndVM.CategoryName)" />
+
+                </div>
+            </div>
+        </div>
                       
-    <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
-        <div class="row">
-            <label for="inputText" class="col-sm-4 col-form-label ">Sub Category</label>
-            <div class="col-sm-8">
-            <InputSelect @bind-Value=bndVM.SubCategoryId class="form-select">
-                <option value="Pending">Pending</option>
-                <option value="Active">Active</option>
-                <option value="Suspended">Suspended</option>
-            </InputSelect>
+        <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
+            <div class="row">
+                <label for="inputText" class="col-sm-4 col-form-label ">Sub Category</label>
+                <div class="col-sm-8">
+                <InputSelect @bind-Value=bndVM.SubCategoryName class="form-select">
+                    <option value="Pending">Pending</option>
+                    <option value="Active">Active</option>
+                    <option value="Suspended">Suspended</option>
+                </InputSelect>
+                 <ValidationMessage For="@(()=>bndVM.SubCategoryName)" />
+                </div>
             </div>
         </div>
     </div>
+    
+   </EditForm>
+
     }
-   
 </div>
                     
 
 @code {
 
     [Parameter]
-    public BrandingModel bndVM { get; set; }
+    public BrandingModel? bndVM { get; set; }
+    EditForm? bndForm;
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.LoadBrands();
+    }
+
+    public bool CanSubmitBranding()
+    {
+        return bndForm.EditContext.Validate();
+    }
+
+    private void LoadBrands()
+    {
+        
+    }
+
 
 }
