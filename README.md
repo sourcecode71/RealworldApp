@@ -6,7 +6,7 @@ This codebase was created to demonstrate a fully fledged fullstack application b
 
 We've gone to great lengths to adhere to the **Blazor** community styleguides & best practices.
 
-# How it works
+# Project Architecture 
 
 > Describe the general architecture of this app here
 
