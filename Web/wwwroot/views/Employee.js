@@ -44,10 +44,7 @@ const app = new Vue({
 
                 axios.post(clientURL, clientData, config)
                     .then(response => {
-
                         var resp = response.data;
-                        console.log("response --- ", response.data);
-
                         if (resp.succeeded) {
                             Swal.fire({
                                 position: 'top-end',
@@ -66,9 +63,6 @@ const app = new Vue({
                        
 
                     }).catch(errors => {
-
-                        console.log(" error.response", error.response);
-
                         Swal.fire({
                             position: 'top-end',
                             title: 'Error!',
@@ -115,8 +109,6 @@ const app = new Vue({
             if (!this.role) {
                 this.errors.push("Please select the emloyee role.");
             }
-
-            
 
             if (!this.errors.length) {
                 return true;
@@ -171,14 +163,14 @@ const app = new Vue({
                 setTimeout(() => {
 
                 $("#allEmployee").DataTable({
-                    scrollY: "500px",
+                    scrollY: "750px",
                     scrollCollapse: true,
                     paging: false,
                     columns: [
                         { "width": "4%" },
-                        { "width": "23%" },
+                        { "width": "30%" },
                         { "width": "15%" },
-                        { "width": "27%" },
+                        { "width": "18%" },
                         { "width": "14%" },
                         { "width": "15%" }
                     ]

@@ -161,13 +161,12 @@
                 });
 
         },
-        EmpHoursLogDetails: function (empid,wrkId) {
+        EmpHoursLogDetails: function (empid) {
 
             this.isHrsDetails = true;
-
             const config = { headers: { "Content-Type": "application/json" } };
             var base_url = window.location.origin;
-            const wrkURL = base_url + "/api/Employee/emp-ot-hour?empId=" + empid +"wrkId="+wrkId;
+            const wrkURL = base_url + "/api/Employee/emp-ot-hour?empId=" + empid + "&wrkId=" + this.wrk.id;
 
             axios.get(wrkURL, config).then(
                 (result) => {

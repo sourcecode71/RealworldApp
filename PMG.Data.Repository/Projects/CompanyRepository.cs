@@ -201,7 +201,7 @@ namespace PMG.Data.Repository.Projects
                                         ProjectId = p.Id,
                                         ProjectName = p.Name,
                                         Year = p.Year,
-                                        SpentDateStr = hr.SetDate.ToString("MM/dd/yyyy"),
+                                        SpentDateStr = hr.SpentDate.ToString("MM/dd/yyyy"),
                                         Remarks = hr.Remarks
                                     }).AsQueryable();
 
@@ -250,7 +250,7 @@ namespace PMG.Data.Repository.Projects
                                   ProjectId = p.Id,
                                   ProjectName = p.Name,
                                   Year = p.Year,
-                                  SpentDateStr = hr.SetDate.ToString("MM/dd/yyyy"),
+                                  SpentDateStr = hr.SpentDate.ToString("MM/dd/yyyy"),
                                   Remarks = hr.Remarks
                               }).AsQueryable();
 

@@ -94,11 +94,10 @@
 
             axios.get(clientURL, config).then(
                 (result) => {
-
                     this.allInv = result.data;
                     setTimeout(() => {
                         $('#invAllLogs').DataTable({
-                            "scrollY": "500px",
+                            "scrollY": "750px",
                             "scrollCollapse": true,
                             "paging": false,
                             columns: [
@@ -112,7 +111,7 @@
                                 { "width": "12%" },
                             ]
                         });
-                    }, 100);
+                    }, 500); 
                 },
                 (error) => {
                     console.error(error);
@@ -160,9 +159,9 @@
                 this.errors.push("Invoice bill is reequired");
             }
 
-            if (!this.invoiceNumber) {
-                this.errors.push("Invoice number is reequired");
-            }
+            //if (!this.invoiceNumber) {
+            //    this.errors.push("Invoice number is reequired");
+            //}
 
             if (!this.invoiceDate) {
                 this.errors.push("Invoice Date is reequired");

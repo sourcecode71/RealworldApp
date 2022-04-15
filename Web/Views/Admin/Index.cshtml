@@ -17,7 +17,7 @@
 
         if (currentRoleByte != null && currentNameByte != null)
         {
-        currentRole = System.Text.Encoding.Default.GetString(currentRoleByte);
+            currentRole = System.Text.Encoding.Default.GetString(currentRoleByte);
             currentName = System.Text.Encoding.Default.GetString(currentNameByte);
         }
     }
@@ -84,7 +84,7 @@
 
                 <div  class="row p-2 mt-2">
                     <div class="col-md-6 col-lg-6">
-                      <div> <h5 style="color:#34c0eb">  Total hour :{{empTotalLog(assignEmp)}}  </h5></div>
+                      <div> <h5 style="color:#34c0eb">  Total hours :{{empTotalLog(assignEmp)}}  </h5></div>
                       
                       <table class="mb-0 table table-borderless" style="width:100%">
                         <thead>
@@ -110,9 +110,10 @@
                     <div class="col-md-6 col-lg-6">
                         <div v-if="isHrsDetails"> 
 
-                       <div> <h5 style="color:#34c0eb">  Total hour :{{empTotalLog(empHrs)}}  </h5></div>
+                       <div> <h5 style="color:#34c0eb">  Total hours :{{empTotalLog(empHrs)}}  </h5></div>
 
-                       <table class="mb-0 table table-borderless" style="width:100%;max-height:250px;overflow:scroll">
+                      <div style="max-height:250px;overflow-y:scroll"> 
+                       <table class="mb-0 table table-borderless" style="width:100%;">
                         <thead>
                             <tr>
                                 <th>Name </th>
@@ -129,8 +130,13 @@
                                 <td>  {{hrs.lhour}}  </td>
                             </tr>
                         </tbody>
-                    </table>
-                        </div>
+                       </table>
+
+                       </div> 
+                     
+                        
+                
+                </div>
               
 
                     </div>
@@ -171,12 +177,17 @@
 
                             <td>
                                 <div class="row">
-                                    <div class="col-md-6 col-lg-6 col-sm-6">
-                                        <button style="text-align:left" type="button"
-                                            v-on:click="ShowAllInvoice(wrk)" class="btn btn-sm btn-outline-info">
-                                            INV
-                                        </button>
-                                    </div>
+
+                                    @if(currentRole == "Admin" || currentRole == "Management")
+                                    {
+                                        <div class="col-md-6 col-lg-6 col-sm-6">
+                                            <button style="text-align:left" type="button"
+                                                v-on:click="ShowAllInvoice(wrk)" class="btn btn-sm btn-outline-info">
+                                                INV
+                                            </button>
+                                        </div>
+                                    }
+
                                     <div class="col-md-6 col-lg-6 col-sm-6">
                                         <button style="text-align:right" type="button" v-on:click="ShowAllHRS(wrk)"
                                             class="btn btn-sm btn-outline-info"> HRS

@@ -49,9 +49,9 @@ namespace PMG.Data.Repository.PayInvoice
                             Balance = Convert.ToDouble(rd.GetValue("Balance").ToString()),
                             SpentHour = Convert.ToDouble(rd.GetValue("SpentHour").ToString()),
                             BudgetHour = Convert.ToDouble(rd.GetValue("BudgetHour").ToString()),
-                            InvoiceBill = Convert.ToDouble(rd.GetValue("BudgetHour").ToString()),
-                            PartialBill = Convert.ToDouble(rd.GetValue("BudgetHour").ToString()),
-                            InvoiceNumber = rd.GetValue("BudgetHour").ToString(),
+                            InvoiceBill = Convert.ToDouble(rd.GetValue("InvoiceBill").ToString()),
+                            PartialBill = Convert.ToDouble(rd.GetValue("PartialBill").ToString()),
+                            InvoiceNumber = rd.GetValue("InvoiceNumber").ToString(),
                             ApprovedDateStr = rd.GetValue("ApprovalDate").ToString(),
                             InvoiceDateStr = rd.GetValue("InvoiceDate").ToString(),
                             DueDateStr = rd.GetValue("EndDate").ToString()
