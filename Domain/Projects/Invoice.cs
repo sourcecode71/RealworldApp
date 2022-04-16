@@ -10,7 +10,7 @@ namespace Domain.Projects
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public Guid WorkOrderId { get; set; }
-        public virtual WorkOrder WorkOrder  { get;set;}
+        public virtual WorkOrder WorkOrder { get; set; }
 
         [MaxLength(100)]
         public string WorkOrderNo { get; set; }

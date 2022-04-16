@@ -1,15 +1,13 @@
+using Application.DTOs;
+using Domain.Enums;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Persistance.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.DTOs;
-using Domain;
-using Domain.Enums;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Persistance;
-using Persistance.Context;
 
 namespace Application.Core.Projects
 {
@@ -52,10 +50,10 @@ namespace Application.Core.Projects
             public async Task<List<ProjectDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var projectsDto = new List<ProjectDto>();
-                    
+
                 var projects = request.ProjectStatus == 0 ? await _context.Projects.Include(x => x.ProjectEmployees).ToListAsync()
                         : await _context.Projects.Include(x => x.ProjectEmployees).Where(x => x.Status == (ProjectStatus)request.ProjectStatus).ToListAsync();
-                
+
                 foreach (var item in projects)
                 {
                     var eng = item.ProjectEmployees.FirstOrDefault(x => x.ProjectId == item.Id && x.EmployeeType == EmployeeType.Engineering);
@@ -99,9 +97,9 @@ namespace Application.Core.Projects
                         SelfProjectId = item.SelfProjectId,
                         Balance = item.Balance,
                         Budget = item.Budget,
-                        Factor =   item.Factor,
+                        Factor = item.Factor,
                         Paid = item.Paid,
-                        Progress = Math.Abs(Math.Round((DateTime.Now - item.CreatedDate).TotalDays /7, 2)),
+                        Progress = Math.Abs(Math.Round((DateTime.Now - item.CreatedDate).TotalDays / 7, 2)),
                         Schedule = item.Schedule,
                         DeliveryDate = item.DeliveryDate,
                         Client = item.Client,

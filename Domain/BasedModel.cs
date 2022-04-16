@@ -13,8 +13,8 @@ namespace Domain
 
         [MaxLength(200)]
 
-        public bool IsDeleted {get;set;}
+        public bool IsDeleted { get; set; }
         public string SetUser { get; set; }
-        public DateTime SetDate { get; set; } 
+        public DateTime SetDate { get; set; }
     }
 }

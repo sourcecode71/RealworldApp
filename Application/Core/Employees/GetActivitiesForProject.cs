@@ -1,12 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.DTOs;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Core.Employees
 {

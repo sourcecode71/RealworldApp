@@ -11,8 +11,8 @@
     
   },
   data: {
-      errors: [],
-      wrk:'',
+    errors: [],
+    wrk:'',
     name: null,
     consecutiveWork: null,
     budget: "",
@@ -24,8 +24,8 @@
     seen: false,
     isName: false,
     showDetails: false,
-      hrsDetails: false,
-      IsInv: true,
+    hrsDetails: false,
+    IsInv: true,
     projects: [],
     workOrders: [],
     companies: [],
@@ -149,8 +149,12 @@
 
               $("#empWrkOrder").dataTable().fnDestroy();
 
+              console.log(" load work order ", result.data);
+
+
               setTimeout(() => {
                   this.workOrders = result.data;
+
               }, 100);
 
           setTimeout(() => {

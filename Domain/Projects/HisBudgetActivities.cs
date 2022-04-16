@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Projects
 {
-    public class HisBudgetActivities :BasedModel
+    public class HisBudgetActivities : BasedModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public string ProjectId { get; set; }
-        public virtual Project Project { get;set;}
+        public virtual Project Project { get; set; }
         public Guid WorkOrderId { get; set; }
         public virtual WorkOrder WorkOrder { get; set; }
         public int BudgetFor { get; set; } // 1= Work Order 2= Project 

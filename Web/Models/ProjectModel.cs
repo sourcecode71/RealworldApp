@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
 
 namespace Web.Models
 {
@@ -36,7 +35,7 @@ namespace Web.Models
         public string FactorFormat { get { return CreateFormatForCurrency(Factor); } set { } }
 
         public string CreateFormatForCurrency(double amount)
-		{
+        {
             return String.Format(CultureInfo.InvariantCulture,
                                  "{0:0,0.00}", amount);
         }

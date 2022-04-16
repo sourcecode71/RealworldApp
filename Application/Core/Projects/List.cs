@@ -1,15 +1,13 @@
+using Application.DTOs;
+using Domain.Enums;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Persistance.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.DTOs;
-using Domain;
-using Domain.Enums;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Persistance;
-using Persistance.Context;
 
 namespace Application.Core.Projects
 {

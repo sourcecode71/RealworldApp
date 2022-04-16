@@ -1,10 +1,9 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.DTOs;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Core.Employees
 {

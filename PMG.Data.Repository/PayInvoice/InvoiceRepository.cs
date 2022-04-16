@@ -1,13 +1,13 @@
 ﻿using Application.DTOs;
 using Domain.Projects;
+using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
 using System.Data;
+using System.Data.Common;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PMG.Data.Repository.PayInvoice
 {
@@ -74,7 +74,7 @@ namespace PMG.Data.Repository.PayInvoice
 
         public async Task<List<InvoiceDTO>> GetPendingInvoice()
         {
-            var invs = _context.Payment.Select(p3=>p3.InvoiceNo).ToList();
+            var invs = _context.Payment.Select(p3 => p3.InvoiceNo).ToList();
 
             var invDTO = await (from inv in _context.Invoice
                                 join wrk in _context.WorkOrder on inv.WorkOrderId equals wrk.Id
@@ -106,7 +106,7 @@ namespace PMG.Data.Repository.PayInvoice
                                     ClientName = cl.Name,
                                     DueDateStr = wrk.EndDate.ToString("MM/dd/yyyy")
 
-                                }).Where(p=> !invs.Contains(p.InvoiceNumber)).ToListAsync();
+                                }).Where(p => !invs.Contains(p.InvoiceNumber)).ToListAsync();
 
             return invDTO;
         }
@@ -131,15 +131,15 @@ namespace PMG.Data.Repository.PayInvoice
 
                     double PrevBalance = 0;
 
-                    if(wrkOD.BudgetStatus == 0)
+                    if (wrkOD.BudgetStatus == 0)
                     {
                         return false;
                     }
 
-                    if(wrkOD != null)
+                    if (wrkOD != null)
                     {
-                       PrevBalance = wrkOD.Balance;
-                       wrkOD.Balance = wrkOD.Balance - invDTO.InvoiceBill;
+                        PrevBalance = wrkOD.Balance;
+                        wrkOD.Balance = wrkOD.Balance - invDTO.InvoiceBill;
                     }
 
 
@@ -151,7 +151,7 @@ namespace PMG.Data.Repository.PayInvoice
                         ProjectId = invDTO.ProjectId,
                         PartialBill = invDTO.PartialBill,
                         InvoiceBill = invDTO.InvoiceBill,
-                        Balance = PrevBalance- invDTO.InvoiceBill,
+                        Balance = PrevBalance - invDTO.InvoiceBill,
                         InvoiceDate = invDTO.InvoiceDate,
                         InvoiceNumber = invDTO.InvoiceNumber,
                         Remarks = invDTO.Remarks,
@@ -171,7 +171,7 @@ namespace PMG.Data.Repository.PayInvoice
                 {
                     await transaction.CommitAsync();
                     throw ex;
-                } 
+                }
             }
         }
 
@@ -210,25 +210,25 @@ namespace PMG.Data.Repository.PayInvoice
         {
             try
             {
-                var pay= await (from p in _context.Payment 
-                         join i in _context.Invoice on p.InvoiceId equals i.Id
-                         join w in _context.WorkOrder on p.WorkOrderId equals w.Id
-                         join pj in _context.Projects on w.ProjectId equals pj.Id
-                         orderby p.SetDate descending
-                         select new PaymentDto
-                         {
-                             Id =p.Id.ToString(),
-                             WorkNo = w.WorkOrderNo,
-                             ProjectNo = pj.ProjectNo,
-                             WorkOrderName=w.ConsWork,
-                             ApprovedBudget=w.ApprovedBudget,
-                             InvoiceNo=i.InvoiceNumber,
-                             InvoiceBill = i.InvoiceBill,
-                             InvoiceDateStr=i.InvoiceDate.ToString("MM/dd/yyyy"),
-                             PayAmount=p.PayAmount,
-                             PayDateStr=p.PaymentDate.ToString("MM/dd/yyyy")
+                var pay = await (from p in _context.Payment
+                                 join i in _context.Invoice on p.InvoiceId equals i.Id
+                                 join w in _context.WorkOrder on p.WorkOrderId equals w.Id
+                                 join pj in _context.Projects on w.ProjectId equals pj.Id
+                                 orderby p.SetDate descending
+                                 select new PaymentDto
+                                 {
+                                     Id = p.Id.ToString(),
+                                     WorkNo = w.WorkOrderNo,
+                                     ProjectNo = pj.ProjectNo,
+                                     WorkOrderName = w.ConsWork,
+                                     ApprovedBudget = w.ApprovedBudget,
+                                     InvoiceNo = i.InvoiceNumber,
+                                     InvoiceBill = i.InvoiceBill,
+                                     InvoiceDateStr = i.InvoiceDate.ToString("MM/dd/yyyy"),
+                                     PayAmount = p.PayAmount,
+                                     PayDateStr = p.PaymentDate.ToString("MM/dd/yyyy")
 
-                         }).ToListAsync();
+                                 }).ToListAsync();
 
                 return pay;
 

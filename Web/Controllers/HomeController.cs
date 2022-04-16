@@ -1,14 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Web.Models;
 using Web.Services;
 
@@ -60,11 +54,11 @@ namespace Web.Controllers
             return View();
         }
 
-       public ResultModel Login(EmployeeModel loginUser)
+        public ResultModel Login(EmployeeModel loginUser)
         {
             ResultModel result = _apiService.CallLogin(loginUser).Result;
 
-            if(result.IsSuccess)
+            if (result.IsSuccess)
             {
                 EmployeeModel loggedInUser = (EmployeeModel)result.Result;
                 SetSessionString("current_user_token", loggedInUser.Token);
@@ -72,7 +66,7 @@ namespace Web.Controllers
                 SetSessionString("current_user_role", loggedInUser.Role);
                 SetSessionString("current_user_name", loggedInUser.Name);
                 SetSessionString("current_user_id", loggedInUser.Id);
-                
+
                 // TODO : Remove above code and use the following code
 
                 //var claims = new List<Claim>

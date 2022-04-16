@@ -1,5 +1,4 @@
 using Domain;
-using Domain.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -53,7 +52,8 @@ namespace Application.DTOs
         public List<ProjectEmp> Drawings { get; set; }
     }
 
-    public class ProjectApprovalDto {
+    public class ProjectApprovalDto
+    {
         public string Id { get; set; }
         public Guid ProjectId { get; set; }
         public string ProjectName { get; set; }

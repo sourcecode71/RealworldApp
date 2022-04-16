@@ -12,7 +12,7 @@ namespace Application.DTOs
         public string EmpName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public  string EmpType { get; set; }
+        public string EmpType { get; set; }
         public string Role { get; set; }
         public double Bhour { get; set; }
         public double Lhour { get; set; }

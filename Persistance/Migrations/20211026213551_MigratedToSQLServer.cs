@@ -1,6 +1,6 @@
-﻿using System;
-using Domain.Enums;
+﻿using Domain.Enums;
 using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 namespace Persistance.Migrations
 {

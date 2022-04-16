@@ -1,15 +1,10 @@
 ﻿using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PMG.Data.Repository.Model
 {
     public static class EnumConverter
     {
-       
+
 
         public static string ProjectStatusString(ProjectStatus status)
         {
@@ -23,6 +18,8 @@ namespace PMG.Data.Repository.Model
                     return "Completed";
                 case ProjectStatus.Archived:
                     return "Archived";
+                case ProjectStatus.Invoiced:
+                    return "Invoiced";
                 case ProjectStatus.Delayed:
                     return "Delayed";
                 case ProjectStatus.Modified:

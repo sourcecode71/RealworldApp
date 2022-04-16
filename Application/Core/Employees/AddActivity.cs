@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Domain;
 using Domain.Enums;
 using MediatR;
 using Persistance.Context;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Core.Employees
 {
@@ -25,17 +24,17 @@ namespace Application.Core.Employees
 
         public class Handler : IRequestHandler<Command>
         {
-        private readonly DataContext _context;
+            private readonly DataContext _context;
             public Handler(DataContext context)
             {
-            _context = context;
+                _context = context;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var project = _context.Projects.FirstOrDefault(x => x.SelfProjectId == request.SelfProjectId);
-                
-                var emp = _context.Employees.FirstOrDefault( x => x.Email == request.EmployeeEmail);
+
+                var emp = _context.Employees.FirstOrDefault(x => x.Email == request.EmployeeEmail);
 
                 if (project != null && emp != null)
                 {

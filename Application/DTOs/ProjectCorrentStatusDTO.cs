@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Application.DTOs
+﻿namespace Application.DTOs
 {
     public class ProjectCorrentStatusDTO
     {

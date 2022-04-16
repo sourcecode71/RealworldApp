@@ -15,7 +15,7 @@ namespace Web.ApiContollers
     {
         private readonly IProjectsRepository _project;
         private readonly IWorkOrderRepository _woRepository;
-        public WorkOrderController(IProjectsRepository projects,IWorkOrderRepository orderRepository)
+        public WorkOrderController(IProjectsRepository projects, IWorkOrderRepository orderRepository)
         {
             _project = projects;
             _woRepository = orderRepository;
@@ -68,7 +68,7 @@ namespace Web.ApiContollers
                 {
                     return RedirectToAction("Login", "Home");
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -97,7 +97,7 @@ namespace Web.ApiContollers
         public ActionResult GetAllArchivedWorkOrder()
         {
             var wrkList = _woRepository.LoadAllWorkOrders();
-            var filterWrk = wrkList.Where(w=>w.WrkStatus == ProjectStatus.Archived || w.WrkStatus == ProjectStatus.Completed);
+            var filterWrk = wrkList.Where(w => w.WrkStatus == ProjectStatus.Archived || w.WrkStatus == ProjectStatus.Completed);
             return Ok(filterWrk);
         }
 

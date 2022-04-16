@@ -41,21 +41,21 @@ namespace PMG.Data.Repository.Projects
                             ProjectId = rd.GetValue("ProjectId").ToString(),
                             ClinetName = rd.GetValue("ClientName").ToString(),
                             ProjectName = rd.GetValue("ProjectName").ToString(),
-                            OriginalBudget =Convert.ToDouble( rd.GetValue("OriginalBudget").ToString()),
-                            ApprovedBudget =Convert.ToDouble( rd.GetValue("ApprovedBudget").ToString()),
-                            Balance = Convert.ToDouble( rd.GetValue("Balance").ToString()),
-                            BudgetHour = Convert.ToDouble( rd.GetValue("BudgetHours").ToString()),
-                            SpentHour = Convert.ToDouble( rd.GetValue("SpentHour").ToString()),
+                            OriginalBudget = Convert.ToDouble(rd.GetValue("OriginalBudget").ToString()),
+                            ApprovedBudget = Convert.ToDouble(rd.GetValue("ApprovedBudget").ToString()),
+                            Balance = Convert.ToDouble(rd.GetValue("Balance").ToString()),
+                            BudgetHour = Convert.ToDouble(rd.GetValue("BudgetHours").ToString()),
+                            SpentHour = Convert.ToDouble(rd.GetValue("SpentHour").ToString()),
                             ConsecutiveWork = rd.GetValue("ConsWork").ToString(),
                             OTDescription = rd.GetValue("OTDescription").ToString(),
-                            CompanyName = rd.GetValue("CompanyName") != null? rd.GetValue("CompanyName").ToString() :"",
+                            CompanyName = rd.GetValue("CompanyName") != null ? rd.GetValue("CompanyName").ToString() : "",
                             ClientName = rd.GetValue("ClientName") != null ? rd.GetValue("ClientName").ToString() : "",
                             ProjectNo = rd.GetValue("ProjectNo").ToString(),
-                            ProjectYear =Convert.ToInt16( rd.GetValue("pYear").ToString()),
+                            ProjectYear = Convert.ToInt16(rd.GetValue("pYear").ToString()),
                             WorkOrderNo = rd.GetValue("WorkOrderNo").ToString(),
                             WrkBudgetNo = rd.GetValue("BudgetNo").ToString(),
-                            WrkStatus =(ProjectStatus)(Convert.ToInt16 (rd.GetValue("WrkStatus").ToString())),
-                            StartDateStr = rd.GetValue("SubmitDate").ToString(),
+                            WrkStatus = (ProjectStatus)(Convert.ToInt16(rd.GetValue("WrkStatus").ToString())),
+                            StartDateStr = rd.GetValue("StartDate").ToString(),
                             EndDateStr = rd.GetValue("EnDate").ToString(),
                             ApprovedDateStr = rd.GetValue("ApprovalDate").ToString(),
 
@@ -167,9 +167,9 @@ namespace PMG.Data.Repository.Projects
 
                     _context.WorkOrder.Add(pmWorkOrder);
 
-                   this.AssignWorkOrderEmploye(dTO, guid.ToString());
+                    this.AssignWorkOrderEmploye(dTO, guid.ToString());
 
-                   bool State= await this.CreateWorkOrderBudget(dTO, guid, OTNo);
+                    bool State = await this.CreateWorkOrderBudget(dTO, guid, OTNo);
 
                     var Status = await _context.SaveChangesAsync();
 
@@ -181,7 +181,7 @@ namespace PMG.Data.Repository.Projects
                 {
                     await transaction.RollbackAsync();
                     throw ex;
-                } 
+                }
             }
 
         }
@@ -189,50 +189,50 @@ namespace PMG.Data.Repository.Projects
         public async Task<bool> UpdateWorkOrder(WorkOrderDTO dTO)
         {
 
-                using (var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
                 {
-                    try
-                    {
-                    WorkOrder workOrder = await _context.WorkOrder.FirstOrDefaultAsync(p => p.Id == new Guid(dTO.WorkOrderId) );
+                    WorkOrder workOrder = await _context.WorkOrder.FirstOrDefaultAsync(p => p.Id == new Guid(dTO.WorkOrderId));
 
                     HisWorkOrder hisWork = new HisWorkOrder
-                        {
-                            Id = Guid.NewGuid(),
-                            ApprovalDate = workOrder.ApprovalDate,
-                            ApprovedBudget = workOrder.ApprovedBudget,
-                            Comments = workOrder.Comments,
-                            IsDeleted = workOrder.IsDeleted,
-                            OTDescription = workOrder.OTDescription,
-                            ProjectId = workOrder.ProjectId,
-                            ProjectNo = workOrder.ProjectNo,
-                            SetDate = workOrder.SetDate,
-                            SetUser = workOrder.SetUser,
-                            WorkOrderId = workOrder.Id,
-                            WorkOrderNo = workOrder.WorkOrderNo,
-                        };
-
-                        _context.HisWorkOrder.Add(hisWork);
-
-                        workOrder.UpdateDate = DateTime.Now;
-                        workOrder.UpdateUser = "admin";
-                        workOrder.Comments = dTO.Comments;
-                        workOrder.ApprovedBudget = dTO.ApprovedBudget;
-                        workOrder.Balance = dTO.ApprovedBudget;
-                        workOrder.ProjectId = dTO.ProjectId;
-                        workOrder.ProjectNo = dTO.ProjectNo;
-
-                       int state = await _context.SaveChangesAsync();
-                       await transaction.CommitAsync();
-
-                        return state == 1;
-
-                    }
-                    catch (Exception ex)
                     {
-                       await transaction.RollbackAsync();
-                        throw ex;
-                    }
+                        Id = Guid.NewGuid(),
+                        ApprovalDate = workOrder.ApprovalDate,
+                        ApprovedBudget = workOrder.ApprovedBudget,
+                        Comments = workOrder.Comments,
+                        IsDeleted = workOrder.IsDeleted,
+                        OTDescription = workOrder.OTDescription,
+                        ProjectId = workOrder.ProjectId,
+                        ProjectNo = workOrder.ProjectNo,
+                        SetDate = workOrder.SetDate,
+                        SetUser = workOrder.SetUser,
+                        WorkOrderId = workOrder.Id,
+                        WorkOrderNo = workOrder.WorkOrderNo,
+                    };
+
+                    _context.HisWorkOrder.Add(hisWork);
+
+                    workOrder.UpdateDate = DateTime.Now;
+                    workOrder.UpdateUser = "admin";
+                    workOrder.Comments = dTO.Comments;
+                    workOrder.ApprovedBudget = dTO.ApprovedBudget;
+                    workOrder.Balance = dTO.ApprovedBudget;
+                    workOrder.ProjectId = dTO.ProjectId;
+                    workOrder.ProjectNo = dTO.ProjectNo;
+
+                    int state = await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    return state == 1;
+
                 }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+            }
         }
         public IQueryable<WorkOrderDTO> GetFilteredWorkOrder(string strOT)
         {
@@ -240,7 +240,7 @@ namespace PMG.Data.Repository.Projects
             {
                 var wrkODT = from wrk in _context.WorkOrder
                              join prj in _context.Projects on wrk.ProjectId equals prj.Id
-                             where wrk.OTDescription.Contains(strOT) 
+                             where wrk.OTDescription.Contains(strOT)
                              orderby wrk.ApprovalDate descending
                              select new WorkOrderDTO
                              {
@@ -265,12 +265,12 @@ namespace PMG.Data.Repository.Projects
             }
         }
 
-       private async Task<bool> CreateWorkOrderBudget(WorkOrderDTO dto, Guid wrkId, string wrkNo)
+        private async Task<bool> CreateWorkOrderBudget(WorkOrderDTO dto, Guid wrkId, string wrkNo)
         {
             try
             {
-               
-                string wrkBudgetNo = GetWrkNumber(wrkNo,wrkId);
+
+                string wrkBudgetNo = GetWrkNumber(wrkNo, wrkId);
                 string budgetVersion = GetBudgetVersion(wrkNo, wrkId);
 
                 var wrkApproval = new WorkOrderActivities
@@ -297,7 +297,7 @@ namespace PMG.Data.Repository.Projects
             }
         }
 
-     
+
 
         private void AssignWorkOrderEmploye(WorkOrderDTO dto, string wrkId)
         {
@@ -306,7 +306,7 @@ namespace PMG.Data.Repository.Projects
                 string pId = (Guid.NewGuid()).ToString();
                 WorkOrderEmployee empW = new WorkOrderEmployee
                 {
-                    WorkOrderId =new Guid(wrkId),
+                    WorkOrderId = new Guid(wrkId),
                     EmployeeId = emp.Id,
                     BudgetHours = emp.hour,
                     EmployeeType = EmployeeType.Engineering
@@ -332,7 +332,7 @@ namespace PMG.Data.Repository.Projects
         private string GetWorkOrderNumber(WorkOrderDTO dTO)
         {
             DateTime CurrentDate = DateTime.Now;
-          
+
             string Year = CurrentDate.Year.ToString();
             var PmOTCount = _context.WorkOrder.Where(P => P.Year == dTO.StartDate.Year).Count() + 1;
             string workOrderNo = string.Format("{0}{1}", Year, PmOTCount.ToString("00000"));
@@ -406,7 +406,7 @@ namespace PMG.Data.Repository.Projects
             {
                 List<WorkOrderDTO> wrkList = await (from w in _context.WorkOrder
                                                     join p in _context.Projects on w.ProjectId equals p.Id
-                                                    join ew in _context.WorkOrderEmployee on w.Id  equals ew.WorkOrderId 
+                                                    join ew in _context.WorkOrderEmployee on w.Id equals ew.WorkOrderId
                                                     where ew.EmployeeId == EmpId
                                                     orderby w.SetDate descending
                                                     select new WorkOrderDTO
@@ -428,7 +428,7 @@ namespace PMG.Data.Repository.Projects
                                                         ApprovedDateStr = w.ApprovalDate.ToString("MM/dd/yyyy")
 
                                                     }).ToListAsync();
-           
+
 
                 return wrkList;
             }
@@ -444,21 +444,21 @@ namespace PMG.Data.Repository.Projects
             try
             {
                 var wrkDT = await (from p in _context.Projects
-                             join w in _context.WorkOrder on p.Id equals w.ProjectId
-                             where p.Id == PrId
-                             select (new WorkOrderDTO
-                             {
-                                 Id = w.Id,
-                                 ProjectNo = p.ProjectNo,
-                                 ProjectName = p.Name,
-                                 ProjectYear = p.Year,
-                                 WorkOrderNo = w.WorkOrderNo,
-                                 ConsecutiveWork = w.ConsWork,
-                                 ApprovedBudget = w.ApprovedBudget,
-                                 StartDateStr = w.StartDate.ToString("MM/dd/yyyy"),
-                                 EndDateStr = w.EndDate.ToString("MM/dd/yyyy"),
-                                 OriginalBudget = w.OriginalBudget
-                             })).ToListAsync();
+                                   join w in _context.WorkOrder on p.Id equals w.ProjectId
+                                   where p.Id == PrId
+                                   select (new WorkOrderDTO
+                                   {
+                                       Id = w.Id,
+                                       ProjectNo = p.ProjectNo,
+                                       ProjectName = p.Name,
+                                       ProjectYear = p.Year,
+                                       WorkOrderNo = w.WorkOrderNo,
+                                       ConsecutiveWork = w.ConsWork,
+                                       ApprovedBudget = w.ApprovedBudget,
+                                       StartDateStr = w.StartDate.ToString("MM/dd/yyyy"),
+                                       EndDateStr = w.EndDate.ToString("MM/dd/yyyy"),
+                                       OriginalBudget = w.OriginalBudget
+                                   })).ToListAsync();
                 return wrkDT;
 
             }
@@ -492,5 +492,5 @@ namespace PMG.Data.Repository.Projects
     }
 
 
- 
+
 }

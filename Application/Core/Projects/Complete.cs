@@ -1,11 +1,9 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Domain;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Core.Projects
 {
@@ -29,14 +27,14 @@ namespace Application.Core.Projects
             {
                 var project = await _context.Projects.FirstOrDefaultAsync(x => x.SelfProjectId == request.SelfProjectId);
 
-                if(project != null)
+                if (project != null)
                 {
                     project.Invoiced = request.Invoiced;
                     project.Status = ProjectStatus.Completed;
 
                     await _context.SaveChangesAsync();
                 }
-              
+
                 return Unit.Value;
             }
         }

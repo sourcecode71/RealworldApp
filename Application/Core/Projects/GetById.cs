@@ -1,15 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.DTOs;
 using Domain;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Persistance;
 using Persistance.Context;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Core.Projects
 {
@@ -92,7 +91,7 @@ namespace Application.Core.Projects
                         drawName = employee.Name;
                 }
 
-                var app = project.ProjectEmployees.FirstOrDefault(x =>x.EmployeeType == EmployeeType.Approval);
+                var app = project.ProjectEmployees.FirstOrDefault(x => x.EmployeeType == EmployeeType.Approval);
                 string appName = string.Empty;
 
                 if (app != null)
@@ -120,7 +119,7 @@ namespace Application.Core.Projects
                     Client = project.Client,
                     Engineering = engName,
                     Drawing = drawName,
-                    Approval =appName,
+                    Approval = appName,
                     Status = GetStatusString(project.Status),
                     AdminDelayedComment = project.AdminDelayedComment,
                     AdminModifiedComment = project.AdminModifiedComment,

@@ -121,6 +121,7 @@ const app = new Vue({
 
                         this.clearAll();
                         this.LoadActiveWrkBudget();
+                        this.LoadActiveStatusBUdget();
                         $("#projectstatusModal").modal("hide");
                     })
                     .catch((errors) => {
@@ -164,15 +165,13 @@ const app = new Vue({
             var base_url = window.location.origin;
             const clientURL = base_url + "/api/project/project-activities/budget-load?PmName=" + PmName;
 
-            axios.get(clientURL, config).then(result => {
-
+            setTimeout(() => {
                 $("#allwrkBudget").dataTable().fnDestroy();
-                $("#allwrkBudgetStatus").dataTable().fnDestroy();
 
+            }, 100);
+
+            axios.get(clientURL, config).then(result => {
                 this.wrkBudgets = result.data;
-
-                $("#exampleModal").modal("hide");
-
 
                 setTimeout(() => {
                     $('#allwrkBudget').DataTable({
@@ -193,35 +192,47 @@ const app = new Vue({
                         ]
                     });
 
+                }, 500);
 
+            }, error => {
+                console.error(error);
+            });
+
+        },
+
+        LoadActiveStatusBUdget: function () {
+
+            var PmName = "NA";
+            const config = { headers: { 'Content-Type': 'application/json' } };
+            var base_url = window.location.origin;
+            const clientURL = base_url + "/api/project/project-activities/budget-load?PmName=" + PmName;
+
+            axios.get(clientURL, config).then(result => {
+                this.wrkBudgets = result.data;
+
+                $("#allwrkBudgetStatus").dataTable().fnDestroy();
+
+
+                setTimeout(() => {
                     $('#allwrkBudgetStatus').DataTable({
                         "scrollY": "500px",
                         "scrollCollapse": true,
                         "paging": false,
                         "columns": [
                             { "width": "2%" },
-                            { "width": "10%" },
+                            { "width": "8%" },
                             { "width": "5%" },
-                            { "width": "15%" },
+                            { "width": "20%" },
                             { "width": "8%" },
                             { "width": "6%" },
                             { "width": "6%" },
-                            { "width": "8%" },
-                            { "width": "8%" },
+                            { "width": "5%" },
+                            { "width": "5%" },
                             { "width": "6%" },
-                            { "width": "10%" },
+                            { "width": "8%" },
                         ]
                     });
-
-
-                  /*  $('#allwrkBudgetStatus').DataTable({
-                        "scrollY": "500px",
-                        "scrollCollapse": true,
-                        "paging": false
-                    }); */
-
-
-                }, 100);
+                }, 500);
 
 
 
@@ -240,6 +251,14 @@ const app = new Vue({
                 this.isApproved = true;
             }
             
+        },
+
+        onTabBudgetClick: function () {
+            this.LoadActiveWrkBudget();
+        },
+
+        onTabStatueClick: function () {
+            this.LoadActiveStatusBUdget();
         },
  
         clearAll: function () {

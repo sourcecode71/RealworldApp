@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Dash Board";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Web.Models
+@model AdminPageDetails
+@{
+    string currentName = "";
+    string currentRole = "";
+    byte[] currentRoleByte;
+    byte[] currentNameByte;
+
+    if (Context.Session.Keys.Count() > 0)
+    {
+        Context.Session.TryGetValue("current_user_role", out currentRoleByte);
+        Context.Session.TryGetValue("current_user_name", out currentNameByte);
+
+        if (currentRoleByte != null && currentNameByte != null)
+        {
+            currentRole = System.Text.Encoding.Default.GetString(currentRoleByte);
+            currentName = System.Text.Encoding.Default.GetString(currentNameByte);
+        }
+    }
+}
+
+
+<link rel="stylesheet" href="~/css/data-table.css" />
+
+<div id="profile">
+    <div style="min-height:500px" class="main-card mb-3 card">
+            <h5 class="card-title p-3"> My Profile </h5>
+            <div class="row">
+                <div class="col-md-9 col-lg-9 col-sm-12"> 
+                    <div  class="card-body row " >
+                        <div class="col-md-4 col-lg-4 col-sm-6"> Name : {{profile.name}}  </div>
+                        <div class="col-md-4 col-lg-4 col-sm-6"> Email : {{profile.email}}  </div>
+                        <div class="col-md-4 col-lg-4 col-sm-6"> Phone :{{profile.phoneNumber}}  </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+              <form v-on:submit.prevent="submitChangePassword" method="post" novalidate="true">
+                <p v-if="errors.length">
+                    <b class="text-danger">Please correct the following error(s):</b>
+                <ul>
+                    <li v-for="error in errors" class="text-danger">{{ error }}</li>
+                </ul>
+                </p>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="name" class="">Current Password</label>
+                            <input name="name" placeholder="Current Password" type="password" class="form-control"
+                                v-model="currentPassword">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="lastName" class="">New Password</label>
+                            <input name="lastName" placeholder="New Password" type="password" v-model="newPassword"
+                                class="form-control">
+                        </div>
+
+                         <div class="position-relative form-group">
+                            <label for="lastName" class="">Confirm Password</label>
+                            <input name="lastName" placeholder="Confirm Password" type="password" v-model="confirmPassword"
+                                class="form-control">
+                        </div>
+
+                    </div>
+                </div>
+
+                  <div class="col-md-0">
+                    <button style="width:140px" type="submit" class="btn btn-outline-primary"> Submit
+                    </button>
+                </div>
+
+                </form>
+            </div>
+    </div>
+   @section Scripts {
+    <script src="~/views/Profiles.js"></script>
+    }
+</div>

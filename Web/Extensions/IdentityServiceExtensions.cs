@@ -1,5 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Persistance.Context;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using Web.Services;
 
 namespace Web.Extensions
@@ -17,7 +17,7 @@ namespace Web.Extensions
             IConfiguration _config)
         {
             services.AddScoped<TokenService>();
-            
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 

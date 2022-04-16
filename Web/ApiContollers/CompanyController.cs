@@ -1,5 +1,4 @@
 ﻿using Application.DTOs;
-using Domain.Common;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +24,7 @@ namespace Web.ApiContollers
         [HttpGet("all-clients")]
         public ActionResult GetAllCientsResult()
         {
-            var project =  _cmRepository.GetAllClient();
+            var project = _cmRepository.GetAllClient();
             return Ok(project);
         }
 
@@ -44,7 +43,7 @@ namespace Web.ApiContollers
                 return Ok(false);
             }
 
-        
+
         }
 
         [HttpGet("all-companies")]
@@ -136,7 +135,7 @@ namespace Web.ApiContollers
                     var logs = await _cmRepository.GetAllHourLogs(empId, EmployeeType.Admin);
                     return Ok(logs);
                 }
-                else if(currentRole == "Engineering")
+                else if (currentRole == "Engineering")
                 {
                     var logs = await _cmRepository.GetAllHourLogs(empId, EmployeeType.Engineering);
                     return Ok(logs);
@@ -155,7 +154,7 @@ namespace Web.ApiContollers
             {
                 return Ok(null);
             }
-                    
+
 
         }
 
@@ -178,7 +177,7 @@ namespace Web.ApiContollers
                 var empId = HttpContext.Session.GetString("current_user_id");
 
 
-               if (currentRole == "Engineering")
+                if (currentRole == "Engineering")
                 {
                     var logs = await _cmRepository.GetWorkOrderHourLogs(empId, wrkId, EmployeeType.Engineering);
                     return Ok(logs);
@@ -230,7 +229,7 @@ namespace Web.ApiContollers
         }
 
 
-     
+
 
 
     }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PMG.Data.Repository.PayInvoice;
-using PMG.Data.Repository.Projects;
 using System.Threading.Tasks;
 
 namespace Web.ApiContollers

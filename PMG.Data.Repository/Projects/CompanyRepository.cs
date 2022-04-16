@@ -11,15 +11,15 @@ using System.Threading.Tasks;
 
 namespace PMG.Data.Repository.Projects
 {
-    public interface ICompanyRepository 
+    public interface ICompanyRepository
     {
         Task<bool> SaveCleint(ClientDTO dTO);
         Task<bool> SaveCompany(CompanyDTO dTO);
         IQueryable<Client> GetAllClient();
-        Task <List<CompanyDTO>> GetAllCompany();
+        Task<List<CompanyDTO>> GetAllCompany();
         Task<List<CompanyDTO>> GetAllCompany(Guid guid);
         Task<bool> SaveEmployeHourLog(HourlogsDTO dTO);
-        Task<List<HourlogsDTO>> GetAllHourLogs(string empId,EmployeeType empType);
+        Task<List<HourlogsDTO>> GetAllHourLogs(string empId, EmployeeType empType);
         Task<List<HourlogsDTO>> GetWorkOrderHourLogs(string empId, string wrkId, EmployeeType empType);
 
     }
@@ -33,7 +33,7 @@ namespace PMG.Data.Repository.Projects
 
         public IQueryable<Client> GetAllClient()
         {
-            return _context.Clients.Where(p => p.IsActive).OrderBy(p=>p.Name);
+            return _context.Clients.Where(p => p.IsActive).OrderBy(p => p.Name);
         }
 
         public async Task<List<CompanyDTO>> GetAllCompany()
@@ -43,7 +43,7 @@ namespace PMG.Data.Repository.Projects
                 var company = await (from cm in _context.Company
                                      join cl in _context.Clients on cm.ClientId equals cl.Id
                                      where (cm.IsActive && cl.IsActive)
-                                     orderby cm.Name 
+                                     orderby cm.Name
                                      select new CompanyDTO
                                      {
                                          Id = cm.Id,
@@ -93,17 +93,17 @@ namespace PMG.Data.Repository.Projects
         {
             try
             {
-               Client  client = new Client
-               {
-                   Name =dTO.Name,
-                   Address =dTO.Address,
-                   ContactName = dTO.ContactName,
-                   email = dTO.Email,
-                   phone= dTO.Phone,
-                   SetDate=DateTime.Now,
-                   SetUser = dTO.SetUser,
+                Client client = new Client
+                {
+                    Name = dTO.Name,
+                    Address = dTO.Address,
+                    ContactName = dTO.ContactName,
+                    email = dTO.Email,
+                    phone = dTO.Phone,
+                    SetDate = DateTime.Now,
+                    SetUser = dTO.SetUser,
 
-               };
+                };
                 _context.Clients.Add(client);
                 int State = await _context.SaveChangesAsync();
 
@@ -124,16 +124,16 @@ namespace PMG.Data.Repository.Projects
                     Name = dTO.Name,
                     Address = dTO.Address,
                     ClientId = dTO.ClientId,
-                    ContactName =dTO.ContactName,
+                    ContactName = dTO.ContactName,
                     Email = dTO.Email,
-                    Phone=dTO.Phone,
-                    SetUser=dTO.SetUser,
-                    SetDate=DateTime.Now
+                    Phone = dTO.Phone,
+                    SetUser = dTO.SetUser,
+                    SetDate = DateTime.Now
                 };
 
                 _context.Company.Add(company);
                 int State = await _context.SaveChangesAsync();
-                return State ==1 ;
+                return State == 1;
             }
             catch (Exception ex)
             {
@@ -147,7 +147,7 @@ namespace PMG.Data.Repository.Projects
             {
                 try
                 {
-                    var prevHour = _context.Hourlogs.Where(p=>p.WorkOrderId == dTO.WorkOrderId && p.EmpId==dTO.EmpId).Sum(ep=>ep.SpentHour);
+                    var prevHour = _context.Hourlogs.Where(p => p.WorkOrderId == dTO.WorkOrderId && p.EmpId == dTO.EmpId).Sum(ep => ep.SpentHour);
 
                     Hourlogs hourlogs = new Hourlogs
                     {
@@ -158,8 +158,8 @@ namespace PMG.Data.Repository.Projects
                         SpentDate = dTO.SpentDate,
                         BalanceHour = (prevHour + dTO.SpentHour),
                         Remarks = dTO.Remarks,
-                        SetDate= DateTime.Now,
-                        HourLogFor =1,
+                        SetDate = DateTime.Now,
+                        HourLogFor = 1,
                         SetUser = dTO.SetUser
                     };
 
@@ -183,40 +183,40 @@ namespace PMG.Data.Repository.Projects
             try
             {
                 var hrLogs = (from hr in _context.Hourlogs
-                                    join wrk in _context.WorkOrder on hr.WorkOrderId equals wrk.Id 
-                                    join e in _context.Employees on hr.EmpId.ToString() equals e.Id
-                                    join p in _context.Projects on wrk.ProjectId equals p.Id
-                                    where (wrk.Status !=ProjectStatus.Archived)
-                                    select new HourlogsDTO
-                                    {
-                                        EmpId = hr.EmpId,
-                                        EmpName = String.Format("{0} {1}", e.FirstName,e.LastName),
-                                        SpentHour = hr.SpentHour,
-                                        SpentDate = hr.SpentDate,
-                                        BalanceHour = hr.BalanceHour,
-                                        WorkOrderId = hr.WorkOrderId,
-                                        WorkOrderNo= wrk.WorkOrderNo,
-                                        WorkOrderName = wrk.ConsWork,
-                                        ProjectNo = p.ProjectNo,
-                                        ProjectId = p.Id,
-                                        ProjectName = p.Name,
-                                        Year = p.Year,
-                                        SpentDateStr = hr.SpentDate.ToString("MM/dd/yyyy"),
-                                        Remarks = hr.Remarks
-                                    }).AsQueryable();
+                              join wrk in _context.WorkOrder on hr.WorkOrderId equals wrk.Id
+                              join e in _context.Employees on hr.EmpId.ToString() equals e.Id
+                              join p in _context.Projects on wrk.ProjectId equals p.Id
+                              where (wrk.Status != ProjectStatus.Archived)
+                              select new HourlogsDTO
+                              {
+                                  EmpId = hr.EmpId,
+                                  EmpName = String.Format("{0} {1}", e.FirstName, e.LastName),
+                                  SpentHour = hr.SpentHour,
+                                  SpentDate = hr.SpentDate,
+                                  BalanceHour = hr.BalanceHour,
+                                  WorkOrderId = hr.WorkOrderId,
+                                  WorkOrderNo = wrk.WorkOrderNo,
+                                  WorkOrderName = wrk.ConsWork,
+                                  ProjectNo = p.ProjectNo,
+                                  ProjectId = p.Id,
+                                  ProjectName = p.Name,
+                                  Year = p.Year,
+                                  SpentDateStr = hr.SpentDate.ToString("MM/dd/yyyy"),
+                                  Remarks = hr.Remarks
+                              }).AsQueryable();
 
-                       if(empType == EmployeeType.Engineering || empType == EmployeeType.Drawing)
-                        {
+                if (empType == EmployeeType.Engineering || empType == EmployeeType.Drawing)
+                {
 
-                           var result = await hrLogs.Where(p=>p.EmpId == new Guid(empId) ).ToListAsync();
-                           return result;
-                        }
-                        else
-                        {
-                            var result = await hrLogs.ToListAsync();
-                            return result;
-                        }
-                       
+                    var result = await hrLogs.Where(p => p.EmpId == new Guid(empId)).ToListAsync();
+                    return result;
+                }
+                else
+                {
+                    var result = await hrLogs.ToListAsync();
+                    return result;
+                }
+
             }
             catch (Exception ex)
             {
@@ -227,7 +227,7 @@ namespace PMG.Data.Repository.Projects
 
 
 
-        public async Task<List<HourlogsDTO>> GetWorkOrderHourLogs(string empId,string wrkId, EmployeeType empType)
+        public async Task<List<HourlogsDTO>> GetWorkOrderHourLogs(string empId, string wrkId, EmployeeType empType)
         {
             try
             {

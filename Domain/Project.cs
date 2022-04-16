@@ -1,4 +1,3 @@
-using Domain.Common;
 using Domain.Enums;
 using Domain.Projects;
 using System;
@@ -9,7 +8,7 @@ namespace Domain
 {
     public class Project
     {
-       public Project()
+        public Project()
         {
             BudgetApprovedStatus = 0; //Budget waiting for approval
         }

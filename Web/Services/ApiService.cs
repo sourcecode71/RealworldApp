@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -19,7 +18,7 @@ namespace Web.Services
         private string EmployeeEndpoint;
         private string ProjectEndpoint;
 
-    
+
 
         public ApiService(IConfiguration configuration)
         {
@@ -88,7 +87,7 @@ namespace Web.Services
             };
         }
 
-      
+
 
         public async Task<bool> CallLogout(EmployeeModel employeeModel)
         {
@@ -174,9 +173,9 @@ namespace Web.Services
             };
         }
 
-	
 
-		public async Task<List<ProjectModel>> CallGetProjects()
+
+        public async Task<List<ProjectModel>> CallGetProjects()
         {
             HttpResponseMessage response = await client.GetAsync($"{ProjectEndpoint}");
 

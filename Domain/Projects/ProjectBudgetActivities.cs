@@ -6,7 +6,7 @@ namespace Domain.Projects
 {
     public class ProjectBudgetActivities : BasedModel
     {
-        
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
@@ -23,8 +23,8 @@ namespace Domain.Projects
         public int Status { get; set; } = 0;
         [MaxLength(250)]
         public string Comments { get; set; }
-        public DateTime  ApprovedDate { get; set; }
-        public string  ApprovalSetUser { get; set; }
+        public DateTime ApprovedDate { get; set; }
+        public string ApprovalSetUser { get; set; }
 
     }
 }

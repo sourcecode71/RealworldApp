@@ -6,9 +6,9 @@ namespace PMG.Data.Repository.Projects
 {
     public interface IProjectsRepository
     {
-        string  GetProjectNumber(ProjectDto projectDto);
+        string GetProjectNumber(ProjectDto projectDto);
         string GetPmBudgetNumber(ProjectApprovalDto projectDto);
-        Task<List<ProjectDto>> GetProjectBySearch(string SearchTag); 
+        Task<List<ProjectDto>> GetProjectBySearch(string SearchTag);
         Task<bool> SubmitBudget(ProjectApprovalDto approvalDto);
         Task<bool> ApprovalBudget(ProjectApprovalDto approvalDto);
         Task<List<ProjectApprovalDto>> LoadWorkOrdeerBudgetAcitivies(string projectName);

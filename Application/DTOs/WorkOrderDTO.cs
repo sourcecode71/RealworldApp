@@ -9,7 +9,7 @@ namespace Application.DTOs
         public WorkOrderDTO()
         {
             Id = Guid.NewGuid();
-            
+
         }
         public Guid Id { get; set; }
 

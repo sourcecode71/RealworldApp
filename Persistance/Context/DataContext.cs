@@ -9,7 +9,7 @@ namespace Persistance.Context
     public class DataContext : IdentityDbContext<Employee>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
-        {       
+        {
         }
 
         public DbSet<Project> Projects { get; set; }
@@ -36,7 +36,7 @@ namespace Persistance.Context
             base.OnModelCreating(builder);
 
             //builder.Entity<ProjectActivity>(x => x.HasKey(aa => new {aa.ProjectId, aa.EmployeeId}));
-            
+
             builder.Entity<ProjectActivity>()
                 .HasOne(p => p.Project)
                 .WithMany(e => e.Activities)

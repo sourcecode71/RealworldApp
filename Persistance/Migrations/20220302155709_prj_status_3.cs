@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 namespace Persistance.Migrations
 {
@@ -7,7 +7,7 @@ namespace Persistance.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-           
+
 
             migrationBuilder.AlterColumn<string>(
                 name: "ProjectId",
@@ -22,12 +22,12 @@ namespace Persistance.Migrations
                 table: "ProjectsStatus",
                 column: "ProjectId");
 
-           
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-           
+
 
             migrationBuilder.DropIndex(
                 name: "IX_ProjectsStatus_ProjectId",

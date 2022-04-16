@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 namespace Persistance.Migrations
 {
@@ -26,7 +26,7 @@ namespace Persistance.Migrations
                 table: "Hourlogs",
                 column: "WorkOrderId");
 
-       
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

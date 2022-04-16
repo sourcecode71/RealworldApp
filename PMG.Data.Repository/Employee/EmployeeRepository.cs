@@ -1,5 +1,4 @@
 ﻿using Application.DTOs;
-using Domain.Enums;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
@@ -80,8 +79,8 @@ namespace PMG.Data.Repository.Employee
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 var param = cmd.CreateParameter();
-                param.ParameterName ="@WrkId";
-                param.Value =new Guid( wrkId);
+                param.ParameterName = "@WrkId";
+                param.Value = new Guid(wrkId);
                 cmd.Parameters.Add(param);
 
                 List<HourslogDto> wrkList = new List<HourslogDto>();
@@ -93,23 +92,23 @@ namespace PMG.Data.Repository.Employee
                     {
 
                         HourslogDto wOT = new HourslogDto()
-                            {
+                        {
 
-                                EmpId = rd.GetValue("empId").ToString(),
-                                WrkId = rd.GetValue("wrkId").ToString(),
-                                WrkNo= rd.GetValue("WorkOrderNo").ToString() !=null? rd.GetValue("WorkOrderNo").ToString() :"",
-                                WrkName = rd.GetValue("ConsWork").ToString() !=null ? rd.GetValue("ConsWork").ToString() :"",
-                                Bhour = Convert.ToDouble(rd.GetValue("BudgetHours").ToString()),
-                                Lhour = Convert.ToDouble(rd.GetValue("SpentHour").ToString()),
-                                EmpType = rd.GetValue("RoleName").ToString(),
-                                FirstName = rd.GetValue("FirstName") != null ? rd.GetValue("FirstName").ToString() : "",
-                                LastName = rd.GetValue("LastName") != null ? rd.GetValue("LastName").ToString() : "",
-                                IsActive = rd.GetValue("isDeleted") !=null? rd.GetValue("isDeleted").ToString() == "True" : false,
+                            EmpId = rd.GetValue("empId").ToString(),
+                            WrkId = rd.GetValue("wrkId").ToString(),
+                            WrkNo = rd.GetValue("WorkOrderNo").ToString() != null ? rd.GetValue("WorkOrderNo").ToString() : "",
+                            WrkName = rd.GetValue("ConsWork").ToString() != null ? rd.GetValue("ConsWork").ToString() : "",
+                            Bhour = Convert.ToDouble(rd.GetValue("BudgetHours").ToString()),
+                            Lhour = Convert.ToDouble(rd.GetValue("SpentHour").ToString()),
+                            EmpType = rd.GetValue("RoleName").ToString(),
+                            FirstName = rd.GetValue("FirstName") != null ? rd.GetValue("FirstName").ToString() : "",
+                            LastName = rd.GetValue("LastName") != null ? rd.GetValue("LastName").ToString() : "",
+                            IsActive = rd.GetValue("isDeleted") != null ? rd.GetValue("isDeleted").ToString() == "True" : false,
                         };
 
-                            wOT.EmpName = String.Format("{0} {1}", wOT.FirstName, wOT.LastName);
+                        wOT.EmpName = String.Format("{0} {1}", wOT.FirstName, wOT.LastName);
 
-                            wrkList.Add(wOT);
+                        wrkList.Add(wOT);
 
                     }
                 }
@@ -177,7 +176,7 @@ namespace PMG.Data.Repository.Employee
         }
 
 
-        public  async Task<List<HourslogDto>> EmployeHourLogDetails(string wrkId)
+        public async Task<List<HourslogDto>> EmployeHourLogDetails(string wrkId)
         {
             try
             {
@@ -248,7 +247,7 @@ namespace PMG.Data.Repository.Employee
                 {
                     while (rd.Read())
                     {
-                        
+
                         HourslogDto wOT = new HourslogDto()
                         {
                             EmpId = rd.GetValue("EmpId").ToString() != null ? rd.GetValue("EmpId").ToString() : "",
@@ -284,27 +283,27 @@ namespace PMG.Data.Repository.Employee
         {
             try
             {
-                var wemp = await(from ew in _context.WorkOrderEmployee
-                                 join wr in _context.WorkOrder on ew.WorkOrderId equals wr.Id
-                                 join p in  _context.Projects on wr.ProjectId equals p.Id
-                                 join em in _context.Employees on ew.EmployeeId equals em.Id
-                                 join cm in _context.Company on p.CompanyId equals cm.Id into cmm
-                                 from c in cmm.DefaultIfEmpty()
-                                 where ew.EmployeeId == empId
-                                 select (new EpmProjectsDto
-                                 {
-                                     Id = ew.Id.ToString(),
-                                     BHours = ew.BudgetHours,
-                                     CompanyName = c.Name,
-                                     Name = string.Format("{0} {1}", em.FirstName, em.LastName),
-                                     StartDateStr = wr.StartDate.ToString("MM/dd/yyyy"),
-                                     DeliveryDateStr = wr.EndDate.ToString("MM/dd/yyyy"),
-                                     WrkNo = wr.WorkOrderNo,
-                                     Year = p.Year,
-                                     ProjectNo = p.ProjectNo,
-                                     ConsWork = wr.ConsWork
-                                      
-                                 })).ToListAsync();
+                var wemp = await (from ew in _context.WorkOrderEmployee
+                                  join wr in _context.WorkOrder on ew.WorkOrderId equals wr.Id
+                                  join p in _context.Projects on wr.ProjectId equals p.Id
+                                  join em in _context.Employees on ew.EmployeeId equals em.Id
+                                  join cm in _context.Company on p.CompanyId equals cm.Id into cmm
+                                  from c in cmm.DefaultIfEmpty()
+                                  where ew.EmployeeId == empId
+                                  select (new EpmProjectsDto
+                                  {
+                                      Id = ew.Id.ToString(),
+                                      BHours = ew.BudgetHours,
+                                      CompanyName = c.Name,
+                                      Name = string.Format("{0} {1}", em.FirstName, em.LastName),
+                                      StartDateStr = wr.StartDate.ToString("MM/dd/yyyy"),
+                                      DeliveryDateStr = wr.EndDate.ToString("MM/dd/yyyy"),
+                                      WrkNo = wr.WorkOrderNo,
+                                      Year = p.Year,
+                                      ProjectNo = p.ProjectNo,
+                                      ConsWork = wr.ConsWork
+
+                                  })).ToListAsync();
                 return wemp;
             }
             catch (System.Exception ex)
@@ -380,7 +379,7 @@ namespace PMG.Data.Repository.Employee
             {
                 var empassign = _context.WorkOrderEmployee.FirstOrDefault(e => e.EmployeeId == dto.EmpId && e.WorkOrderId == new Guid(dto.WrkId));
                 // empassign.OriginalBHours = empassign.BudgetHours;
-                if(empassign == null)
+                if (empassign == null)
                 {
                     return false;
                 }
@@ -390,7 +389,7 @@ namespace PMG.Data.Repository.Employee
                     await _context.SaveChangesAsync();
                     return true;
                 }
-               
+
             }
             catch (Exception ex)
             {
@@ -404,7 +403,7 @@ namespace PMG.Data.Repository.Employee
             try
             {
                 var exitHrs = _context.WorkOrderEmployee.Where(e => e.EmployeeId == dto.EmpId && e.WorkOrderId == new Guid(dto.WrkId)).FirstOrDefault();
-                if(exitHrs == null)
+                if (exitHrs == null)
                 {
                     WorkOrderEmployee workOrderEmp = new WorkOrderEmployee
                     {
@@ -426,12 +425,41 @@ namespace PMG.Data.Repository.Employee
                 return true;
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 throw ex;
             }
         }
+
+        public async Task<EmployeeDto> GetEmployeeById(string empId)
+        {
+            try
+            {
+                var empList = await (from emp in _context.Employees
+                                     join ur in _context.UserRoles on emp.Id equals ur.UserId
+                                     join rl in _context.Roles on ur.RoleId equals rl.Id
+                                     where (emp.Id == empId)
+                                     select new EmployeeDto
+                                     {
+                                         Id = emp.Id,
+                                         Email = emp.Email,
+                                         FirstName = emp.FirstName,
+                                         LastName = emp.LastName,
+                                         Name = string.Format("{0} {1}", emp.FirstName, emp.LastName),
+                                         PhoneNumber = emp.PhoneNumber,
+                                         Role = rl.Name
+                                     }).FirstOrDefaultAsync();
+                return empList;
+
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+       
     }
 
- }
+}
 

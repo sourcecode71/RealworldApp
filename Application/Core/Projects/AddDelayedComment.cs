@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Core.Projects
 {
@@ -19,7 +17,7 @@ namespace Application.Core.Projects
 
         public class Handler : IRequestHandler<Command>
         {
-        private readonly DataContext _context;
+            private readonly DataContext _context;
             public Handler(DataContext context)
             {
                 _context = context;

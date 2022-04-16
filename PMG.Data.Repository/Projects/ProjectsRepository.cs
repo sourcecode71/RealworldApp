@@ -23,7 +23,7 @@ namespace PMG.Data.Repository.Projects
         public string GetProjectNumber(ProjectDto projectDto)
         {
             DateTime CurrentDate = DateTime.Now;
-            var TodayPmCount = _context.Projects.Where(P=>P.Year == CurrentDate.Date.Year ).Count()+1;
+            var TodayPmCount = _context.Projects.Where(P => P.Year == CurrentDate.Date.Year).Count() + 1;
 
             //string Day = CurrentDate.Day.ToString("00");
             //string Month = CurrentDate.Month.ToString("00");
@@ -33,28 +33,28 @@ namespace PMG.Data.Repository.Projects
             return ProjectNumber;
         }
 
-        public async Task< List<ProjectDto>> GetProjectBySearch(string SearchTag)
+        public async Task<List<ProjectDto>> GetProjectBySearch(string SearchTag)
         {
             var projects = await _context.Projects.Join(_context.Clients,
-                prj =>prj.CompanyId,
-                cln=>cln.Id,(prj,cln) =>new { Proj =prj,client=cln})
-                .Where(pp => pp.Proj.Name.Contains(SearchTag)).Take(20).Select(pp=> new
+                prj => prj.CompanyId,
+                cln => cln.Id, (prj, cln) => new { Proj = prj, client = cln })
+                .Where(pp => pp.Proj.Name.Contains(SearchTag)).Take(20).Select(pp => new
                 ProjectDto()
                 {
                     Id = pp.Proj.Id,
                     Name = pp.Proj.Name,
-                    Client=pp.client.Name,
-                    Balance =pp.Proj.Balance,
-                    DeliveryDate=pp.Proj.DeliveryDate,
-                    Description =pp.Proj.Description,
+                    Client = pp.client.Name,
+                    Balance = pp.Proj.Balance,
+                    DeliveryDate = pp.Proj.DeliveryDate,
+                    Description = pp.Proj.Description,
                     Year = pp.Proj.Year,
                     ProjectNo = pp.Proj.ProjectNo
                 }).ToListAsync();
-           
+
             return projects;
         }
 
-       
+
 
         public async Task<bool> SubmitBudget(ProjectApprovalDto dto)
         {
@@ -89,7 +89,7 @@ namespace PMG.Data.Repository.Projects
                     _context.Add(pmApproval);
 
                     var Status = await _context.SaveChangesAsync();
-                   await transaction.CommitAsync();
+                    await transaction.CommitAsync();
 
                     return Status == 1;
 
@@ -165,7 +165,7 @@ namespace PMG.Data.Repository.Projects
                     }
 
                     var pba = await _context.WorkOrderActivities.FirstOrDefaultAsync(p => p.WorkOrderId == dto.WorkOrderId);
-                 
+
                     if (pba != null)
                     {
                         pba.Status = dto.Status;
@@ -238,7 +238,7 @@ namespace PMG.Data.Repository.Projects
                     await transaction.CommitAsync();
 
                     return State > 0;
-                
+
 
                 }
                 catch (Exception ex)
@@ -249,7 +249,7 @@ namespace PMG.Data.Repository.Projects
             }
         }
 
-       public async Task<List<ProjectApprovalDto>> LoadWorkOrdeerBudgetAcitivies(string projectName)
+        public async Task<List<ProjectApprovalDto>> LoadWorkOrdeerBudgetAcitivies(string projectName)
         {
             try
             {
@@ -260,20 +260,20 @@ namespace PMG.Data.Repository.Projects
                                select new ProjectApprovalDto
                                {
                                    Id = pa.Id.ToString(),
-                                   ConsecutiveWork =wr.ConsWork,
+                                   ConsecutiveWork = wr.ConsWork,
                                    WorkerOrderNo = wr.WorkOrderNo,
                                    BudegtNo = pa.BudgetNo,
-                                   BudegtVersionNo =pa.BudgetVersionNo,
+                                   BudegtVersionNo = pa.BudgetVersionNo,
                                    WorkOrderId = wr.Id,
                                    Budget = pa.Budget,
                                    ApprovalStatus = pa.Status,
                                    ApprovedBudget = pa.ApprovedBudget,
                                    BudgetSubmitDateStr = pa.BudgetSubmitDate.ToString("dd/MM/yyyy"),
                                    ProjectNo = pr.ProjectNo,
-                                   SceduleWeek = Convert.ToDouble(((wr.EndDate -wr.StartDate).TotalDays/7).ToString("F")),
+                                   SceduleWeek = Convert.ToDouble(((wr.EndDate - wr.StartDate).TotalDays / 7).ToString("F")),
                                    Year = pr.Year,
                                    ApprovalDateStr = pa.ApprovedDate.ToString("dd/MM/yyyyy"),
-                                   ApprovalStatusStr = pa.Status ==0 ? "Waiting" : pa.Status == 1 ? "Approved" : pa.Status == 2 ? "Not Approved" : "Changed",
+                                   ApprovalStatusStr = pa.Status == 0 ? "Waiting" : pa.Status == 1 ? "Approved" : pa.Status == 2 ? "Not Approved" : "Changed",
                                    WorkOrderStatus = EnumConverter.ProjectStatusString(wr.Status),
 
                                }).Take(250).ToListAsync();
@@ -292,8 +292,8 @@ namespace PMG.Data.Repository.Projects
             try
             {
                 var clDTO = await (from cl in _context.Clients
-                             where cl.IsActive == true
-                             select new ClientDTO { Name = cl.Name, Id = cl.Id, Address = cl.Address }).
+                                   where cl.IsActive == true
+                                   select new ClientDTO { Name = cl.Name, Id = cl.Id, Address = cl.Address }).
                              ToListAsync();
                 return clDTO;
 
@@ -310,20 +310,20 @@ namespace PMG.Data.Repository.Projects
             try
             {
                 var projects = await (from prj in _context.Projects
-                               join emw in _context.ProjectEmployees on prj.Id equals emw.ProjectId
-                               join cli in _context.Company on prj.CompanyId equals cli.Id into cliList
-                               from cts in cliList.DefaultIfEmpty()
-                                where emw.EmployeeId == empId && prj.Status != ProjectStatus.Completed
-                               select new ProjectDto
-                               {
-                                   Name = prj.Name,
-                                   Id = prj.Id,
-                                   ProjectNo = prj.ProjectNo,
-                                   Year = prj.Year,
-                                   Description = prj.Description,
-                                   CompanyName = cts.Name,
-                                   
-                               }).Distinct().ToListAsync();
+                                      join emw in _context.ProjectEmployees on prj.Id equals emw.ProjectId
+                                      join cli in _context.Company on prj.CompanyId equals cli.Id into cliList
+                                      from cts in cliList.DefaultIfEmpty()
+                                      where emw.EmployeeId == empId && prj.Status != ProjectStatus.Completed
+                                      select new ProjectDto
+                                      {
+                                          Name = prj.Name,
+                                          Id = prj.Id,
+                                          ProjectNo = prj.ProjectNo,
+                                          Year = prj.Year,
+                                          Description = prj.Description,
+                                          CompanyName = cts.Name,
+
+                                      }).Distinct().ToListAsync();
 
                 return projects;
 
@@ -341,24 +341,24 @@ namespace PMG.Data.Repository.Projects
             try
             {
                 var projects = await (from prj in _context.Projects
-                                     join cli in _context.Company on prj.CompanyId equals cli.Id into cmList
-                                     from cts in cmList.DefaultIfEmpty()
-                                     where  prj.Status != ProjectStatus.Completed
-                                     select new ProjectDto
-                                     {
-                                         Name = prj.Name,
-                                         Id = prj.Id,
-                                         ProjectNo = prj.ProjectNo,
-                                         Year = prj.Year,
-                                         Description = prj.Description,
-                                         CompanyName = cts.Name,
-                                         Week = prj.Week,
-                                         StartDateStr = prj.StartDate.ToString("MM/dd/yyyy"),
-                                         DeliveryDateStr = prj.DeliveryDate.ToString("MM/dd/yyyy"),
-                                         Status = EnumConverter.ProjectStatusString(prj.Status)
-                                     }).Distinct().ToListAsync();
+                                      join cli in _context.Company on prj.CompanyId equals cli.Id into cmList
+                                      from cts in cmList.DefaultIfEmpty()
+                                      where prj.Status != ProjectStatus.Completed
+                                      select new ProjectDto
+                                      {
+                                          Name = prj.Name,
+                                          Id = prj.Id,
+                                          ProjectNo = prj.ProjectNo,
+                                          Year = prj.Year,
+                                          Description = prj.Description,
+                                          CompanyName = cts.Name,
+                                          Week = prj.Week,
+                                          StartDateStr = prj.StartDate.ToString("MM/dd/yyyy"),
+                                          DeliveryDateStr = prj.DeliveryDate.ToString("MM/dd/yyyy"),
+                                          Status = EnumConverter.ProjectStatusString(prj.Status)
+                                      }).Distinct().ToListAsync();
 
-                return projects.OrderBy(p=>p.ProjectNo).ToList();
+                return projects.OrderBy(p => p.ProjectNo).ToList();
             }
             catch (Exception ex)
             {
@@ -397,7 +397,7 @@ namespace PMG.Data.Repository.Projects
                 {
                     await transaction.RollbackAsync();
                     throw ex;
-                } 
+                }
             }
         }
 
@@ -425,27 +425,27 @@ namespace PMG.Data.Repository.Projects
                         Progress = 0,
                         Status = ProjectStatus.Budgeted,
                         CreatedDate = DateTime.Now,
-                        Description =dto.Description
+                        Description = dto.Description
                     };
 
                     _context.Projects.Add(projectDomain);
 
-                   // this.AssignProjectEmploye(dto,cnPid);
-                    
-                   // bool bStatus= await this.CreateProjectBudget(dto, cnPid, ProjectNo);
+                    // this.AssignProjectEmploye(dto,cnPid);
+
+                    // bool bStatus= await this.CreateProjectBudget(dto, cnPid, ProjectNo);
 
                     int State = await _context.SaveChangesAsync();
-                   
-                    await transaction.CommitAsync();
-                    
 
-                    return State == 1 ;
+                    await transaction.CommitAsync();
+
+
+                    return State == 1;
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
                     throw ex;
-                } 
+                }
             }
         }
 
@@ -474,7 +474,7 @@ namespace PMG.Data.Repository.Projects
 
                 var Status = await _context.SaveChangesAsync();
 
-                return Status >0;
+                return Status > 0;
             }
             catch (Exception ex)
             {
@@ -482,7 +482,7 @@ namespace PMG.Data.Repository.Projects
             }
         }
 
-        private void AssignProjectEmploye(ProjectDto dto,string cnPid)
+        private void AssignProjectEmploye(ProjectDto dto, string cnPid)
         {
             foreach (ProjectEmp emp in dto.Engineers)
             {

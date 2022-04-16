@@ -1,22 +1,18 @@
-using Application.DTOs;
 using Application.Core.Projects;
-using Domain;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using Application.DTOs;
 using Domain.Enums;
-using Application.Core.Employees;
-using System.IO;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
-using OfficeOpenXml.Drawing;
-using System.Drawing;
-using System;
-using System.Globalization;
-using PMG.Data.Repository.Projects;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
+using OfficeOpenXml.Drawing;
+using OfficeOpenXml.Style;
+using PMG.Data.Repository.Projects;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Web.ApiControllers
 {
@@ -29,7 +25,7 @@ namespace Web.ApiControllers
             _project = projects;
         }
 
-      
+
 
         [HttpPost("create-new-project")]
         public async Task<IActionResult> CreateNewProject([FromBody] ProjectDto dto)
@@ -46,7 +42,7 @@ namespace Web.ApiControllers
         }
 
         [HttpGet("project-search")]
-        public async Task< ActionResult> GetProjectSearchResult(string searchTag)
+        public async Task<ActionResult> GetProjectSearchResult(string searchTag)
         {
             var project = await _project.GetProjectBySearch(searchTag);
             return Ok(project);
@@ -62,7 +58,7 @@ namespace Web.ApiControllers
         [HttpPost("budegt-approval/status")]
         public async Task<ActionResult> SaveWorkOrderApproval(ProjectApprovalDto dto)
         {
-           
+
 
             string currentEmail = HttpContext.Session.GetString("current_user_email");
             if (!string.IsNullOrEmpty(currentEmail))

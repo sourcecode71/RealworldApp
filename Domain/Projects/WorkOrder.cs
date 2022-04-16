@@ -1,5 +1,4 @@
-﻿using Domain.Common;
-using Domain.Enums;
+﻿using Domain.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

@@ -3,7 +3,6 @@ using AspNetCore.SassCompiler;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -11,11 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Persistance.Context;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Web.Ioc;
 using Web.Services;
 using Web.Setting.GlobalExceptionHandling;
@@ -45,9 +40,9 @@ namespace Web
             services.AddMediatR(typeof(Create.Handler).Assembly);
             services.AddScoped<TokenService>();
 
-            #if DEBUG
-                services.AddSassCompiler();
-            #endif
+#if DEBUG
+            services.AddSassCompiler();
+#endif
 
             ContainerSetup.Setup(services, Configuration);
 
@@ -100,10 +95,10 @@ namespace Web
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie("Cookies",options =>
-            {
-                options.LoginPath = "/Home/Login"; // using the AuthController instead
-            });
+            .AddCookie("Cookies", options =>
+             {
+                 options.LoginPath = "/Home/Login"; // using the AuthController instead
+             });
 
             services.AddMvc().AddSessionStateTempDataProvider();
             services.AddSession();
@@ -133,7 +128,7 @@ namespace Web
 
             app.ConfigureExceptionHandler();
 
-        
+
 
             app.UseEndpoints(endpoints =>
             {

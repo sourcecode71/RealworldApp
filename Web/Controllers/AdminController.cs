@@ -1,8 +1,6 @@
-﻿using Application.DTOs;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using Web.Models;
 using Web.Services;
 
@@ -30,8 +28,8 @@ namespace Web.Controllers
                     return RedirectToAction("Login", "Home");
                 }
 
-                    return View();
-                
+                return View();
+
             }
 
             return RedirectToAction("Login", "Home");
@@ -153,7 +151,7 @@ namespace Web.Controllers
 
         public List<string> GetEmployeesNames()
         {
-            return  _apiService.CallGetEmployeesNames().Result;
+            return _apiService.CallGetEmployeesNames().Result;
         }
 
         public ResultModel ArchiveProject(ProjectModel project)

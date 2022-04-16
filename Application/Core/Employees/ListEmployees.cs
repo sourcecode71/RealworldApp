@@ -1,13 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.DTOs;
 using Domain;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Core.Employees
 {
@@ -35,11 +35,11 @@ namespace Application.Core.Employees
 
                     List<Project> projectsInDb = new List<Project>();
 
-                    foreach(var project in projects)
+                    foreach (var project in projects)
                     {
-                        var projectInDb = _context.Projects.FirstOrDefault(x => x.Id == project );
+                        var projectInDb = _context.Projects.FirstOrDefault(x => x.Id == project);
 
-                        if(projectInDb != null && projectInDb.Status != ProjectStatus.Archived)
+                        if (projectInDb != null && projectInDb.Status != ProjectStatus.Archived)
                             projectsInDb.Add(projectInDb);
                     }
 

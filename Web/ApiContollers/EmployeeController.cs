@@ -1,17 +1,18 @@
+using Application.Core.Employees;
+using Application.DTOs;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Context;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Security.Claims;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
-using Web.Services;
-using Application.DTOs;
-using Application.Core.Employees;
 using PMG.Data.Repository.Employee;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Web.Services;
 
 namespace Web.ApiControllers
 {
@@ -112,19 +113,19 @@ namespace Web.ApiControllers
         {
             bool existRole = await _roleManager.RoleExistsAsync(registerDto.Role);
 
-            
-                IdentityRole role = new IdentityRole();
-                role.Name = registerDto.Role;
 
-              var result=  await _roleManager.CreateAsync(role);
+            IdentityRole role = new IdentityRole();
+            role.Name = registerDto.Role;
 
-            return result.Succeeded == true; 
+            var result = await _roleManager.CreateAsync(role);
+
+            return result.Succeeded == true;
         }
 
         [HttpGet("all-role")]
         public async Task<ActionResult<List<RolesDTO>>> GetAllRoles()
         {
-            var Roles = await _context.Roles.Select(p=> new RolesDTO
+            var Roles = await _context.Roles.Select(p => new RolesDTO
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -172,9 +173,9 @@ namespace Web.ApiControllers
 
                     IList<string> roles = await _userManager.GetRolesAsync(user);
 
-                    var usrResp= CreateEmployeeObject(user, roles.Count > 0 ? roles[0] : string.Empty);
-                    
-                   // return Ok(usrResp);
+                    var usrResp = CreateEmployeeObject(user, roles.Count > 0 ? roles[0] : string.Empty);
+
+                    // return Ok(usrResp);
 
                 }
 
@@ -187,13 +188,30 @@ namespace Web.ApiControllers
             }
         }
 
-        
+        [HttpPut("change-password")]
+        public async Task<ActionResult> UpdatePassword([FromBody] EmployeeDto pDTO)
+        {
+            string userId = HttpContext.Session.GetString("current_user_id");
+            string Email = HttpContext.Session.GetString("current_user_email");
+
+            var user = new Employee
+            {
+                Id = userId,
+                Email = Email,
+            };
+
+            var result = await _userManager.ChangePasswordAsync(user, pDTO.CurrentPassword,pDTO.NewPassword);
+
+            return Ok(result);
+        }
+
+
         [AllowAnonymous]
         [HttpGet("current")]
         public async Task<ActionResult<EmployeeDto>> GetCurrentUser()
         {
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
-            
+
             return CreateEmployeeObject(user, null);
         }
 
@@ -264,7 +282,7 @@ namespace Web.ApiControllers
             var empDto = await _empRepository.EmployeHourLogDetails(wrkId);
             return empDto;
         }
-       
+
 
         [HttpGet("all-hour-log/summery")]
         public async Task<ActionResult<List<HourslogDto>>> GetHourLogsSummeryAll()
@@ -281,7 +299,7 @@ namespace Web.ApiControllers
         }
 
         [HttpGet("emp-ot-hour")]
-        public async Task<ActionResult<List<HourslogDto>>> GetEmpWisehourLogs(string EmpId,string wrkId)
+        public async Task<ActionResult<List<HourslogDto>>> GetEmpWisehourLogs(string EmpId, string wrkId)
         {
             var empDto = await _empRepository.GetEmpWiseWrkOThourLogs(EmpId, wrkId);
             return empDto;
@@ -307,7 +325,7 @@ namespace Web.ApiControllers
         public async Task<ActionResult<List<EmployeeDto>>> GetHrsLogEmployes()
         {
             var empDto = await _empRepository.GetAllActiveEmployee();
-            var filterEmp = empDto.Where(p => p.Role == "Drawing" || p.Role == "Engineering").Select(p=>p).ToList();
+            var filterEmp = empDto.Where(p => p.Role == "Drawing" || p.Role == "Engineering").Select(p => p).ToList();
             return filterEmp;
         }
     }

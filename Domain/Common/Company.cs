@@ -8,13 +8,13 @@ namespace Domain.Common
     {
         public Client()
         {
-            Id= Guid.NewGuid();
+            Id = Guid.NewGuid();
             IsActive = true;
         }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        [MaxLength(100),Required]
+        [MaxLength(100), Required]
         public string Name { get; set; }
         [MaxLength(250)]
         public string Address { get; set; }
@@ -31,8 +31,8 @@ namespace Domain.Common
     {
         public Company()
         {
-            IsActive= true;
-            Id= Guid.NewGuid();
+            IsActive = true;
+            Id = Guid.NewGuid();
         }
 
         [Key]

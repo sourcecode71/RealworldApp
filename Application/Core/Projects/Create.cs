@@ -1,15 +1,12 @@
+using Application.DTOs;
+using Domain;
+using MediatR;
+using Persistance.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.DTOs;
-using Domain;
-using Domain.Enums;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Persistance;
-using Persistance.Context;
 
 namespace Application.Core.Projects
 {
@@ -38,7 +35,7 @@ namespace Application.Core.Projects
 
                 request.Project.SelfProjectId = maxSelfId + 1;
                 request.Project.Id = Guid.NewGuid().ToString();
-               // request.Project.Balance = request.Project.Budget;
+                // request.Project.Balance = request.Project.Budget;
                 _context.Projects.Add(request.Project);
 
                 var result = await _context.SaveChangesAsync() > 0;

@@ -22,7 +22,7 @@ namespace Web
 
             try
             {
-               log.Information("Apllication Started.");
+                log.Information("Apllication Started.");
                 var context = services.GetRequiredService<DataContext>();
                 context.Database.Migrate();
             }

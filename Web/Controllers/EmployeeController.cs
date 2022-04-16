@@ -1,7 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using Web.Models;
 using Web.Services;
 
@@ -29,7 +28,7 @@ namespace Web.Controllers
 
         public List<ProjectModel> GetProjects()
         {
-            return  _apiService.CallGetProjects().Result;
+            return _apiService.CallGetProjects().Result;
         }
     }
 }
