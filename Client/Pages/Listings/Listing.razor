@@ -1,7 +1,5 @@
 ﻿@page "/listing"
 
-
-
 <PageTitle>Listing</PageTitle>
 
  <section class="section">
@@ -79,25 +77,4 @@
 	  </div>
 </section>
 
-@code {
-    ListingModel lgVM = new ListingModel();
-    BrandingModel bndVM = new BrandingModel();
-    PackageModel pkgVM = new PackageModel();
-    PackagingComponent pkgComponent;
-    BrandingComponent  bndComponent;
 
-
-    protected async Task InvalidFormSubmitted()
-    {
-        if(bndComponent.CanSubmitBranding() & pkgComponent.CanSubmitPackage())
-        {
-            
-        }
-    }
-
-    protected async Task ValidFormSubmitted()
-    {
-        
-
-    }
-}
