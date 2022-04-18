@@ -95,6 +95,9 @@
             axios.get(clientURL, config).then(
                 (result) => {
                     this.allInv = result.data;
+
+                    console.log(" all ", this.allInv);
+
                     setTimeout(() => {
                         $('#invAllLogs').DataTable({
                             "scrollY": "750px",
@@ -104,14 +107,15 @@
                                 { "width": "3%" },
                                 { "width": "9%" },
                                 { "width": "25%" },
-                                { "width": "10%" },
-                                { "width": "10%" },
+                                { "width": "8%" },
+                                { "width": "8%" },
+                                { "width": "8%" },
                                 { "width": "9%" },
                                 { "width": "8%" },
                                 { "width": "12%" },
                             ]
                         });
-                    }, 500); 
+                    }, 200); 
                 },
                 (error) => {
                     console.error(error);

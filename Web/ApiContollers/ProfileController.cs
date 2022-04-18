@@ -20,7 +20,7 @@ namespace Web.ApiContollers
         [HttpGet("my-profile")]
         public async Task<ActionResult> GetProfile()
         {
-            string userId = HttpContext.Session.GetString("current_user_id");
+           string userId = HttpContext.Session.GetString("current_user_id");
             EmployeeDto employeeDto = await _empRepository.GetEmployeeById(userId);
             return Ok(employeeDto);
         }

@@ -191,18 +191,23 @@ namespace Web.ApiControllers
         [HttpPut("change-password")]
         public async Task<ActionResult> UpdatePassword([FromBody] EmployeeDto pDTO)
         {
-            string userId = HttpContext.Session.GetString("current_user_id");
-            string Email = HttpContext.Session.GetString("current_user_email");
-
-            var user = new Employee
+            try
             {
-                Id = userId,
-                Email = Email,
-            };
+              //  string userId = HttpContext.Session.GetString("current_user_id");
+                string Email = HttpContext.Session.GetString("current_user_email");
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == Email);
+                //var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var result = await _userManager.ChangePasswordAsync(user, pDTO.CurrentPassword, pDTO.NewPassword);
 
-            var result = await _userManager.ChangePasswordAsync(user, pDTO.CurrentPassword,pDTO.NewPassword);
+                string status = result.Succeeded ? "Ok" : "Fail";
 
-            return Ok(result);
+                return Ok(status);
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
 

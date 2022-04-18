@@ -35,18 +35,20 @@
             if (this.isValidInvFrom()) {
                 const config = { headers: { "Content-Type": "application/json" } };
                 var base_url = window.location.origin;
-                const clientURL = base_url + "/api/profile/change-password";
+                const clientURL = base_url + "/api/Employee/change-password";
 
                 const profile = {
-                    password: this.currentPassword,
-                    confirmPassword: this.confirmPassword
+                    currentPassword: this.currentPassword,
+                    newPassword: this.confirmPassword
                 };
 
                 axios
-                    .Put(clientURL, profile, config)
+                    .put(clientURL, profile, config)
                     .then((response) => {
 
-                        if (response.data == "Success") {
+                        console.log(" response -- ", response);
+
+                        if (response.data == "Ok") {
                             Swal.fire({
                                 position: "top-end",
                                 icon: "success",
@@ -56,7 +58,6 @@
                             });
 
                             this.clearAll();
-                            this.loadAllInvoice();
                         }
                         else {
                             Swal.fire({
@@ -104,6 +105,12 @@
 
 
             }, 100);
+        },
+
+        clearAll: function () {
+            this.currentPassword = "";
+            this.newPassword = "";
+            this.confirmPassword = "";
         },
 
         isValidInvFrom: function () {

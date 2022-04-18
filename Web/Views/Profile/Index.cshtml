@@ -38,7 +38,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row p-5">
               <form v-on:submit.prevent="submitChangePassword" method="post" novalidate="true">
                 <p v-if="errors.length">
                     <b class="text-danger">Please correct the following error(s):</b>
@@ -46,30 +46,41 @@
                     <li v-for="error in errors" class="text-danger">{{ error }}</li>
                 </ul>
                 </p>
-                <div class="form-row">
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="name" class="">Current Password</label>
-                            <input name="name" placeholder="Current Password" type="password" class="form-control"
-                                v-model="currentPassword">
+                <div>
+                    <div class ="row">
+                         <div class="col-md-6">
+                            <div class="position-relative form-group">
+                                <label for="name" class="">Current Password</label>
+                                <input name="name" placeholder="Current Password" type="password" class="form-control"
+                                    v-model="currentPassword">
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="lastName" class="">New Password</label>
-                            <input name="lastName" placeholder="New Password" type="password" v-model="newPassword"
-                                class="form-control">
+
+                    <div class="row"> 
+                    
+                        <div class="col-md-6">
+                            <div class="position-relative form-group">
+                                <label for="lastName" class="">New Password</label>
+                                <input name="lastName" placeholder="New Password" type="password" v-model="newPassword"
+                                    class="form-control">
+                            </div>
+
                         </div>
+
+
+                        <div class="col-md-6">
 
                          <div class="position-relative form-group">
                             <label for="lastName" class="">Confirm Password</label>
                             <input name="lastName" placeholder="Confirm Password" type="password" v-model="confirmPassword"
                                 class="form-control">
                         </div>
+                       </div>
 
                     </div>
-                </div>
 
+                    </div>
                   <div class="col-md-0">
                     <button style="width:140px" type="submit" class="btn btn-outline-primary"> Submit
                     </button>
