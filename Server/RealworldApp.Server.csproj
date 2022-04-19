@@ -8,10 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Client\RealworldApp.Client.csproj" />
+    <ProjectReference Include="..\RealworldApp.Data.Access\RealworldApp.Data.Access.csproj" />
     <ProjectReference Include="..\Shared\RealworldApp.Shared.csproj" />
   </ItemGroup>
 
